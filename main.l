@@ -6,24 +6,26 @@ void yyerror (char *s);
 // called by the parser whenever it needs a token. This is where the lexical analyzer is called. 
 int yylex();
 %}
+/* Constants */
+DIGIT [0-9]
+ALPHA [a-z]
+ALNUM [0-9a-zA-Z]
 /* a directive that tells the compiler that the code below is the lexical analyzer.  */
 /* The lexical analyzer is built by specifying regular expressions for each token.  */
-/* If you saw the string "print", return the token "print" */
 /* first store the value of the token, and the second return its type */
-/* Ignore white spaces */
-/* Ignore comments starting with "//"" */
-/* Ignore comments starting with "/*"" */
-/* Else, return an error */
+/* e.g.: If you saw the string "print", return the token "print" */
 %%
-"print"				        {return print;}
-"exit"				        {return exit_command;}
-[a-zA-Z_]	    {yylval.id = yytext[0]; return identifier;}
--?[0-9]+                    {yylval.num = atoi(yytext); return number;}
-[ \t\n]                     ;
-\/\/.*                      ;
-\/\*.*\*\/                  ;
-[-+=;]           	        {return yytext[0];}
-.                           {ECHO; yyerror ("unexpected character");}
+"print"				        {return print;} /*print Command*/
+"exit"				        {return exit_command;} /*exit Command*/
+{ALPHA}                 	{yylval.letter = yytext[0]; return identifier;}
+\-?{DIGIT}*"."{DIGIT}+      {yylval.num = atof(yytext); return number;}
+\-?{DIGIT}+                 {yylval.num = atoi(yytext); return number;}
+\"{ALNUM}+\" 			    {yylval.str = yytext; return string; }
+[ \t\n]                     ; /*Ignore White Spaces*/
+\/\/.*                      ; /*Ignore Comments*/
+\/\*.*\*\/                  ; /*Ignore Comments*/
+[*+-/=%;~&|^(){}:]          {return yytext[0];} /*Return the character*/
+.                           {ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
 %%
 // C code
 // The wrapper function yywrap() 

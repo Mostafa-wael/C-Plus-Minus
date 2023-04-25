@@ -7,5 +7,8 @@ lex.yy.c: y.tab.c main.l
 build: lex.yy.c y.tab.c
 	gcc -g lex.yy.c y.tab.c -o main
 
+run: build
+	./main
+
 clean: 
 	rm -rf lex.yy.c y.tab.c y.tab.h main main.dSYM

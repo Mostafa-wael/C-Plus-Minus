@@ -13,17 +13,18 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %}
 /* Yacc definitions */
 // %union is used to define the types of the tokens that can be returned   
-%union {int num; char id;} // here we dfined two types: num as integres and id as characters
+%union {int num; char* str; char letter;} // here we dfined two types: num as integres and letter as characters
 %start statment // defines the starting symbol
 /* Tokens */
 // this will be added to the header file y.tab.h, hence the lexical analyzer will know about them
 %token print
 %token exit_command
 %token <num> number // this is a token called number returned by the lexical analyzer with as num
-%token <id> identifier // this is a token called identifier returned by the lexical analyzer with as id
+%token <letter> identifier // this is a token called identifier returned by the lexical analyzer with as letter
+%token <str> string // this is a token called string returned by the lexical analyzer with as str
 /* Types */
 %type <num> statment exp term // this defines the type of the non-terminals
-%type <id> assignment // this defines the type of the non-terminals
+%type <letter> assignment // this defines the type of the non-terminals
 
 %%
 
