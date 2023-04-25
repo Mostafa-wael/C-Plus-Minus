@@ -13,18 +13,35 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %}
 /* Yacc definitions */
 // %union is used to define the types of the tokens that can be returned   
-%union {int num; char* str; char letter;} // here we dfined two types: num as integres and letter as characters
+// here we dfined two types: 2nd term with type of the 1st term
+%union {int INT; 
+        float FLOAT;
+        char* STR; 
+        int BOOL;
+        char LETTER;}
 %start statment // defines the starting symbol
 /* Tokens */
 // this will be added to the header file y.tab.h, hence the lexical analyzer will know about them
+%token <INT> number // this is a token called number returned by the lexical analyzer with as num
+%token <FLOAT> float_number // this is a token called float_number returned by the lexical analyzer with as float_num
+%token <LETTER> identifier // this is a token called identifier returned by the lexical analyzer with as letter
+%token <STR> string // this is a token called string returned by the lexical analyzer with as str
+%token <BOOL> true_command 
+%token <BOOL> false_command 
+
 %token print
 %token exit_command
-%token <num> number // this is a token called number returned by the lexical analyzer with as num
-%token <letter> identifier // this is a token called identifier returned by the lexical analyzer with as letter
-%token <str> string // this is a token called string returned by the lexical analyzer with as str
+
+%token IF ELSE ELIF ENDIF WHILE FOR BREAK CONTINUE FUNCTION RETURN
+%left  AND OR NOT// this defines the associativity of the operators 
+
+%left  '+' '-' // this defines the associativity of the operators
+%left  '*' '/' // this defines the associativity of the operators
+%left '^' '|' '&' '~'// this defines the associativity of the operators
+%right '=' // this defines the associativity of the operators
 /* Types */
-%type <num> statment exp term // this defines the type of the non-terminals
-%type <letter> assignment // this defines the type of the non-terminals
+%type <INT> statment exp term // this defines the type of the non-terminals
+%type <LETTER> assignment // this defines the type of the non-terminals
 
 %%
 
@@ -46,6 +63,9 @@ exp    	    : term                  {$$ = $1;}
             ;
 term   	    : number                {$$ = $1;}
             | identifier			{$$ = symbolVal($1);} 
+            | '(' exp ')'           {$$ = $2;}
+            /* TODO: strings notworking yet */
+            //| string                {$$ = $1;}
             ;
 
 %%                     

@@ -10,5 +10,8 @@ build: lex.yy.c y.tab.c
 run: build
 	./main
 
+test: build
+	./main < ./tests/test1.txt
+
 clean: 
 	rm -rf lex.yy.c y.tab.c y.tab.h main main.dSYM

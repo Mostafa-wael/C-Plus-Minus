@@ -6,25 +6,50 @@ void yyerror (char *s);
 // called by the parser whenever it needs a token. This is where the lexical analyzer is called. 
 int yylex();
 %}
-/* Constants */
+/* RegEx */
 DIGIT [0-9]
 ALPHA [a-z]
 ALNUM [0-9a-zA-Z]
+SPACES [ \r\t\n]
+INLINE_COMMENT \/\/.*
+MULTILINE_COMMENT \/\*.*\*\/
+SPECIAL_CHARCHETES [*+-/;=%~&|^(){}:]
 /* a directive that tells the compiler that the code below is the lexical analyzer.  */
 /* The lexical analyzer is built by specifying regular expressions for each token.  */
 /* first store the value of the token, and the second return its type */
 /* e.g.: If you saw the string "print", return the token "print" */
 %%
+"if"				        {return IF;} /*if Command*/
+"else"				        {return ELSE;} /*else Command*/
+"elif"				        {return ELIF;} /*elif Command*/
+"endif"				        {return ENDIF;} /*endif Command*/
+
+"while"				        {return WHILE;} /*while Command*/
+"for"				        {return FOR;} /*for Command*/
+"break"				        {return BREAK;} /*break Command*/
+"continue"				    {return CONTINUE;} /*continue Command*/
+
+"function"				    {return FUNCTION;} /*function Command*/
+"return"				    {return RETURN;} /*return Command*/
+
+"and" | "&&"                {return AND;} /*and Command*/
+"or" | "||"                 {return OR;} /*or Command*/
+"not" | "!"                 {return NOT;} /*not Command*/
+
+"true"                      {yylval.BOOL=1; return true_command;} /*true Command*/
+"false"                      {yylval.BOOL=0; return false_command;} /*false Command*/
+
 "print"				        {return print;} /*print Command*/
 "exit"				        {return exit_command;} /*exit Command*/
-{ALPHA}                 	{yylval.letter = yytext[0]; return identifier;}
-\-?{DIGIT}*"."{DIGIT}+      {yylval.num = atof(yytext); return number;}
-\-?{DIGIT}+                 {yylval.num = atoi(yytext); return number;}
-\"{ALNUM}+\" 			    {yylval.str = yytext; return string; }
-[ \t\n]                     ; /*Ignore White Spaces*/
-\/\/.*                      ; /*Ignore Comments*/
-\/\*.*\*\/                  ; /*Ignore Comments*/
-[*+-/=%;~&|^(){}:]          {return yytext[0];} /*Return the character*/
+{ALPHA}                 	{yylval.LETTER = yytext[0]; return identifier;}
+\-?{DIGIT}+                 {yylval.INT = atoi(yytext); return number;}
+\-?{DIGIT}*"."{DIGIT}+      {yylval.FLOAT = atof(yytext); return float_number;}
+\"{ALNUM}+\" 			    {yylval.STR = yytext; return string; }
+{SPACES}                     ; /*Ignore White Spaces*/
+{INLINE_COMMENT}             ; /*Ignore Comments*/
+{MULTILINE_COMMENT}          ; /*Ignore Comments*/
+
+{SPECIAL_CHARCHETES}         {return yytext[0];} /*Return the character*/
 .                           {ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
 %%
 // C code
