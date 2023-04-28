@@ -5,52 +5,77 @@
 void yyerror (char *s); 
 // called by the parser whenever it needs a token. This is where the lexical analyzer is called. 
 int yylex();
+int line=1;
 %}
 /* RegEx */
+/*====================*/
 DIGIT [0-9]
-ALPHA [a-z]
-ALNUM [0-9a-zA-Z]
-SPACES [ \r\t\n]
+ALPHAB [a-z]
+ALPHANUM [0-9a-zA-Z]
+SPACES [ \r\t]
+NEW_LINE \n
 INLINE_COMMENT \/\/.*
 MULTILINE_COMMENT \/\*.*\*\/
 SPECIAL_CHARCHETES [*+-/;=%~&|^(){}:]
+TRUE [tT]rue | 1 | [yY]es
+FALSE [fF]alse | 0 | [nN]o
 /* a directive that tells the compiler that the code below is the lexical analyzer.  */
 /* The lexical analyzer is built by specifying regular expressions for each token.  */
 /* first store the value of the token, and the second return its type */
 /* e.g.: If you saw the string "print", return the token "print" */
+/* ['"]({ALPHANUM})*['"]               {yylval.TYPE_STR = yytext; printf("%s\n", yytext);return string;} */
 %%
-"if"				        {return IF;} /*if Command*/
-"else"				        {return ELSE;} /*else Command*/
-"elif"				        {return ELIF;} /*elif Command*/
-"endif"				        {return ENDIF;} /*endif Command*/
+{ALPHAB}                 	        {yylval.TYPE_LETTER = yytext[0]; return identifier;}
+\-?{DIGIT}+                         {yylval.TYPE_INT = atoi(yytext); return number;}
+\-?{DIGIT}*"."{DIGIT}+              {yylval.TYPE_FLOAT = atof(yytext); return float_number;}
+\"[^\"]*\" 			                {yylval.TYPE_STR = strdup(yytext); return string; }
 
-"while"				        {return WHILE;} /*while Command*/
-"for"				        {return FOR;} /*for Command*/
-"break"				        {return BREAK;} /*break Command*/
-"continue"				    {return CONTINUE;} /*continue Command*/
 
-"function"				    {return FUNCTION;} /*function Command*/
-"return"				    {return RETURN;} /*return Command*/
+"print"				               {return PRINT;} /*print Command*/
+"exit"				               {return EXIT;} /*exit Command*/
 
-"and" | "&&"                {return AND;} /*and Command*/
-"or" | "||"                 {return OR;} /*or Command*/
-"not" | "!"                 {return NOT;} /*not Command*/
+"if"				               {return IF;} /*if Command*/
+"else"				               {return ELSE;} /*else Command*/
+"elif"				               {return ELIF;} /*elif Command*/
+"endif"				               {return ENDIF;} /*endif Command*/
 
-"true"                      {yylval.BOOL=1; return true_command;} /*true Command*/
-"false"                      {yylval.BOOL=0; return false_command;} /*false Command*/
+"switch"				           {return SWITCH;} /*switch Command*/
+"case"				               {return CASE;} /*case Command*/
+"default"				           {return DEFAULT;} /*default Command*/
+"endswitch"				           {return ENDSWITCH;} /*endswitch Command*/
 
-"print"				        {return print;} /*print Command*/
-"exit"				        {return exit_command;} /*exit Command*/
-{ALPHA}                 	{yylval.LETTER = yytext[0]; return identifier;}
-\-?{DIGIT}+                 {yylval.INT = atoi(yytext); return number;}
-\-?{DIGIT}*"."{DIGIT}+      {yylval.FLOAT = atof(yytext); return float_number;}
-\"{ALNUM}+\" 			    {yylval.STR = yytext; return string; }
-{SPACES}                     ; /*Ignore White Spaces*/
-{INLINE_COMMENT}             ; /*Ignore Comments*/
-{MULTILINE_COMMENT}          ; /*Ignore Comments*/
+"while"				               {return WHILE;} /*while Command*/
+"for"				               {return FOR;} /*for Command*/
+"break"				               {return BREAK;} /*break Command*/
+"continue"				           {return CONTINUE;} /*continue Command*/
 
-{SPECIAL_CHARCHETES}         {return yytext[0];} /*Return the character*/
-.                           {ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
+"function"				           {return FUNCTION;} /*function Command */
+"return"				           {return RETURN;} /*return Command*/
+
+
+"<<"                                {return SHL;} /*SHL Command*/
+">>"                                {return SHR;} /*SHR Command*/
+
+"=="                                {return EQ;} /*EQ Command*/
+"!="                                {return NEQ;} /*NEQ Command*/
+"<="                                {return LEQ;} /*LEQ Command*/
+">="                                {return GEQ;} /*GEQ Command*/
+"<"                                 {return LT;} /*LT Command*/
+">"                                 {return GT;} /*GT Command*/
+
+"&&"                                {return AND;} /*and Command*/
+"||"                                {return OR;} /*or Command*/
+"!"                                 {return NOT;} /*not Command*/
+
+[tT]rue | 1 | [yY]es               {yylval.TYPE_BOOL=1; return true_command;} /*true Command*/
+[fF]alse | 0 | [nN]o               {yylval.TYPE_BOOL=0; return false_command;} /*false Command*/
+
+{NEW_LINE}                          line++; /*Ignore New Lines*/
+{SPACES}                            ; /*Ignore White Spaces*/
+{INLINE_COMMENT}                    ; /*Ignore Comments*/
+{MULTILINE_COMMENT}                 ; /*Ignore Comments*/
+{SPECIAL_CHARCHETES}                {return yytext[0];} /*Return the character*/
+.                                   {ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
 %%
 // C code
 // The wrapper function yywrap() 

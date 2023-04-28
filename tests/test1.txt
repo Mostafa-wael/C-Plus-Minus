@@ -1,5 +1,45 @@
-a = 10;
-b = 10;
-print a+b;
-// print "hi";
+print "arithmetic";
+a = 10; // 1010
+b = 10; // 1010
+c = 2; // 0010
+d = a * b + c; 
+print a;
+print b;
+print c;
+print d; // 102
+////////////////////////////////
+print -a; // -10
+// print -3-4;
+print a+b; // 20
+print a-b; // 0
+print a/b; // 1
+print a%c; // 0
+////////////////////////////////
+print "bitwise";
+print a | c ; // 1010 | 0010 = 1010 = 10
+print a & c ; // 1010 & 0010 = 0010 = 2
+print a ^ c ; // 1010 ^ 0010 = 1000 = 8
+print a << c ; // 1010 << 0010 = 101000 = 40
+print a >> c ; // 1010 >> 0010 = 10 = 2
+print ~a; // -11
+////////////////////////////////
+////////////////////////////////
+print "logic";
+a = 1;
+b = 0;
+print a; // 1
+print b; // 0
+print a == b; // 1
+print a != b; // 0
+print a < b; // 0
+print a > b; // 1
+print a <= b; // 0
+print a >= b; // 1
+////////////////////////////////
+print "More logic";
+print !a; // 0
+print a && b; // 0
+print a || b; // 1
+print (a && a && b) || a; // 1
+////////////////////////////////
 exit;
