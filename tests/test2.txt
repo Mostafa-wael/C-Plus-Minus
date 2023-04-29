@@ -6,6 +6,11 @@ bool c = 1;
 string d = "hello";
 void e = 0;
 print c;
+print d;
+{
+    const int a = 10;
+    print a;
+}
 ////////////////////////////////
 print "logic";
 a = 1;

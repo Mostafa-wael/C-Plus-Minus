@@ -73,23 +73,29 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %left  '+' '-' 
 %right NOT '!' '~' 
 %left  '*' '/' '%' 
+
 // Return Types
 //======================
 // this defines the type of the non-terminals
 %type <TYPE_VOID> statments statment controlStatment 
-%type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop switchCaseLoop case caseList
-%type <TYPE_DATA_TYPE> dataType declaration
-%type <TYPE_DATA_IDENTIFIER> dataIdentifier
-%type <TYPE_LETTER> assignment 
+%type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop switchCaseLoop case caseList codeBlock
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
+%type <TYPE_LETTER> assignment 
+%type <TYPE_DATA_TYPE> dataType declaration
+%type <TYPE_DATA_IDENTIFIER> dataIdentifier
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
-statments	                                : statment ';'
-                                                | controlStatment
-			                        | statments statment ';'
-                                                | statments controlStatment
+statments	                                : statment ';'                          {;}
+                                                | codeBlock                             {;}
+                                                | controlStatment                       {;}
+                                                | statments codeBlock                   {;}
+			                        | statments statment ';'                {;}
+                                                | statments controlStatment             {;}
+                                                ;
+codeBlock                                       : '{' statments '}'                     {;}
+                                                | '{' '}'                               {;}
                                                 ;
 controlStatment                                 : ifCondition
                                                 | whileLoop
@@ -101,6 +107,7 @@ statment                                        : assignment 		                {
                                                 | declaration 		                {;}
                                                 | EXIT 		                        {exit(EXIT_SUCCESS);}
                                                 | BREAK 		                {;}
+                                                | CONTINUE 		                {;}
                                                 | PRINT exp 		                {printf("%d\n", $2);}
                                                 | PRINT STRING 	                        {printf("%s\n", $2);}
                                                 /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
@@ -142,8 +149,8 @@ exp    	                                        : term                          
                                                 ;
 term   	                                        : NUMBER                                {$$ = $1;}
                                                 | FLOAT_NUMBER                          {$$ = $1;}
-                                                | TRUE                          {$$ = 1;}
-                                                | FALSE                         {$$ = 0;}
+                                                | TRUE                                  {$$ = 1;}
+                                                | FALSE                                 {$$ = 0;}
                                                 | IDENTIFIER	                        {$$ = symbolVal($1);} 
                                                 | '(' exp ')'                           {$$ = $2;}
                                                 ;
@@ -156,16 +163,16 @@ dataType                                        : INT_DATA_TYPE                 
                                                 | VOID_DATA_TYPE                                  {$$ = $1;}
                                                 ;
 
-ifCondition                                     : IF '(' exp ')' '{' statments '}'      {;}
-                                                | IF '(' exp ')' '{' statments '}' ELSE '{' statments '}' {;}
-                                                | IF '(' exp ')' '{' statments '}' ELIF '(' exp ')' '{' statments '}' {;}
-                                                | IF '(' exp ')' '{' statments '}' ELIF '(' exp ')' '{' statments '}' ELSE '{' statments '}' {;}
+ifCondition                                     : IF '(' exp ')' codeBlock      {;}
+                                                | IF '(' exp ')' codeBlock ELSE codeBlock {;}
+                                                | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock {;}
+                                                | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock ELSE codeBlock {;}
                                                 ;
-whileLoop                                       : WHILE '(' exp ')' '{' statments '}'   {;}
+whileLoop                                       : WHILE '(' exp ')' codeBlock   {;}
                                                 ;
-forLoop                                         : FOR '(' assignment ';' exp ';' assignment ')' '{' statments '}' {;}
+forLoop                                         : FOR '(' assignment ';' exp ';' assignment ')' codeBlock {;}
                                                 ;
-repeastUntilLoop                                : REPEAT '{' statments '}' UNTIL '(' exp ')' ';' {;}
+repeastUntilLoop                                : REPEAT codeBlock UNTIL '(' exp ')' ';' {;}
                                                 ;
 case                                            : CASE exp ':' statments                         {;}
                                                 | DEFAULT ':' statments                          {;}
@@ -175,6 +182,7 @@ caseList                                        : caseList case
                                                 ;
 switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'            {;}
                                                 ;
+
 
 
 %%                     
