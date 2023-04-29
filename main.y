@@ -26,6 +26,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %union {
         int TYPE_INT; 
         char* TYPE_DATA_TYPE;
+        char* TYPE_DATA_IDENTIFIER;
         float TYPE_FLOAT;
         char* TYPE_STR; 
         int TYPE_BOOL;
@@ -42,6 +43,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %token <TYPE_BOOL> true_command 
 %token <TYPE_BOOL> false_command 
 %token <TYPE_DATA_TYPE> INT FLOAT STRING BOOL VOID
+%token <TYPE_DATA_IDENTIFIER> CONST
 
 // Control Commands
 //======================
@@ -77,6 +79,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %type <TYPE_VOID> statments statment controlStatment 
 %type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop switchCaseLoop case caseList
 %type <TYPE_DATA_TYPE> dataType declaration
+%type <TYPE_DATA_IDENTIFIER> dataIdentifier
 %type <TYPE_LETTER> assignment 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
@@ -104,8 +107,11 @@ statment                                        : assignment 		                {
                                                 ;
 declaration                                     : dataType identifier 		        {;}
                                                 | dataType assignment	                {;}
+                                                | dataIdentifier declaration 	        {;}
                                                 ;
-assignment                                      : identifier '=' exp                    {updateSymbolVal($1,$3); }
+assignment                                      : identifier '=' exp                    {updateSymbolVal($1,$3);}
+                                                | identifier '=' string                 {updateSymbolVal($1,atoi($3));}
+                                                ;
 			                        ;
 exp    	                                        : term                                  {$$ = $1;}
                                                 | '-' term                              {$$ = -$2;}
@@ -140,6 +146,8 @@ term   	                                        : number                        
                                                 | false_command                         {$$ = 0;}
                                                 | identifier	                        {$$ = symbolVal($1);} 
                                                 | '(' exp ')'                           {$$ = $2;}
+                                                ;
+dataIdentifier                                  : CONST                                 {;}
                                                 ;
 dataType                                        : INT                                   {$$ = $1;}
                                                 | FLOAT                                 {$$ = $1;}

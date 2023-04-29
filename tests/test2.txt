@@ -1,4 +1,11 @@
 
+print "declaration";
+const int a = 5;
+float b = 5.5;
+bool c = 1;
+string d = "hello";
+void e = 0;
+print c;
 ////////////////////////////////
 print "logic";
 a = 1;

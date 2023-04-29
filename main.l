@@ -25,21 +25,23 @@ FALSE [fF]alse | 0 | [nN]o
 /* e.g.: If you saw the string "print", return the token "print" */
 /* ['"]({ALPHANUM})*['"]               {yylval.TYPE_STR = yytext; printf("%s\n", yytext);return string;} */
 %%
-{ALPHAB}                 	        {yylval.TYPE_LETTER = yytext[0]; return identifier;}
-\-?{DIGIT}+                         {yylval.TYPE_INT = atoi(yytext); return number;}
-\-?{DIGIT}*"."{DIGIT}+              {yylval.TYPE_FLOAT = atof(yytext); return float_number;}
-\"[^\"]*\" 			                {yylval.TYPE_STR = strdup(yytext); return string; }
+{ALPHAB}                 	       {yylval.TYPE_LETTER = yytext[0]; return identifier;}
+\-?{DIGIT}+                        {yylval.TYPE_INT = atoi(yytext); return number;}
+\-?{DIGIT}*"."{DIGIT}+             {yylval.TYPE_FLOAT = atof(yytext); return float_number;}
+\"[^\"]*\" 			               {yylval.TYPE_STR = strdup(yytext); return string; }
 
 
 "print"				               {return PRINT;} /*print Command*/
 "assert"                           {return ASSERT;} /*assert Command*/
 "exit"				               {return EXIT;} /*exit Command*/
 
-"int"                               {return INT;} /*int Command*/
-"float"                             {return FLOAT;} /*float Command*/
-"string"                            {return STRING;} /*string Command*/
-"bool"                              {return BOOL;} /*bool Command*/
-"void"                              {return VOID;} /*void Command*/
+"const"                            {return CONST;} /*const Command*/
+
+"int"                              {return INT;} /*int Command*/
+"float"                            {return FLOAT;} /*float Command*/
+"string"                           {return STRING;} /*string Command*/
+"bool"                             {return BOOL;} /*bool Command*/
+"void"                             {return VOID;} /*void Command*/
 
 "if"				               {return IF;} /*if Command*/
 "else"				               {return ELSE;} /*else Command*/
