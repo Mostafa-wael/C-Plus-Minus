@@ -36,13 +36,13 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 /* Tokens */// this will be added to the header file y.tab.h, hence the lexical analyzer will know about them
 // Data Types
 //======================
-%token <TYPE_INT> number // this is a token called number returned by the lexical analyzer with as TYPE_INT
-%token <TYPE_FLOAT> float_number // this is a token called float_number returned by the lexical analyzer with as TYPE_FLOAT
-%token <TYPE_LETTER> identifier // this is a token called identifier returned by the lexical analyzer with as TYPE_LETTER
-%token <TYPE_STR> string // this is a token called string returned by the lexical analyzer with as TYPE_STR
-%token <TYPE_BOOL> true_command 
-%token <TYPE_BOOL> false_command 
-%token <TYPE_DATA_TYPE> INT FLOAT STRING BOOL VOID
+%token <TYPE_INT> NUMBER // this is a token called NUMBER returned by the lexical analyzer with as TYPE_INT
+%token <TYPE_FLOAT> FLOAT_NUMBER // this is a token called FLOAT_NUMBER returned by the lexical analyzer with as TYPE_FLOAT
+%token <TYPE_LETTER> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_LETTER
+%token <TYPE_STR> STRING // this is a token called STRING returned by the lexical analyzer with as TYPE_STR
+%token <TYPE_BOOL> TRUE 
+%token <TYPE_BOOL> FALSE 
+%token <TYPE_DATA_TYPE> INT_DATA_TYPE FLOAT_DATA_TYPE STRING_DATA_TYPE BOOL_DATA_TYPE VOID_DATA_TYPE
 %token <TYPE_DATA_IDENTIFIER> CONST
 
 // Control Commands
@@ -102,15 +102,15 @@ statment                                        : assignment 		                {
                                                 | EXIT 		                        {exit(EXIT_SUCCESS);}
                                                 | BREAK 		                {;}
                                                 | PRINT exp 		                {printf("%d\n", $2);}
-                                                | PRINT string 	                        {printf("%s\n", $2);}
-                                                /* | PRINT float_number 	                {printf("%f\n", $2);} */
+                                                | PRINT STRING 	                        {printf("%s\n", $2);}
+                                                /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
                                                 ;
-declaration                                     : dataType identifier 		        {;}
+declaration                                     : dataType IDENTIFIER 		        {;}
                                                 | dataType assignment	                {;}
                                                 | dataIdentifier declaration 	        {;}
                                                 ;
-assignment                                      : identifier '=' exp                    {updateSymbolVal($1,$3);}
-                                                | identifier '=' string                 {updateSymbolVal($1,atoi($3));}
+assignment                                      : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3);}
+                                                | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
                                                 ;
 			                        ;
 exp    	                                        : term                                  {$$ = $1;}
@@ -140,20 +140,20 @@ exp    	                                        : term                          
                                                 | exp AND exp                           {$$ = $1 && $3;}
                                                 | exp OR exp                            {$$ = $1 || $3;}
                                                 ;
-term   	                                        : number                                {$$ = $1;}
-                                                | float_number                          {$$ = $1;}
-                                                | true_command                          {$$ = 1;}
-                                                | false_command                         {$$ = 0;}
-                                                | identifier	                        {$$ = symbolVal($1);} 
+term   	                                        : NUMBER                                {$$ = $1;}
+                                                | FLOAT_NUMBER                          {$$ = $1;}
+                                                | TRUE                          {$$ = 1;}
+                                                | FALSE                         {$$ = 0;}
+                                                | IDENTIFIER	                        {$$ = symbolVal($1);} 
                                                 | '(' exp ')'                           {$$ = $2;}
                                                 ;
 dataIdentifier                                  : CONST                                 {;}
                                                 ;
-dataType                                        : INT                                   {$$ = $1;}
-                                                | FLOAT                                 {$$ = $1;}
-                                                | STRING                                {$$ = $1;}
-                                                | BOOL                                  {$$ = $1;}
-                                                | VOID                                  {$$ = $1;}
+dataType                                        : INT_DATA_TYPE                                   {$$ = $1;}
+                                                | FLOAT_DATA_TYPE                                 {$$ = $1;}
+                                                | STRING_DATA_TYPE                                {$$ = $1;}
+                                                | BOOL_DATA_TYPE                                  {$$ = $1;}
+                                                | VOID_DATA_TYPE                                  {$$ = $1;}
                                                 ;
 
 ifCondition                                     : IF '(' exp ')' '{' statments '}'      {;}
@@ -175,6 +175,8 @@ caseList                                        : caseList case
                                                 ;
 switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'            {;}
                                                 ;
+
+
 %%                     
 /* C code */
 int computeSymbolIndex(char token)

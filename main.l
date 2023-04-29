@@ -23,12 +23,11 @@ FALSE [fF]alse | 0 | [nN]o
 /* The lexical analyzer is built by specifying regular expressions for each token.  */
 /* first store the value of the token, and the second return its type */
 /* e.g.: If you saw the string "print", return the token "print" */
-/* ['"]({ALPHANUM})*['"]               {yylval.TYPE_STR = yytext; printf("%s\n", yytext);return string;} */
 %%
-{ALPHAB}                 	       {yylval.TYPE_LETTER = yytext[0]; return identifier;}
-\-?{DIGIT}+                        {yylval.TYPE_INT = atoi(yytext); return number;}
-\-?{DIGIT}*"."{DIGIT}+             {yylval.TYPE_FLOAT = atof(yytext); return float_number;}
-\"[^\"]*\" 			               {yylval.TYPE_STR = strdup(yytext); return string; }
+{ALPHAB}                 	       {yylval.TYPE_LETTER = yytext[0]; return IDENTIFIER;}
+\-?{DIGIT}+                        {yylval.TYPE_INT = atoi(yytext); return NUMBER;}
+\-?{DIGIT}*"."{DIGIT}+             {yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
+\"[^\"]*\" 			               {yylval.TYPE_STR = strdup(yytext); return STRING; }
 
 
 "print"				               {return PRINT;} /*print Command*/
@@ -37,11 +36,11 @@ FALSE [fF]alse | 0 | [nN]o
 
 "const"                            {return CONST;} /*const Command*/
 
-"int"                              {return INT;} /*int Command*/
-"float"                            {return FLOAT;} /*float Command*/
-"string"                           {return STRING;} /*string Command*/
-"bool"                             {return BOOL;} /*bool Command*/
-"void"                             {return VOID;} /*void Command*/
+"int"                              {return INT_DATA_TYPE;} /*int Command*/
+"float"                            {return FLOAT_DATA_TYPE;} /*float Command*/
+"string"                           {return STRING_DATA_TYPE;} /*string Command*/
+"bool"                             {return BOOL_DATA_TYPE;} /*bool Command*/
+"void"                             {return VOID_DATA_TYPE;} /*void Command*/
 
 "if"				               {return IF;} /*if Command*/
 "else"				               {return ELSE;} /*else Command*/
@@ -76,8 +75,8 @@ FALSE [fF]alse | 0 | [nN]o
 "||"                                {return OR;} /*or Command*/
 "!"                                 {return NOT;} /*not Command*/
 
-[tT]rue | 1 | [yY]es               {yylval.TYPE_BOOL=1; return true_command;} /*true Command*/
-[fF]alse | 0 | [nN]o               {yylval.TYPE_BOOL=0; return false_command;} /*false Command*/
+[tT]rue | 1 | [yY]es               {yylval.TYPE_BOOL=1; return TRUE;} /*true Command*/
+[fF]alse | 0 | [nN]o               {yylval.TYPE_BOOL=0; return FALSE;} /*false Command*/
 
 {NEW_LINE}                          line++; /*Ignore New Lines*/
 {SPACES}                            ; /*Ignore White Spaces*/
