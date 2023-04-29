@@ -51,8 +51,8 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 
 // Control Flow
 //======================
-%token IF ELSE ELIF ENDIF 
-%token SWITCH CASE DEFAULT ENDSWITCH
+%token IF ELSE ELIF 
+%token SWITCH CASE DEFAULT 
 %token WHILE FOR BREAK CONTINUE REPEAT UNTIL
 %token FUNCTION RETURN
 
@@ -75,7 +75,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 //======================
 // this defines the type of the non-terminals
 %type <TYPE_VOID> statments statment controlStatment 
-%type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop
+%type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop switchCaseLoop case caseList
 %type <TYPE_DATA_TYPE> dataType declaration
 %type <TYPE_LETTER> assignment 
 %type <TYPE_INT> exp 
@@ -92,10 +92,12 @@ controlStatment                                 : ifCondition
                                                 | whileLoop
                                                 | forLoop
                                                 | repeastUntilLoop
+                                                | switchCaseLoop
                                                 ;       
 statment                                        : assignment 		                {;}
                                                 | declaration 		                {;}
                                                 | EXIT 		                        {exit(EXIT_SUCCESS);}
+                                                | BREAK 		                {;}
                                                 | PRINT exp 		                {printf("%d\n", $2);}
                                                 | PRINT string 	                        {printf("%s\n", $2);}
                                                 /* | PRINT float_number 	                {printf("%f\n", $2);} */
@@ -156,6 +158,14 @@ whileLoop                                       : WHILE '(' exp ')' '{' statment
 forLoop                                         : FOR '(' assignment ';' exp ';' assignment ')' '{' statments '}' {;}
                                                 ;
 repeastUntilLoop                                : REPEAT '{' statments '}' UNTIL '(' exp ')' ';' {;}
+                                                ;
+case                                            : CASE exp ':' '{' statments '}'                {;}
+                                                | DEFAULT ':' '{' statments '}'                 {;}
+                                                ;
+caseList                                        : caseList case
+                                                | case
+                                                ;
+switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'   {;}
                                                 ;
 %%                     
 /* C code */

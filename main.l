@@ -44,12 +44,10 @@ FALSE [fF]alse | 0 | [nN]o
 "if"				               {return IF;} /*if Command*/
 "else"				               {return ELSE;} /*else Command*/
 "elif"				               {return ELIF;} /*elif Command*/
-"endif"				               {return ENDIF;} /*endif Command*/
 
 "switch"				           {return SWITCH;} /*switch Command*/
 "case"				               {return CASE;} /*case Command*/
 "default"				           {return DEFAULT;} /*default Command*/
-"endswitch"				           {return ENDSWITCH;} /*endswitch Command*/
 
 "while"				               {return WHILE;} /*while Command*/
 "for"				               {return FOR;} /*for Command*/
