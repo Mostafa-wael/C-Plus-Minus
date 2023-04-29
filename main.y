@@ -72,7 +72,8 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 // Return Types
 //======================
 // this defines the type of the non-terminals
-%type <TYPE_VOID> statments statment 
+%type <TYPE_VOID> statments statment controlStatment 
+%type <TYPE_VOID> ifCondition 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
 %type <TYPE_LETTER> assignment 
@@ -80,9 +81,19 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 
 /* descriptions of expected inputs corresponding actions (in C) */
 statments	                                : statment ';'
+                                                | controlStatment
 			                        | statments statment ';'
+                                                | statments controlStatment
                                                 ;
-
+controlStatment                                 : ifCondition
+                                                /* | whileCondition
+                                                | forCondition
+                                                | switchCondition
+                                                | functionCall
+                                                | returnCommand
+                                                | breakCommand
+                                                | continueCommand */
+                                                ;       
 statment                                        : assignment 		                {;}
                                                 | EXIT 		                        {exit(EXIT_SUCCESS);}
                                                 | PRINT exp 		                {printf("%d\n", $2);}
@@ -126,6 +137,11 @@ term   	                                        : number                        
                                                 | '(' exp ')'                           {$$ = $2;}
                                                 ;
 
+ifCondition                                     : IF '(' exp ')' '{' statments '}'      {;}
+                                                | IF '(' exp ')' '{' statments '}' ELSE '{' statments '}' {;}
+                                                | IF '(' exp ')' '{' statments '}' ELIF '(' exp ')' '{' statments '}' {;}
+                                                | IF '(' exp ')' '{' statments '}' ELIF '(' exp ')' '{' statments '}' ELSE '{' statments '}' {;}
+                                                ;
 %%                     
 /* C code */
 int computeSymbolIndex(char token)
