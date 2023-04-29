@@ -146,7 +146,7 @@ ifCondition                                     : IF '(' exp ')' '{' statments '
                                                 ;
 whileLoop                                       : WHILE '(' exp ')' '{' statments '}'   {;}
                                                 ;
-forLoop                                         : FOR '(' exp ';' exp ';' exp ')' '{' statments '}' {printf("for loop\n");}
+forLoop                                         : FOR '(' assignment ';' exp ';' assignment ')' '{' statments '}' {;}
                                                 ;
 %%                     
 /* C code */
