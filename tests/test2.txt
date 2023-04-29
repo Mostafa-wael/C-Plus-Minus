@@ -172,5 +172,17 @@ switch (a) {
         print "default";
         break;
 }
-
+////////////////////////////////
+print "functions";
+x(1, 2);
+// a = y();
+print "x";
+int y (){
+    print "y";
+    return 1;
+}
+int x(int a, int b) {
+    print "add";
+    return a + b;
+}
 exit;

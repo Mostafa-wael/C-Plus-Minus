@@ -17,7 +17,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %}
 /* Yacc definitions */
 //==============================================================================
-%start statments // defines the starting symbol
+%start program // defines the starting symbol
 
 // Symbols Types(in C)
 //======================
@@ -56,7 +56,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %token IF ELSE ELIF 
 %token SWITCH CASE DEFAULT 
 %token WHILE FOR BREAK CONTINUE REPEAT UNTIL
-%token FUNCTION RETURN
+%token RETURN
 
 // Operators
 //======================
@@ -77,8 +77,9 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 // Return Types
 //======================
 // this defines the type of the non-terminals
-%type <TYPE_VOID> statments statment controlStatment 
-%type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop switchCaseLoop case caseList codeBlock
+%type <TYPE_VOID> program statments statment controlStatment 
+%type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop switchCaseLoop case caseList 
+%type<TYPE_VOID> codeBlock functionArgs functionParms  functionCall 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
 %type <TYPE_LETTER> assignment 
@@ -87,6 +88,11 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
+program                                         : statments                             {;}
+                                                | functionDef                      {;}
+                                                | program statments                     {;}
+                                                | program functionDef              {;}
+                                                ;
 statments	                                : statment ';'                          {;}
                                                 | codeBlock                             {;}
                                                 | controlStatment                       {;}
@@ -102,12 +108,16 @@ controlStatment                                 : ifCondition
                                                 | forLoop
                                                 | repeastUntilLoop
                                                 | switchCaseLoop
-                                                ;       
+                                                ;      
+                                                ; 
 statment                                        : assignment 		                {;}
+                                                | functionCall                          {;}
                                                 | declaration 		                {;}
                                                 | EXIT 		                        {exit(EXIT_SUCCESS);}
                                                 | BREAK 		                {;}
                                                 | CONTINUE 		                {;}
+                                                | RETURN 		                {;}
+                                                | RETURN exp 		                {;}
                                                 | PRINT exp 		                {printf("%d\n", $2);}
                                                 | PRINT STRING 	                        {printf("%s\n", $2);}
                                                 /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
@@ -154,35 +164,48 @@ term   	                                        : NUMBER                        
                                                 | IDENTIFIER	                        {$$ = symbolVal($1);} 
                                                 | '(' exp ')'                           {$$ = $2;}
                                                 ;
-dataIdentifier                                  : CONST                                 {;}
+dataIdentifier                                  : CONST                                         {;}
                                                 ;
-dataType                                        : INT_DATA_TYPE                                   {$$ = $1;}
-                                                | FLOAT_DATA_TYPE                                 {$$ = $1;}
-                                                | STRING_DATA_TYPE                                {$$ = $1;}
-                                                | BOOL_DATA_TYPE                                  {$$ = $1;}
-                                                | VOID_DATA_TYPE                                  {$$ = $1;}
+dataType                                        : INT_DATA_TYPE                                 {$$ = $1;}
+                                                | FLOAT_DATA_TYPE                               {$$ = $1;}
+                                                | STRING_DATA_TYPE                              {$$ = $1;}
+                                                | BOOL_DATA_TYPE                                {$$ = $1;}
+                                                | VOID_DATA_TYPE                                {$$ = $1;}
                                                 ;
 
-ifCondition                                     : IF '(' exp ')' codeBlock      {;}
-                                                | IF '(' exp ')' codeBlock ELSE codeBlock {;}
+ifCondition                                     : IF '(' exp ')' codeBlock                      {;}
+                                                | IF '(' exp ')' codeBlock ELSE codeBlock       {;}
                                                 | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock {;}
                                                 | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock ELSE codeBlock {;}
                                                 ;
-whileLoop                                       : WHILE '(' exp ')' codeBlock   {;}
+whileLoop                                       : WHILE '(' exp ')' codeBlock                   {;}
                                                 ;
 forLoop                                         : FOR '(' assignment ';' exp ';' assignment ')' codeBlock {;}
                                                 ;
-repeastUntilLoop                                : REPEAT codeBlock UNTIL '(' exp ')' ';' {;}
+repeastUntilLoop                                : REPEAT codeBlock UNTIL '(' exp ')' ';'        {;}
                                                 ;
-case                                            : CASE exp ':' statments                         {;}
-                                                | DEFAULT ':' statments                          {;}
+
+case                                            : CASE exp ':' statments                        {;}
+                                                | DEFAULT ':' statments                         {;}
                                                 ;
 caseList                                        : caseList case
                                                 | case
                                                 ;
-switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'            {;}
+switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'           {;}
                                                 ;
-
+                                  
+functionArgs                                    : dataType IDENTIFIER                           {;}
+                                                | dataType IDENTIFIER ',' functionArgs          {;}
+                                                ;
+functionParms                                   : term                                          {;}
+                                                | term ',' functionParms                        {;}
+                                                ;
+functionDef                                     : dataType IDENTIFIER '(' functionArgs ')' codeBlock {;}
+                                                | dataType IDENTIFIER '(' ')' codeBlock {printf("functionDef\n");}
+                                                ;
+functionCall                                    : IDENTIFIER '(' functionParms ')'              {;}
+                                                | IDENTIFIER '(' ')'                            {;}
+                                                ;
 
 
 %%                     

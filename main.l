@@ -57,7 +57,6 @@ FALSE [fF]alse | 0 | [nN]o
 "break"				               {return BREAK;} /*break Command*/
 "continue"				           {return CONTINUE;} /*continue Command*/
 
-"function"				           {return FUNCTION;} /*function Command */
 "return"				           {return RETURN;} /*return Command*/
 
 
