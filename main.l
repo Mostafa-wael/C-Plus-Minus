@@ -35,6 +35,12 @@ FALSE [fF]alse | 0 | [nN]o
 "assert"                           {return ASSERT;} /*assert Command*/
 "exit"				               {return EXIT;} /*exit Command*/
 
+"int"                               {return INT;} /*int Command*/
+"float"                             {return FLOAT;} /*float Command*/
+"string"                            {return STRING;} /*string Command*/
+"bool"                              {return BOOL;} /*bool Command*/
+"void"                              {return VOID;} /*void Command*/
+
 "if"				               {return IF;} /*if Command*/
 "else"				               {return ELSE;} /*else Command*/
 "elif"				               {return ELIF;} /*elif Command*/
@@ -47,6 +53,8 @@ FALSE [fF]alse | 0 | [nN]o
 
 "while"				               {return WHILE;} /*while Command*/
 "for"				               {return FOR;} /*for Command*/
+"repeat"				           {return REPEAT;} /*repeat Command*/
+"until"				               {return UNTIL;} /*until Command*/
 "break"				               {return BREAK;} /*break Command*/
 "continue"				           {return CONTINUE;} /*continue Command*/
 

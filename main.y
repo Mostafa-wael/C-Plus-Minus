@@ -25,6 +25,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 // here we defined those types where the 2nd term is definedwith type of the 1st term
 %union {
         int TYPE_INT; 
+        char* TYPE_DATA_TYPE;
         float TYPE_FLOAT;
         char* TYPE_STR; 
         int TYPE_BOOL;
@@ -40,6 +41,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %token <TYPE_STR> string // this is a token called string returned by the lexical analyzer with as TYPE_STR
 %token <TYPE_BOOL> true_command 
 %token <TYPE_BOOL> false_command 
+%token <TYPE_DATA_TYPE> INT FLOAT STRING BOOL VOID
 
 // Control Commands
 //======================
@@ -51,7 +53,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 //======================
 %token IF ELSE ELIF ENDIF 
 %token SWITCH CASE DEFAULT ENDSWITCH
-%token WHILE FOR BREAK CONTINUE 
+%token WHILE FOR BREAK CONTINUE REPEAT UNTIL
 %token FUNCTION RETURN
 
 // Operators
@@ -73,10 +75,11 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 //======================
 // this defines the type of the non-terminals
 %type <TYPE_VOID> statments statment controlStatment 
-%type <TYPE_VOID> ifCondition whileLoop forLoop
+%type <TYPE_VOID> ifCondition whileLoop forLoop repeastUntilLoop
+%type <TYPE_DATA_TYPE> dataType declaration
+%type <TYPE_LETTER> assignment 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
-%type <TYPE_LETTER> assignment 
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
@@ -88,21 +91,19 @@ statments	                                : statment ';'
 controlStatment                                 : ifCondition
                                                 | whileLoop
                                                 | forLoop
-                                                /* | whileCondition
-                                                | forCondition
-                                                | switchCondition
-                                                | functionCall
-                                                | returnCommand
-                                                | breakCommand
-                                                | continueCommand */
+                                                | repeastUntilLoop
                                                 ;       
 statment                                        : assignment 		                {;}
+                                                | declaration 		                {;}
                                                 | EXIT 		                        {exit(EXIT_SUCCESS);}
                                                 | PRINT exp 		                {printf("%d\n", $2);}
                                                 | PRINT string 	                        {printf("%s\n", $2);}
                                                 /* | PRINT float_number 	                {printf("%f\n", $2);} */
                                                 ;
-assignment                                      : identifier '=' exp                    { updateSymbolVal($1,$3); }
+declaration                                     : dataType identifier 		        {;}
+                                                | dataType assignment	                {;}
+                                                ;
+assignment                                      : identifier '=' exp                    {updateSymbolVal($1,$3); }
 			                        ;
 exp    	                                        : term                                  {$$ = $1;}
                                                 | '-' term                              {$$ = -$2;}
@@ -138,6 +139,12 @@ term   	                                        : number                        
                                                 | identifier	                        {$$ = symbolVal($1);} 
                                                 | '(' exp ')'                           {$$ = $2;}
                                                 ;
+dataType                                        : INT                                   {$$ = $1;}
+                                                | FLOAT                                 {$$ = $1;}
+                                                | STRING                                {$$ = $1;}
+                                                | BOOL                                  {$$ = $1;}
+                                                | VOID                                  {$$ = $1;}
+                                                ;
 
 ifCondition                                     : IF '(' exp ')' '{' statments '}'      {;}
                                                 | IF '(' exp ')' '{' statments '}' ELSE '{' statments '}' {;}
@@ -147,6 +154,8 @@ ifCondition                                     : IF '(' exp ')' '{' statments '
 whileLoop                                       : WHILE '(' exp ')' '{' statments '}'   {;}
                                                 ;
 forLoop                                         : FOR '(' assignment ';' exp ';' assignment ')' '{' statments '}' {;}
+                                                ;
+repeastUntilLoop                                : REPEAT '{' statments '}' UNTIL '(' exp ')' ';' {;}
                                                 ;
 %%                     
 /* C code */
