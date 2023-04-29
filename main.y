@@ -73,7 +73,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 //======================
 // this defines the type of the non-terminals
 %type <TYPE_VOID> statments statment controlStatment 
-%type <TYPE_VOID> ifCondition 
+%type <TYPE_VOID> ifCondition whileLoop forLoop
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
 %type <TYPE_LETTER> assignment 
@@ -86,6 +86,8 @@ statments	                                : statment ';'
                                                 | statments controlStatment
                                                 ;
 controlStatment                                 : ifCondition
+                                                | whileLoop
+                                                | forLoop
                                                 /* | whileCondition
                                                 | forCondition
                                                 | switchCondition
@@ -141,6 +143,10 @@ ifCondition                                     : IF '(' exp ')' '{' statments '
                                                 | IF '(' exp ')' '{' statments '}' ELSE '{' statments '}' {;}
                                                 | IF '(' exp ')' '{' statments '}' ELIF '(' exp ')' '{' statments '}' {;}
                                                 | IF '(' exp ')' '{' statments '}' ELIF '(' exp ')' '{' statments '}' ELSE '{' statments '}' {;}
+                                                ;
+whileLoop                                       : WHILE '(' exp ')' '{' statments '}'   {;}
+                                                ;
+forLoop                                         : FOR '(' exp ';' exp ';' exp ')' '{' statments '}' {printf("for loop\n");}
                                                 ;
 %%                     
 /* C code */
