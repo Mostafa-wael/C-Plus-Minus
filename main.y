@@ -159,13 +159,13 @@ forLoop                                         : FOR '(' assignment ';' exp ';'
                                                 ;
 repeastUntilLoop                                : REPEAT '{' statments '}' UNTIL '(' exp ')' ';' {;}
                                                 ;
-case                                            : CASE exp ':' '{' statments '}'                {;}
-                                                | DEFAULT ':' '{' statments '}'                 {;}
+case                                            : CASE exp ':' statments                         {;}
+                                                | DEFAULT ':' statments                          {;}
                                                 ;
 caseList                                        : caseList case
                                                 | case
                                                 ;
-switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'   {;}
+switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'            {;}
                                                 ;
 %%                     
 /* C code */

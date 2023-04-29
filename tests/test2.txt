@@ -125,42 +125,40 @@ repeat {
 ////////////////////////////////
 print "switch case loops";
 switch (a) {
-    default: {
+    default:
         print "default";
         break;
-    }
 }
 switch (a) {
-    case 1: {
+    case 1: 
         print "1";
         break;
-    }
-    case 2: {
+    
+    case 2: 
         print "2";
         break;
-    }
-    case 3: {
+    
+    case 3: 
         print "3";
         break;
-    }
 }
+
 switch (a) {
-    case 1: {
+    case 1: 
         print "1";
         break;
-    }
-    case 2: {
+    
+    case 2: 
         print "2";
         break;
-    }
-    case 3: {
+    
+    case 3: 
         print "3";
         break;
-    }
-    default: {
+    
+    default: 
         print "default";
         break;
-    }
 }
 
 exit;
