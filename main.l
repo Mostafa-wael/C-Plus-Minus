@@ -32,6 +32,7 @@ FALSE [fF]alse | 0 | [nN]o
 
 
 "print"				               {return PRINT;} /*print Command*/
+"assert"                           {return ASSERT;} /*assert Command*/
 "exit"				               {return EXIT;} /*exit Command*/
 
 "if"				               {return IF;} /*if Command*/

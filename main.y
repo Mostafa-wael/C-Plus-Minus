@@ -17,7 +17,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %}
 /* Yacc definitions */
 //==============================================================================
-%start statment // defines the starting symbol
+%start program // defines the starting symbol
 
 // Symbols Types(in C)
 //======================
@@ -43,6 +43,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 // Control Commands
 //======================
 %token PRINT
+%token ASSERT
 %token EXIT
 
 // Control Flow
@@ -57,20 +58,20 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 /* Order is imporetant here */
 // this defines the associativity of the operators 
 %right '=' 
-%right '!' '~' 
-%left  AND OR NOT 
+%left  AND OR  
+%left  '|' 
+%left  '^' 
+%left  '&' 
 %left EQ NEQ 
 %left GT GEQ LT LEQ 
 %left SHR SHL
 %left  '+' '-' 
+%right NOT '!' '~' 
 %left  '*' '/' '%' 
-%left  '|' 
-%left  '^' 
-%left  '&' 
 // Return Types
 //======================
 // this defines the type of the non-terminals
-%type <TYPE_INT> statment 
+%type <TYPE_INT> program statment 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
 %type <TYPE_LETTER> assignment 
@@ -78,6 +79,9 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
+program	                                        : statment ';'
+			                        | program statment ';'
+                                                ;
 
 statment                                        : assignment ';'		        {;}
                                                 | EXIT ';'		                {exit(EXIT_SUCCESS);}
@@ -90,9 +94,7 @@ statment                                        : assignment ';'		        {;}
                                                 | statment  PRINT string ';'	        {printf("%s\n", $3);}
                                                 | statment  PRINT number ';'	        {printf("%d\n", $3);}
                                                 | statment  PRINT float_number ';'	{printf("%f\n", $3);}
-                                                | statment  EXIT ';'	                {exit(EXIT_SUCCESS);}
-                                                ;
-
+                                                | statment  EXIT ';'	                {exit(EXIT_SUCCESS);}                                                ;
 assignment                                      : identifier '=' exp                    { updateSymbolVal($1,$3); }
 			                        ;
 exp    	                                        : term                                 {$$ = $1;}
