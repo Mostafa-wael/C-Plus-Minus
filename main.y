@@ -17,7 +17,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %}
 /* Yacc definitions */
 //==============================================================================
-%start program // defines the starting symbol
+%start statments // defines the starting symbol
 
 // Symbols Types(in C)
 //======================
@@ -28,6 +28,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
         float TYPE_FLOAT;
         char* TYPE_STR; 
         int TYPE_BOOL;
+        void* TYPE_VOID;
         char TYPE_LETTER
 ;}
 /* Tokens */// this will be added to the header file y.tab.h, hence the lexical analyzer will know about them
@@ -71,58 +72,51 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 // Return Types
 //======================
 // this defines the type of the non-terminals
-%type <TYPE_INT> program statment 
+%type <TYPE_VOID> statments statment 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
 %type <TYPE_LETTER> assignment 
-
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
-program	                                        : statment ';'
-			                        | program statment ';'
+statments	                                : statment ';'
+			                        | statments statment ';'
                                                 ;
 
-statment                                        : assignment ';'		        {;}
-                                                | EXIT ';'		                {exit(EXIT_SUCCESS);}
-                                                | PRINT exp ';'			        {printf("%d\n", $2);}
-                                                | PRINT string ';'	                {printf("%s\n", $2);}
-                                                | PRINT number ';'	                {printf("%d\n", $2);}
-                                                | PRINT float_number ';'	        {printf("%f\n", $2);}
-                                                | statment  assignment ';'	        {;}
-                                                | statment  PRINT exp ';'	        {printf("%d\n", $3);}
-                                                | statment  PRINT string ';'	        {printf("%s\n", $3);}
-                                                | statment  PRINT number ';'	        {printf("%d\n", $3);}
-                                                | statment  PRINT float_number ';'	{printf("%f\n", $3);}
-                                                | statment  EXIT ';'	                {exit(EXIT_SUCCESS);}                                                ;
+statment                                        : assignment 		                {;}
+                                                | EXIT 		                        {exit(EXIT_SUCCESS);}
+                                                | PRINT exp 		                {printf("%d\n", $2);}
+                                                | PRINT string 	                        {printf("%s\n", $2);}
+                                                /* | PRINT float_number 	                {printf("%f\n", $2);} */
+                                                ;
 assignment                                      : identifier '=' exp                    { updateSymbolVal($1,$3); }
 			                        ;
-exp    	                                        : term                                 {$$ = $1;}
-                                                | '-' term                             {$$ = -$2;}
-                                                | '~' term                             {$$ = ~$2;}
-                                                | NOT term                             {$$ = !$2;}
+exp    	                                        : term                                  {$$ = $1;}
+                                                | '-' term                              {$$ = -$2;}
+                                                | '~' term                              {$$ = ~$2;}
+                                                | NOT term                              {$$ = !$2;}
 
-                                                | exp '+' exp                          {$$ = $1 + $3;}
-                                                | exp '-' exp                          {$$ = $1 - $3;}
-                                                | exp '*' exp                          {$$ = $1 * $3;}
-                                                | exp '/' exp                          {$$ = $1 / $3;}
-                                                | exp '%' exp                          {$$ = $1 % $3;}
+                                                | exp '+' exp                           {$$ = $1 + $3;}
+                                                | exp '-' exp                           {$$ = $1 - $3;}
+                                                | exp '*' exp                           {$$ = $1 * $3;}
+                                                | exp '/' exp                           {$$ = $1 / $3;}
+                                                | exp '%' exp                           {$$ = $1 % $3;}
 
-                                                | exp '|' exp                          {$$ = $1 | $3;}
-                                                | exp '&' exp                          {$$ = $1 & $3;}
-                                                | exp '^' exp                          {$$ = $1 ^ $3;}
-                                                | exp SHL exp                          {$$ = $1 << $3;}
-                                                | exp SHR exp                          {$$ = $1 >> $3;}
+                                                | exp '|' exp                           {$$ = $1 | $3;}
+                                                | exp '&' exp                           {$$ = $1 & $3;}
+                                                | exp '^' exp                           {$$ = $1 ^ $3;}
+                                                | exp SHL exp                           {$$ = $1 << $3;}
+                                                | exp SHR exp                           {$$ = $1 >> $3;}
 
-                                                | exp EQ exp                           {$$ = $1 == $3;}
-                                                | exp NEQ exp                          {$$ = $1 != $3;}
-                                                | exp GT exp                           {$$ = $1 > $3;}
-                                                | exp GEQ exp                          {$$ = $1 >= $3;}
-                                                | exp LT exp                           {$$ = $1 < $3;}
-                                                | exp LEQ exp                          {$$ = $1 <= $3;}
+                                                | exp EQ exp                            {$$ = $1 == $3;}
+                                                | exp NEQ exp                           {$$ = $1 != $3;}
+                                                | exp GT exp                            {$$ = $1 > $3;}
+                                                | exp GEQ exp                           {$$ = $1 >= $3;}
+                                                | exp LT exp                            {$$ = $1 < $3;}
+                                                | exp LEQ exp                           {$$ = $1 <= $3;}
 
-                                                | exp AND exp                          {$$ = $1 && $3;}
-                                                | exp OR exp                           {$$ = $1 || $3;}
+                                                | exp AND exp                           {$$ = $1 && $3;}
+                                                | exp OR exp                            {$$ = $1 || $3;}
                                                 ;
 term   	                                        : number                                {$$ = $1;}
                                                 | float_number                          {$$ = $1;}
