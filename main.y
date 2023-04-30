@@ -34,16 +34,6 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
         char TYPE_LETTER
 ;}
 /* Tokens */// this will be added to the header file y.tab.h, hence the lexical analyzer will know about them
-// Data Types
-//======================
-%token <TYPE_INT> NUMBER // this is a token called NUMBER returned by the lexical analyzer with as TYPE_INT
-%token <TYPE_FLOAT> FLOAT_NUMBER // this is a token called FLOAT_NUMBER returned by the lexical analyzer with as TYPE_FLOAT
-%token <TYPE_LETTER> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_LETTER
-%token <TYPE_STR> STRING // this is a token called STRING returned by the lexical analyzer with as TYPE_STR
-%token <TYPE_BOOL> TRUE 
-%token <TYPE_BOOL> FALSE 
-%token <TYPE_DATA_TYPE> INT_DATA_TYPE FLOAT_DATA_TYPE STRING_DATA_TYPE BOOL_DATA_TYPE VOID_DATA_TYPE
-%token <TYPE_DATA_IDENTIFIER> CONST
 
 // Control Commands
 //======================
@@ -56,7 +46,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %token IF ELSE ELIF 
 %token SWITCH CASE DEFAULT 
 %token WHILE FOR BREAK CONTINUE REPEAT UNTIL
-%token RETURN
+%token RETURN ENUM
 
 // Operators
 //======================
@@ -74,6 +64,19 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %right NOT '!' '~' 
 %left  '*' '/' '%' 
 
+// Declarations
+//======================
+%token <TYPE_DATA_IDENTIFIER> CONST
+%token <TYPE_DATA_TYPE> INT_DATA_TYPE FLOAT_DATA_TYPE STRING_DATA_TYPE BOOL_DATA_TYPE VOID_DATA_TYPE
+%token <TYPE_INT> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_LETTER
+
+// Data Types
+//======================
+%token <TYPE_INT> NUMBER // this is a token called NUMBER returned by the lexical analyzer with as TYPE_INT
+%token <TYPE_FLOAT> FLOAT_NUMBER // this is a token called FLOAT_NUMBER returned by the lexical analyzer with as TYPE_FLOAT
+%token <TYPE_STR> STRING // this is a token called STRING returned by the lexical analyzer with as TYPE_STR
+%token <TYPE_BOOL> TRUE 
+%token <TYPE_BOOL> FALSE 
 // Return Types
 //======================
 // this defines the type of the non-terminals
@@ -88,125 +91,136 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
-program                                         : statments                             {;}
-                                                | functionDef                      {;}
-                                                | program statments                     {;}
-                                                | program functionDef              {;}
-                                                ;
-statments	                                : statment ';'                          {;}
-                                                | codeBlock                             {;}
-                                                | controlStatment                       {;}
-                                                | statments codeBlock                   {;}
-			                        | statments statment ';'                {;}
-                                                | statments controlStatment             {;}
-                                                ;
-codeBlock                                       : '{' statments '}'                     {;}
-                                                | '{' '}'                               {;}
-                                                ;
-controlStatment                                 : ifCondition
-                                                | whileLoop
-                                                | forLoop
-                                                | repeastUntilLoop
-                                                | switchCaseLoop
-                                                ;      
-                                                ; 
-statment                                        : assignment 		                {;}
-                                                | functionCall                          {;}
-                                                | declaration 		                {;}
-                                                | EXIT 		                        {exit(EXIT_SUCCESS);}
-                                                | BREAK 		                {;}
-                                                | CONTINUE 		                {;}
-                                                | RETURN 		                {;}
-                                                | RETURN exp 		                {;}
-                                                | PRINT exp 		                {printf("%d\n", $2);}
-                                                | PRINT STRING 	                        {printf("%s\n", $2);}
-                                                /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
-                                                ;
-declaration                                     : dataType IDENTIFIER 		        {;}
-                                                | dataType assignment	                {;}
-                                                | dataIdentifier declaration 	        {;}
-                                                ;
-assignment                                      : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3);}
-                                                | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
-                                                ;
-			                        ;
-exp    	                                        : term                                  {$$ = $1;}
-                                                | '-' term                              {$$ = -$2;}
-                                                | '~' term                              {$$ = ~$2;}
-                                                | NOT term                              {$$ = !$2;}
+program                 : statments                             {;}
+                        | functionDef                           {;}
+                        | program statments                     {;}
+                        | program functionDef                   {;}
+                        ;
+statments	        : statment ';'                          {;}
+                        | codeBlock                             {;}
+                        | controlStatment                       {;}
+                        | statments codeBlock                   {;}
+                        | statments statment ';'                {;}
+                        | statments controlStatment             {;}
+                        ;
+codeBlock               : '{' statments '}'                     {;}
+                        | '{' '}'                               {;}
+                        ;
+controlStatment         : ifCondition
+                        | whileLoop
+                        | forLoop
+                        | repeastUntilLoop
+                        | switchCaseLoop
+                        ;      
+                                                 
+statment                : assignment 		                {;}
+                        | functionCall                          {;}
+                        | declaration 		                {;}
+                        | EXIT 		                        {exit(EXIT_SUCCESS);}
+                        | BREAK 		                {;}
+                        | CONTINUE 		                {;}
+                        | RETURN 		                {;}
+                        | RETURN exp 		                {;}
+                        | PRINT exp 		                {printf("%d\n", $2);}
+                        | PRINT STRING 	                        {printf("%s\n", $2);}
+                        /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
+                        ;
+declaration             : dataType IDENTIFIER 		        {;}
+                        | dataType assignment	                {;}
+                        | dataIdentifier declaration 	        {;}
+                        ;
+assignment              : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3);}
+                        | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
+                        | enumDeclaration
+                        | enumDef
+                        ;
+exp    	                : term                                  {$$ = $1;}
+                        | '-' term                              {$$ = -$2;}
+                        | '~' term                              {$$ = ~$2;}
+                        | NOT term                              {$$ = !$2;}
 
-                                                | exp '+' exp                           {$$ = $1 + $3;}
-                                                | exp '-' exp                           {$$ = $1 - $3;}
-                                                | exp '*' exp                           {$$ = $1 * $3;}
-                                                | exp '/' exp                           {$$ = $1 / $3;}
-                                                | exp '%' exp                           {$$ = $1 % $3;}
+                        | exp '+' exp                           {$$ = $1 + $3;}
+                        | exp '-' exp                           {$$ = $1 - $3;}
+                        | exp '*' exp                           {$$ = $1 * $3;}
+                        | exp '/' exp                           {$$ = $1 / $3;}
+                        | exp '%' exp                           {$$ = $1 % $3;}
 
-                                                | exp '|' exp                           {$$ = $1 | $3;}
-                                                | exp '&' exp                           {$$ = $1 & $3;}
-                                                | exp '^' exp                           {$$ = $1 ^ $3;}
-                                                | exp SHL exp                           {$$ = $1 << $3;}
-                                                | exp SHR exp                           {$$ = $1 >> $3;}
+                        | exp '|' exp                           {$$ = $1 | $3;}
+                        | exp '&' exp                           {$$ = $1 & $3;}
+                        | exp '^' exp                           {$$ = $1 ^ $3;}
+                        | exp SHL exp                           {$$ = $1 << $3;}
+                        | exp SHR exp                           {$$ = $1 >> $3;}
 
-                                                | exp EQ exp                            {$$ = $1 == $3;}
-                                                | exp NEQ exp                           {$$ = $1 != $3;}
-                                                | exp GT exp                            {$$ = $1 > $3;}
-                                                | exp GEQ exp                           {$$ = $1 >= $3;}
-                                                | exp LT exp                            {$$ = $1 < $3;}
-                                                | exp LEQ exp                           {$$ = $1 <= $3;}
+                        | exp EQ exp                            {$$ = $1 == $3;}
+                        | exp NEQ exp                           {$$ = $1 != $3;}
+                        | exp GT exp                            {$$ = $1 > $3;}
+                        | exp GEQ exp                           {$$ = $1 >= $3;}
+                        | exp LT exp                            {$$ = $1 < $3;}
+                        | exp LEQ exp                           {$$ = $1 <= $3;}
 
-                                                | exp AND exp                           {$$ = $1 && $3;}
-                                                | exp OR exp                            {$$ = $1 || $3;}
-                                                ;
-term   	                                        : NUMBER                                {$$ = $1;}
-                                                | FLOAT_NUMBER                          {$$ = $1;}
-                                                | TRUE                                  {$$ = 1;}
-                                                | FALSE                                 {$$ = 0;}
-                                                | IDENTIFIER	                        {$$ = symbolVal($1);} 
-                                                | '(' exp ')'                           {$$ = $2;}
-                                                ;
-dataIdentifier                                  : CONST                                         {;}
-                                                ;
-dataType                                        : INT_DATA_TYPE                                 {$$ = $1;}
-                                                | FLOAT_DATA_TYPE                               {$$ = $1;}
-                                                | STRING_DATA_TYPE                              {$$ = $1;}
-                                                | BOOL_DATA_TYPE                                {$$ = $1;}
-                                                | VOID_DATA_TYPE                                {$$ = $1;}
-                                                ;
+                        | exp AND exp                           {$$ = $1 && $3;}
+                        | exp OR exp                            {$$ = $1 || $3;}
+                        ;
+term   	                : NUMBER                                {$$ = $1;}
+                        | FLOAT_NUMBER                          {$$ = $1;}
+                        | TRUE                                  {$$ = 1;}
+                        | FALSE                                 {$$ = 0;}
+                        | IDENTIFIER	                        {$$ = symbolVal($1);} 
+                        | '(' exp ')'                           {$$ = $2;}
+                        ;
+dataIdentifier          : CONST                                         {;}
+                        ;
+dataType                : INT_DATA_TYPE                                 {$$ = $1;}
+                        | FLOAT_DATA_TYPE                               {$$ = $1;}
+                        | STRING_DATA_TYPE                              {$$ = $1;}
+                        | BOOL_DATA_TYPE                                {$$ = $1;}
+                        | VOID_DATA_TYPE                                {$$ = $1;}
+                        ;
 
-ifCondition                                     : IF '(' exp ')' codeBlock                      {;}
-                                                | IF '(' exp ')' codeBlock ELSE codeBlock       {;}
-                                                | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock {;}
-                                                | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock ELSE codeBlock {;}
-                                                ;
-whileLoop                                       : WHILE '(' exp ')' codeBlock                   {;}
-                                                ;
-forLoop                                         : FOR '(' assignment ';' exp ';' assignment ')' codeBlock {;}
-                                                ;
-repeastUntilLoop                                : REPEAT codeBlock UNTIL '(' exp ')' ';'        {;}
-                                                ;
+ifCondition             : IF '(' exp ')' codeBlock                      {;}
+                        | IF '(' exp ')' codeBlock ELSE codeBlock       {;}
+                        | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock {;}
+                        | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock ELSE codeBlock {;}
+                        ;
+whileLoop               : WHILE '(' exp ')' codeBlock                   {;}
+                        ;
+forLoop                 : FOR '(' assignment ';' exp ';' assignment ')' codeBlock {;}
+                        ;
+repeastUntilLoop        : REPEAT codeBlock UNTIL '(' exp ')' ';'        {;}
+                        ;
 
-case                                            : CASE exp ':' statments                        {;}
-                                                | DEFAULT ':' statments                         {;}
-                                                ;
-caseList                                        : caseList case
-                                                | case
-                                                ;
-switchCaseLoop                                  : SWITCH '(' exp ')' '{' caseList '}'           {;}
-                                                ;
+case                    : CASE exp ':' statments                        {;}
+                        | DEFAULT ':' statments                         {;}
+                        ;
+caseList                : caseList case
+                        | case
+                        ;
+switchCaseLoop          : SWITCH '(' exp ')' '{' caseList '}'           {;}
+                        ;
                                   
-functionArgs                                    : dataType IDENTIFIER                           {;}
-                                                | dataType IDENTIFIER ',' functionArgs          {;}
-                                                ;
-functionParms                                   : term                                          {;}
-                                                | term ',' functionParms                        {;}
-                                                ;
-functionDef                                     : dataType IDENTIFIER '(' functionArgs ')' codeBlock {;}
-                                                | dataType IDENTIFIER '(' ')' codeBlock {printf("functionDef\n");}
-                                                ;
-functionCall                                    : IDENTIFIER '(' functionParms ')'              {;}
-                                                | IDENTIFIER '(' ')'                            {;}
-                                                ;
+functionArgs            : dataType IDENTIFIER                           {;}
+                        | dataType IDENTIFIER ',' functionArgs          {;}
+                        ;
+functionParms           : term                                          {;}
+                        | term ',' functionParms                        {;}
+                        ;
+functionDef             : dataType IDENTIFIER '(' functionArgs ')' codeBlock {;}
+                        | dataType IDENTIFIER '(' ')' codeBlock         {printf("functionDef\n");}
+                        ;
+functionCall            : IDENTIFIER '(' functionParms ')'              {;}
+                        | IDENTIFIER '(' ')'                            {;}
+                        ;
 
+enumDef	                : ENUM IDENTIFIER '{' enumBody '}'              {;}
+                        ;
+enumBody		: IDENTIFIER                                    {;}
+                        | IDENTIFIER '=' exp                            {;}
+                        | enumBody ',' IDENTIFIER                       {;}
+                        | enumBody ',' IDENTIFIER  '=' exp              {;}
+                        ;
+enumDeclaration         : IDENTIFIER IDENTIFIER                         {;}
+                        | IDENTIFIER IDENTIFIER '=' exp                 {;}
+                        ;
 
 %%                     
 /* C code */

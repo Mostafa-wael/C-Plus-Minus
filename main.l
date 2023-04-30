@@ -10,7 +10,7 @@ int line=1;
 /* RegEx */
 /*====================*/
 DIGIT [0-9]
-ALPHAB [a-z]
+ALPHAB [a-zA-Z]
 ALPHANUM [0-9a-zA-Z]
 SPACES [ \r\t]
 NEW_LINE \n
@@ -24,7 +24,7 @@ FALSE [fF]alse | 0 | [nN]o
 /* first store the value of the token, and the second return its type */
 /* e.g.: If you saw the string "print", return the token "print" */
 %%
-{ALPHAB}                 	       {yylval.TYPE_LETTER = yytext[0]; return IDENTIFIER;}
+{ALPHAB}                           {yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
 \-?{DIGIT}+                        {yylval.TYPE_INT = atoi(yytext); return NUMBER;}
 \-?{DIGIT}*"."{DIGIT}+             {yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
 \"[^\"]*\" 			               {yylval.TYPE_STR = strdup(yytext); return STRING; }
@@ -58,6 +58,7 @@ FALSE [fF]alse | 0 | [nN]o
 "continue"				           {return CONTINUE;} /*continue Command*/
 
 "return"				           {return RETURN;} /*return Command*/
+"enum"                             {return ENUM;} /*enum Command*/
 
 
 "<<"                                {return SHL;} /*SHL Command*/
