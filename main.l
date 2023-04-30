@@ -13,7 +13,19 @@ void log(const char* type, const char* value)
 {
     if(SHOW_LOGS)
     {
-        printf("Lex(%d) %s: %s\n", line, type, value);
+        if (type == "int value")
+        {
+            printf("\033[1;30mLex(%d) %s: %d\033[0m\n", line, type, atoi(value));
+            return;
+        }
+        else if (type == "float value")
+        {
+            printf("\033[1;30mLex(%d) %s: %f\033[0m\n", line, type, atof(value));
+            return;
+        }
+        // printf("Lex(%d) %s: %s\n", line, type, value);
+        printf("\033[1;30mLex(%d) %s: %s\033[0m\n", line, type, value);
+
     }
 }
 %}
@@ -93,8 +105,8 @@ FALSE [fF]alse | 0 | [nN]o
 [fF]alse | 0 | [nN]o               {log("value", "false"); yylval.TYPE_BOOL=0; return FALSE_VAL;} /*false Command*/
 
 [a-zA-Z_][a-zA-Z0-9_]*             {log("identifier", yytext); yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
-\-?{DIGIT}+                        {if(SHOW_LOGS){printf("Lex(%d) int value: %d\n", line, atoi(yytext));}yylval.TYPE_INT = atoi(yytext); return NUMBER;}
-\-?{DIGIT}*"."{DIGIT}+             {if(SHOW_LOGS){printf("Lex(%d) float value: %f\n", line, atof(yytext));}yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
+\-?{DIGIT}+                        {log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}
+\-?{DIGIT}*"."{DIGIT}+             {log("float value", yytext);yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
 \"[^\"]*\" 			               {log("string value", yytext);yylval.TYPE_STR = strdup(yytext); return STRING; }
 
 {NEW_LINE}                          line++; /*Ignore New Lines*/

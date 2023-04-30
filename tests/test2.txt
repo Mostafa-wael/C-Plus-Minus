@@ -1,207 +1,208 @@
 
-print "declaration";
+print("declaration");
 const int a = 5;
 float b = 5.5;
 bool c = 1;
 string d = "hello";
 void e = 0;
-print c; // 1
-print d; // hello
+print(c); // 1
+print(d); // hello
 {
     const int a = 10;
-    print a;
+    print(a);
 }
 ////////////////////////////////
-print "logic";
+print("logic");
 a = 1;
 b = 0;
-print a; // 1
-print b; // 0
-print a == b; // 0
-print a != b; // 1
-print a < b; // 0
-print a > b; // 1
-print a <= b; // 0
-print a >= b; // 1
+print(a); // 1
+print(b); // 0
+print(a == b); // 0
+print(a != b); // 1
+print(a < b); // 0
+print(a > b); // 1
+print(a <= b); // 0
+print(a >= b); // 1
 ////////////////////////////////
-print "More logic";
-print !a; // 0
-print a && b; // 0
-print a || b; // 1
-print (a && a && b) || a; // 1
+print("More logic");
+print(!a); // 0
+print(a && b); // 0
+print(a || b); // 1
+print((a && a && b) || a); // 1
 ////////////////////////////////
-print "assignment";
+print("assignment");
 a = 10; // 1010
 b = 10; // 1010
 c = 2; // 0010
 d = a * b + c; 
-print a == 10;
-print b == 10;
-print c == 2;
-print d == 102; // 102
+print(a == 10);
+print(b == 10);
+print(c == 2);
+print(d == 102); // 102
 ////////////////////////////////
-print "arithmetic";
-print -a == -10; // -10
-// print -3-4;
-print a+b == 20; // 20
-print a-b == 0; // 0
-print a/b == 1; // 1
-print a%c == 0; // 0
-print a * b - b + a / b == 91; // 91
+print("arithmetic");
+print(-a == -10); // -10
+// print(-3-4);
+print(a+b == 20); // 20
+print(a-b == 0); // 0
+print(a/b == 1); // 1
+print(a%c == 0); // 0
+print(a * b - b + a / b == 91); // 91
 ////////////////////////////////
-print "bitwise";
-print (a | c)  == 10; // 1010 | 0010 = 1010 = 10
-print (a & c)  == 2; // 1010 & 0010 = 0010 = 2
-print (a ^ c)  == 8; // 1010 ^ 0010 = 1000 = 8
-print (a << c)  == 40; // 1010 << 0010 = 101000 = 40
-print (a >> c) == 2; // 1010 >> 0010 = 10 = 2
-print (~a) == -11; // -11
-print (a<<c)>>c == 10; // 10
+print("bitwise");
+print((a | c)  == 10); // 1010 | 0010 = 1010 = 10
+print((a & c)  == 2); // 1010 & 0010 = 0010 = 2
+print((a ^ c)  == 8); // 1010 ^ 0010 = 1000 = 8
+print((a << c)  == 40); // 1010 << 0010 = 101000 = 40
+print((a >> c) == 2); // 1010 >> 0010 = 10 = 2
+print((~a) == -11); // -11
+print((a<<c)>>c == 10); // 10
 ////////////////////////////////
-print "conditions";
+print("conditions");
 if (a == 10) {
-    print "if";
-    print "another if";
+    print("if");
+    print("another if");
 }
 elif (a == 11) {
-    print "elif";
-    print "another elif";
+    print("elif");
+    print("another elif");
 }
 else {
-    print "else";
-    print "another else";
+    print("else");
+    print("another else");
     if (a == 10) {
-        print "if";
-        print "another if";
+        print("if");
+        print("another if");
     }
     else {
-        print "else";
-        print "another else";
+        print("else");
+        print("another else");
     }
 }
 if (a == 10) {
-    print "if";
-    print "another if";
+    print("if");
+    print("another if");
 }
 elif(a == 11) {
-    print "else";
-    print "another else";
+    print("else");
+    print("another else");
 }
 ////////////////////////////////
-print "while loops";
+print("while loops");
 a = 0;
 while (a < 20) {
-    print a;
+    print(a);
     a = a + 1;
 }
-print a;
+print(a);
 while (a < 20) {
     if (a == 10) {
-        print a;
+        print(a);
     }
     a = a + 1;
 }
-print a;
+print(a);
 ////////////////////////////////
-print "for loops";
+print("for loops");
 for (a=2 ; a<10; a = a+1 ) {
-    print a;
+    print(a);
 }
 for (a=2 ; a<10; a= a+1 ) {
-    print a;
+    print(a);
     b = a;
     while (b < 10) {
         if (b == 5) {
-            print "hi";
-            print b;
+            print("hi");
+            print(b);
         }
         
         b = b + 1;
     }
 }
 ////////////////////////////////
-print "repeat loops";
+print("repeat loops");
 a = 0;
 repeat {
-    print a;
+    print(a);
     a = a + 1;
-    print a;
+    print(a);
 } until (a == 1);
 repeat {
-    print a;
+    print(a);
     a = a + 1;
     if (a == 1) {
-        print a;
+        print(a);
     }
 } until (a == 1);
 ////////////////////////////////
-print "switch case loops";
+print("switch case loops");
 switch (a) {
     default:
-        print "default";
+        print("default");
         break;
 }
 switch (a) {
     case 1: 
-        print "1";
+        print("1");
         break;
     
     case 2: 
-        print "2";
+        print("2");
         break;
     
     case 3: 
-        print "3";
+        print("3");
         break;
 }
 
 switch (a) {
     case 1: 
-        print "1";
+        print("1");
         break;
     
     case 2: 
-        print "2";
+        print("2");
         break;
     
     case 3: 
-        print "3";
+        print("3");
         break;
     
     default: 
-        print "default";
+        print("default");
         break;
 }
 ////////////////////////////////
-print "functions";
+print("functions");
 a+1;
 x(1, 2);
-print "x";
+print("x");
 int y (){
-    print "y";
+    print("y");
     return 1;
 }
 int x(int a, int b) {
-    print "add";
+    print("add");
     return a + b;
 }
 a = y();
-print "y done";
+print("y done");
 ////////////////////////////////
-print "enums";
+print("enums");
 enum Color{
     RED=10,
     GREEN,
     BLUE=12,
     RED
 };
-print 0;
+print(0);
 {
     Color c1;
     Color c2=RED;
     Color c3=3+5;
 }
 string a = "hi";
-print true;
+int b = 5;
+print(true);
 
 exit;

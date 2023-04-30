@@ -121,8 +121,8 @@ statment                : assignment 		                {;}
                         | CONTINUE 		                {;}
                         | RETURN 		                {;}
                         | RETURN exp 		                {;}
-                        | PRINT exp 		                {printf("%d\n", $2);}
-                        | PRINT STRING 	                        {printf("%s\n", $2);}
+                        | PRINT '(' exp ')' 		        {printf("%d\n", $3);}
+                        | PRINT '(' STRING ')' 	                {printf("%s\n", $3);}
                         /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
                         ;
 declaration             : dataType IDENTIFIER 		        {;}
