@@ -201,5 +201,6 @@ print 0;
     Color c2=RED;
     Color c3=3+5;
 }
+print 1;
 
 exit;

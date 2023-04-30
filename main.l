@@ -24,12 +24,6 @@ FALSE [fF]alse | 0 | [nN]o
 /* first store the value of the token, and the second return its type */
 /* e.g.: If you saw the string "print", return the token "print" */
 %%
-{ALPHAB}                           {yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
-\-?{DIGIT}+                        {yylval.TYPE_INT = atoi(yytext); return NUMBER;}
-\-?{DIGIT}*"."{DIGIT}+             {yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
-\"[^\"]*\" 			               {yylval.TYPE_STR = strdup(yytext); return STRING; }
-
-
 "print"				               {return PRINT;} /*print Command*/
 "assert"                           {return ASSERT;} /*assert Command*/
 "exit"				               {return EXIT;} /*exit Command*/
@@ -77,6 +71,11 @@ FALSE [fF]alse | 0 | [nN]o
 
 [tT]rue | 1 | [yY]es               {yylval.TYPE_BOOL=1; return TRUE;} /*true Command*/
 [fF]alse | 0 | [nN]o               {yylval.TYPE_BOOL=0; return FALSE;} /*false Command*/
+
+[a-zA-Z_][a-zA-Z0-9_]*             {yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
+\-?{DIGIT}+                        {yylval.TYPE_INT = atoi(yytext); return NUMBER;}
+\-?{DIGIT}*"."{DIGIT}+             {yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
+\"[^\"]*\" 			               {yylval.TYPE_STR = strdup(yytext); return STRING; }
 
 {NEW_LINE}                          line++; /*Ignore New Lines*/
 {SPACES}                            ; /*Ignore White Spaces*/
