@@ -11,10 +11,24 @@ build: lex.yy.c y.tab.c
 run: build
 	./main
 
-test1: build
-	./main < ./tests/test1.txt
-test2: build
-	./main < ./tests/test2.txt	
+decleration: build
+	./main < ./tests/decleration.c
+operations: build
+	./main < ./tests/operations.c
+conditions: build
+	./main < ./tests/conditions.c
+loops: build
+	./main < ./tests/loops.c
+functions: build
+	./main < ./tests/functions.c
+enum: build
+	./main < ./tests/enum.c
+mixed: build
+	./main < ./tests/mixed.c
 
+test: decleration operations conditions loops functions enum mixed
+	echo "All tests passed"
+
+	
 clean: 
 	rm -rf lex.yy.c y.tab.c y.tab.h main main.dSYM

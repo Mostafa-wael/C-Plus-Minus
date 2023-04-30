@@ -1,7 +1,7 @@
 
 print("declaration");
 const int a = 5;
-b = -5;
+int b = -5;
 print (b);
 print (-b);
 float b = 5.5;
@@ -17,8 +17,8 @@ print(d); // hello
 }
 ////////////////////////////////
 print("logic");
-a = 1;
-b = 0;
+bool a = 1;
+bool b = 0;
 print(a); // 1
 print(b); // 0
 print(a == b); // 0
@@ -35,10 +35,10 @@ print(a || b); // 1
 print((a && a && b) || a); // 1
 ////////////////////////////////
 print("assignment");
-a = 10; // 1010
-b = 10; // 1010
-c = 2; // 0010
-d = a * b + c; 
+int a = 10; // 1010
+int b = 10; // 1010
+int c = 2; // 0010
+int d = a * b + c; 
 print(a == 10);
 print(b == 10);
 print(c == 2);
@@ -93,7 +93,7 @@ elif(a == 11) {
 }
 ////////////////////////////////
 print("while loops");
-a = 0;
+int a = 0;
 while (a < 20) {
     print(a);
     a = a + 1;
