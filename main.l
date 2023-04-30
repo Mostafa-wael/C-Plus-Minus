@@ -37,10 +37,10 @@ ALPHANUM [0-9a-zA-Z]
 SPACES [ \r\t]
 NEW_LINE \n
 INLINE_COMMENT \/\/.*
+/* TODO: MULTILINE_COMMENT is not working */
 MULTILINE_COMMENT \/\*.*\*\/
 arithmticOps        [/+*%-]
 bitwiseOps          [&^~|]
-
 endOfStatement      [;]
 punctuators         [()={}:,]
 TRUE [tT]rue | 1 | [yY]es
@@ -113,7 +113,7 @@ FALSE [fF]alse | 0 | [nN]o
 {SPACES}                            ; /*Ignore White Spaces*/
 {INLINE_COMMENT}                    {log("inline comment", yytext);} /*Ignore Comments*/
 {MULTILINE_COMMENT}                 {log("multiline comment", yytext);} /*Ignore Comments*/
-.                                   {ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
+.                                   {log("unexpected character", yytext); ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
 %%
 // C code
 // The wrapper function yywrap() 

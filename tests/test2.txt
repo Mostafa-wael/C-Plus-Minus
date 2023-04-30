@@ -1,7 +1,11 @@
 
 print("declaration");
 const int a = 5;
+b = -5;
+print (b);
+print (-b);
 float b = 5.5;
+print (b);
 bool c = 1;
 string d = "hello";
 void e = 0;
@@ -204,5 +208,4 @@ print(0);
 string a = "hi";
 int b = 5;
 print(true);
-
 exit;
