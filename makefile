@@ -1,6 +1,6 @@
 y.tab.c: main.y
-	yacc -d  main.y
-	# yacc -d -Wcounterexamples main.y
+	# yacc -d  main.y
+	yacc -d -Wcounterexamples main.y
 
 lex.yy.c: y.tab.c main.l
 	lex main.l

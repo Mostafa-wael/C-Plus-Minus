@@ -93,8 +93,8 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 /* descriptions of expected inputs corresponding actions (in C) */
 program                 : statments                             {;}
                         | functionDef                           {;}
-                        | program statments                     {;}
-                        | program functionDef                   {;}
+                        | statments program                      {;}
+                        | functionDef program                    {;}
                         ;
 statments	        : statment ';'                          {;}
                         | codeBlock                             {;}
@@ -114,7 +114,7 @@ controlStatment         : ifCondition
                         ;      
                                                  
 statment                : assignment 		                {;}
-                        | functionCall                          {;}
+                        | exp                                   {;}
                         | declaration 		                {;}
                         | EXIT 		                        {exit(EXIT_SUCCESS);}
                         | BREAK 		                {;}
@@ -135,6 +135,7 @@ assignment              : IDENTIFIER '=' exp                    {updateSymbolVal
                         | enumDef
                         ;
 exp    	                : term                                  {$$ = $1;}
+                        | functionCall                          {;}
                         | '-' term                              {$$ = -$2;}
                         | '~' term                              {$$ = ~$2;}
                         | NOT term                              {$$ = !$2;}
