@@ -75,8 +75,8 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %token <TYPE_INT> NUMBER // this is a token called NUMBER returned by the lexical analyzer with as TYPE_INT
 %token <TYPE_FLOAT> FLOAT_NUMBER // this is a token called FLOAT_NUMBER returned by the lexical analyzer with as TYPE_FLOAT
 %token <TYPE_STR> STRING // this is a token called STRING returned by the lexical analyzer with as TYPE_STR
-%token <TYPE_BOOL> TRUE 
-%token <TYPE_BOOL> FALSE 
+%token <TYPE_BOOL> TRUE_VAL 
+%token <TYPE_BOOL> FALSE_VAL 
 // Return Types
 //======================
 // this defines the type of the non-terminals
@@ -164,8 +164,8 @@ exp    	                : term                                  {$$ = $1;}
                         ;
 term   	                : NUMBER                                {$$ = $1;}
                         | FLOAT_NUMBER                          {$$ = $1;}
-                        | TRUE                                  {$$ = 1;}
-                        | FALSE                                 {$$ = 0;}
+                        | TRUE_VAL                                  {$$ = 1;}
+                        | FALSE_VAL                                 {$$ = 0;}
                         | IDENTIFIER	                        {$$ = symbolVal($1);} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;

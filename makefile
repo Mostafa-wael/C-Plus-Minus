@@ -6,7 +6,7 @@ lex.yy.c: y.tab.c main.l
 	lex main.l
 
 build: lex.yy.c y.tab.c
-	gcc -g lex.yy.c y.tab.c -o main
+	gcc -g lex.yy.c y.tab.c -o main 
 
 run: build
 	./main
