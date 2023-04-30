@@ -105,8 +105,8 @@ FALSE [fF]alse | 0 | [nN]o
 [fF]alse | 0 | [nN]o               {log("value", "false"); yylval.TYPE_BOOL=0; return FALSE_VAL;} /*false Command*/
 
 [a-zA-Z_][a-zA-Z0-9_]*             {log("identifier", yytext); yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
-\-?{DIGIT}+                        {log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}
-\-?{DIGIT}*"."{DIGIT}+             {log("float value", yytext);yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
+{DIGIT}+                        {log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}
+{DIGIT}*"."{DIGIT}+             {log("float value", yytext);yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
 \"[^\"]*\" 			               {log("string value", yytext);yylval.TYPE_STR = strdup(yytext); return STRING; }
 
 {NEW_LINE}                          line++; /*Ignore New Lines*/
