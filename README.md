@@ -5,14 +5,19 @@ The designed language is a `C` like programming language.
 Sample program:
 
 `print("declaration");`
+
 `const int a = -5;`
+
 `print (a);`
+
 `print (-a);`
 
 `float b = 5.5;`
+
 `print (b);`
 
 `bool c = 1;`
+
 `print(c); // 1`
 
 `string d = "hello";`
@@ -22,10 +27,15 @@ Sample program:
 `print(d); // hello2`
 
 `{`
+
 `    const int a = 10;`
+
 `    print(a);`
+
 `}`
+
 `exit;`
+
 
 ## Steps
 - `yacc -d main.y`: create y.tab.h and y.tab.c
