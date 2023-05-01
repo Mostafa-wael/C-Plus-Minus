@@ -31,7 +31,6 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
         char* TYPE_STR; 
         int TYPE_BOOL;
         void* TYPE_VOID;
-        char TYPE_LETTER
 ;}
 /* Tokens */// this will be added to the header file y.tab.h, hence the lexical analyzer will know about them
 
@@ -68,7 +67,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 //======================
 %token <TYPE_DATA_IDENTIFIER> CONST
 %token <TYPE_DATA_TYPE> INT_DATA_TYPE FLOAT_DATA_TYPE STRING_DATA_TYPE BOOL_DATA_TYPE VOID_DATA_TYPE
-%token <TYPE_INT> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_LETTER
+%token <TYPE_INT> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_INT
 
 // Data Types
 //======================
@@ -85,7 +84,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %type<TYPE_VOID> codeBlock functionArgs functionParams  functionCall 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
-%type <TYPE_LETTER> assignment 
+%type <TYPE_INT> assignment 
 %type <TYPE_DATA_TYPE> dataType declaration
 %type <TYPE_DATA_IDENTIFIER> dataIdentifier
 %%
