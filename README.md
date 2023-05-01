@@ -142,31 +142,31 @@ Sample program:
    <br>
    <li>exp → term | functionCall | - term | '~' term | NOT term | exp '+' exp | exp '-' exp | exp '*' exp | exp '/' exp | exp '%' exp | exp '|' exp | exp '&' exp | exp '^' exp | exp SHL exp | exp SHR exp | exp EQ exp | exp NEQ exp | exp GT exp | exp GEQ exp | exp LT exp | exp LEQ exp | exp AND exp | exp OR exp </li>
    <br>
-   <li>term → </li>
+   <li>term → NUMBER | FLOAT_NUMBER | TRUE_VAL | FALSE_VAL |IDENTIFIER | ( exp )</li>
    <br>
-   <li>dataIdentifier → </li>
+   <li>dataIdentifier → CONST</li>
    <br>
-   <li>dataType → </li>
+   <li>dataType → INT_DATA_TYPE | FLOAT_DATA_TYPE | STRING_DATA_TYPE | BOOL_DATA_TYPE | VOID_DATA_TYPE</li>
    <br>
-   <li>ifCondition → </li>
+   <li>ifCondition → IF ( exp ) codeBlock | IF ( exp ) codeBlock ELSE codeBlock | IF ( exp ) codeBlock ELIF ( exp ) codeBlock | IF ( exp ) codeBlock ELIF ( exp ) codeBlock ELSE codeBlock</li>
    <br>
-   <li>whileLoop → </li>
+   <li>whileLoop → WHILE ( exp ) codeBlock</li>
    <br>
-   <li>forLoop → </li>
+   <li>forLoop → FOR ( assignment ; exp ; assignment ) codeBlock</li>
    <br>
-   <li>repeatUntilLoop → </li>
+   <li>repeatUntilLoop → REPEAT codeBlock UNTIL ( exp ) ;</li>
    <br>
-   <li>case → </li>
+   <li>case → CASE exp : statements | DEFAULT : statements</li>
    <br>
-   <li>caseList → </li>
+   <li>caseList → caseList case | case</li>
    <br>
-   <li>switchCaseLoop → </li>
+   <li>switchCaseLoop → SWITCH ( exp ) { caseList }</li>
    <br>
-   <li>functionArgs → </li>
+   <li>functionArgs → dataType IDENTIFIER | dataType IDENTIFIER , functionArgs</li>
    <br>
-   <li>functionParams → </li>
+   <li>functionParams → term | term , functionParams</li>
    <br>
-   <li>functionDef → </li>
+   <li>functionDef → dataType IDENTIFIER ( functionArgs ) codeBlock | dataType IDENTIFIER '(' ')' codeBlock</li>
    <br>
    <li>functionCall → IDENTIFIER ( functionParams ) | IDENTIFIER ( )</li>
    <br>
