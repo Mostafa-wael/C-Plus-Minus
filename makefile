@@ -12,19 +12,19 @@ run: build
 	./main
 
 decleration: build
-	./main < ./tests/decleration.c
+	./main < ./test/decleration.c
 operations: build
-	./main < ./tests/operations.c
+	./main < ./test/operations.c
 conditions: build
-	./main < ./tests/conditions.c
+	./main < ./test/conditions.c
 loops: build
-	./main < ./tests/loops.c
+	./main < ./test/loops.c
 functions: build
-	./main < ./tests/functions.c
+	./main < ./test/functions.c
 enum: build
-	./main < ./tests/enum.c
+	./main < ./test/enum.c
 mixed: build
-	./main < ./tests/mixed.c
+	./main < ./test/mixed.c
 
 test: decleration operations conditions loops functions enum mixed
 	echo "All tests passed"

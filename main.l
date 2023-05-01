@@ -32,14 +32,14 @@ void log(const char* type, const char* value)
 /* RegEx */
 /*====================*/
 DIGIT [0-9]
-ALPHAB [a-zA-Z]
+ALPHABET [a-zA-Z]
 ALPHANUM [0-9a-zA-Z]
-SPACES [ \r\t]
+SPACE [ \r\t]
 NEW_LINE \n
 INLINE_COMMENT \/\/.*
 /* TODO: MULTILINE_COMMENT is not working */
 MULTILINE_COMMENT \/\*.*\*\/
-arithmticOps        [/+*%-]
+arithmeticOps        [/+*%-]
 bitwiseOps          [&^~|]
 endOfStatement      [;]
 punctuators         [()={}:,]
@@ -96,7 +96,7 @@ FALSE [fF]alse | 0 | [nN]o
 "&&"                               {log("logical operator", yytext);return AND;} /*and Command*/
 "||"                               {log("logical operator", yytext);return OR;} /*or Command*/
 "!"                                {log("logical operator", yytext);return NOT;} /*not Command*/
-{arithmticOps}                     {log("arithmtic operator", yytext);return yytext[0];} /*Return the character*/
+{arithmeticOps}                     {log("arithmtic operator", yytext);return yytext[0];} /*Return the character*/
 
 {punctuators}                      {log("punctuators", yytext);return yytext[0];} /*Return the character*/
 {endOfStatement}                   {log("end Of Statement", "; \n");return yytext[0];} /*Return the character*/
@@ -110,7 +110,7 @@ FALSE [fF]alse | 0 | [nN]o
 \"[^\"]*\" 			               {log("string value", yytext);yylval.TYPE_STR = strdup(yytext); return STRING; }
 
 {NEW_LINE}                          line++; /*Ignore New Lines*/
-{SPACES}                            ; /*Ignore White Spaces*/
+{SPACE}                            ; /*Ignore White SPACE*/
 {INLINE_COMMENT}                    {log("inline comment", yytext);} /*Ignore Comments*/
 {MULTILINE_COMMENT}                 {log("multiline comment", yytext);} /*Ignore Comments*/
 .                                   {log("unexpected character", yytext); ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
