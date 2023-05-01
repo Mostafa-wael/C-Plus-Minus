@@ -1,47 +1,52 @@
-## Project Overview
+# Compilers Project
+
+## Table of Contents
+- [Compilers Project](#compilers-project)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Run Steps](#run-steps)
+  - [Tools and Technologies](#tools-and-technologies)
+  - [Tokens](#tokens)
+  - [Syntax](#syntax)
+    - [Data Types](#data-types)
+    - [Operators](#operators)
+    - [Conditional Statements](#conditional-statements)
+    - [Loops](#loops)
+    - [Functions](#functions)
+    - [Enumerations](#enumerations)
+  - [Production Rules](#production-rules)
+
+## Introduction
 
 The designed language is a `C` like programming language.
 
 Sample program:
 
-`print("declaration");`
+```c
+const int a = 5;
+float b = 6;
+print ("Operations:");
+if (a == 5) {
+    print ("a is 5");
+}
+else {
+    if (b == 6) {
+        print ("b is 6");
+    }
+    else {
+        print ("b is not 6");
+    }
+}
+exit;
+```
 
-`const int a = -5;`
-
-`print (a);`
-
-`print (-a);`
-
-`float b = 5.5;`
-
-`print (b);`
-
-`bool c = 1;`
-
-`print(c); // 1`
-
-`string d = "hello";`
-
-`void e = 0;`
-
-`print(d); // hello2`
-
-`{`
-
-`    const int a = 10;`
-
-`    print(a);`
-
-`}`
-
-`exit;`
-
-
-## Steps
+## Run Steps
 - `yacc -d main.y`: create y.tab.h and y.tab.c
 - `lex main.l`: create lex.yy.c
 - `gcc -g lex.yy.c y.tab.c -o main`: create main
 - `./main`: run main
+
+For convenience, the above steps are combined in a makefile. To run the makefile, type `make <test case name>` in the terminal.
 
 
 ## Tools and Technologies
@@ -124,6 +129,201 @@ Sample program:
    </tr>
 </table>
 
+## Syntax
+### Data Types
+Tha language supports the following data types:
+- Integer
+- Float
+- Boolean
+- String
+
+It supports modifiers like `const` as well.
+```c
+const int a = 10;
+int b = 20;
+float c = 10.5;
+bool d = true;
+string e = "Hello World";
+```
+
+### Operators
+The language supports the common operators in C.
+```c
+// Arithmetic operators
+a = b + c;
+a = b - c;
+a = b * c;
+a = b / c;
+a = b % c;
+// Bitwise operators
+a = b & c;
+a = b | c;
+a = b ^ c;
+a = ~b;
+// Logical operators
+a = b && c;
+a = b || c;
+a = !b;
+// Relational operators
+a = b == c;
+a = b != c;
+a = b > c;
+a = b >= c;
+a = b < c;
+a = b <= c;
+// Shift operators
+a = b << c;
+a = b >> c;
+```
+### Conditional Statements
+The language supports the if-else, if-elif-else, and switch-case statements.
+```c
+int a = 10;
+// if statement
+if (a == 10) {
+    print("if");
+    print("another if");
+}
+elif (a == 11) {
+    print("elif");
+    print("another elif");
+}
+else {
+    print("else");
+    print("another else");
+    if (a == 10) {
+        print("if");
+        print("another if");
+    }
+    else {
+        print("else");
+        print("another else");
+    }
+}
+if (a == 10) {
+    print("if");
+    print("another if");
+}
+elif(a == 11) {
+    print("else");
+    print("another else");
+}
+// switch-case statement
+switch (a) {
+    default:
+        print("default");
+        break;
+}
+switch (a) {
+    case 1: 
+        print("1");
+        break;
+    
+    case 2: 
+        print("2");
+        break;
+    
+    case 3: 
+        print("3");
+        break;
+}
+
+switch (a) {
+    case 1: 
+        print("1");
+        break;
+    
+    case 2: 
+        print("2");
+        break;
+    
+    case 3: 
+        print("3");
+        break;
+    
+    default: 
+        print("default");
+        break;
+}
+```
+### Loops
+The language supports the while, for, and repeat-until loops.
+```c
+// while loop
+a = 0;
+while (a < 20) {
+    print(a);
+    a = a + 1;
+}
+print(a);
+while (a < 20) {
+    if (a == 10) {
+        print(a);
+    }
+    a = a + 1;
+}
+// for loop
+for (a=2 ; a<10; a = a+1 ) {
+    print(a);
+}
+for (a=2 ; a<10; a= a+1 ) {
+    print(a);
+    b = a;
+    while (b < 10) {
+        if (b == 5) {
+            print("hi");
+            print(b);
+        }
+        
+        b = b + 1;
+    }
+}
+// repeat-until loop
+a = 0;
+repeat {
+    print(a);
+    a = a + 1;
+    print(a);
+} until (a == 1);
+repeat {
+    print(a);
+    a = a + 1;
+    if (a == 1) {
+        print(a);
+    }
+} until (a == 1);
+```
+### Functions
+The language supports functions with and without parameters.
+```c
+int y (){
+    print("y");
+    return 1;
+}
+int x(int a, int b) {
+    print("add");
+    return a + b;
+}
+x(1, 2); // function call
+a = y(); // function call and assignment
+```
+N.B.: you can't define a function inside any scope.
+
+### Enumerations
+The language supports enumerations.
+```c
+enum Color{
+    RED=10,
+    GREEN,
+    BLUE=12,
+    RED
+};
+{
+    Color c1;
+    Color c2=RED;
+    Color c3=3+5;
+}
+```
 ## Production Rules
 <ul>
    <li>program → statements | functionDef | statements program | functionDef program</li>

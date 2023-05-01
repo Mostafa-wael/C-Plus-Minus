@@ -9,6 +9,8 @@ print(a-b == 0); // 0
 print(a/b == 1); // 1
 print(a%c == 0); // 0
 print(a * b - b + a / b == 91); // 91
+print(100-5);
+print(-100-5+5);
 ////////////////////////////////
 print("bitwise");
 a = 10;
