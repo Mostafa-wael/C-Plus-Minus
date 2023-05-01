@@ -2,11 +2,11 @@ print("functions");
 a+1;
 x(1, 2);
 print("x");
-int y (){
+def int y (){
     print("y");
     return 1;
 }
-int x(int a, int b) {
+def int x(int a, int b) {
     print("add");
     return a + b;
 }

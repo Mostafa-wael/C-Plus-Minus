@@ -45,7 +45,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %token IF ELSE ELIF 
 %token SWITCH CASE DEFAULT 
 %token WHILE FOR BREAK CONTINUE REPEAT UNTIL
-%token RETURN ENUM
+%token RETURN ENUM 
 
 // Operators
 //======================
@@ -81,7 +81,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 // this defines the type of the non-terminals
 %type <TYPE_VOID> program statements statement controlstatement 
 %type <TYPE_VOID> ifCondition whileLoop forLoop repeatUntilLoop switchCaseLoop case caseList 
-%type<TYPE_VOID> codeBlock functionArgs functionParams  functionCall 
+%type <TYPE_VOID> codeBlock functionArgs functionParams  functionCall 
 %type <TYPE_INT> exp 
 %type <TYPE_INT> term 
 %type <TYPE_INT> assignment 
@@ -90,19 +90,19 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
-program                 : statements                             {;}
+program                 : statements                            {;}
                         | functionDef                           {;}
-                        | statements program                      {;}
-                        | functionDef program                    {;}
+                        | statements program                    {;}
+                        | functionDef program                   {;}
                         ;
-statements	        : statement ';'                          {;}
+statements	        : statement ';'                         {;}
                         | codeBlock                             {;}
-                        | controlstatement                       {;}
-                        | statements codeBlock                   {;}
-                        | statements statement ';'                {;}
-                        | statements controlstatement             {;}
+                        | controlstatement                      {;}
+                        | statements codeBlock                  {;}
+                        | statements statement ';'              {;}
+                        | statements controlstatement           {;}
                         ;
-codeBlock               : '{' statements '}'                     {;}
+codeBlock               : '{' statements '}'                    {;}
                         | '{' '}'                               {;}
                         ;
 controlstatement        : ifCondition
@@ -130,8 +130,8 @@ declaration             : dataType IDENTIFIER 		        {;}
                         ;
 assignment              : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3);}
                         | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
-                        | enumDeclaration
-                        | enumDef
+                        | enumDeclaration                       {;}     
+                        | enumDef                               {;}
                         ;
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {;}
@@ -163,8 +163,8 @@ exp    	                : term                                  {$$ = $1;}
                         ;
 term   	                : NUMBER                                {$$ = $1;}
                         | FLOAT_NUMBER                          {$$ = $1;}
-                        | TRUE_VAL                                  {$$ = 1;}
-                        | FALSE_VAL                                 {$$ = 0;}
+                        | TRUE_VAL                              {$$ = 1;}
+                        | FALSE_VAL                             {$$ = 0;}
                         | IDENTIFIER	                        {$$ = symbolVal($1);} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
@@ -186,11 +186,11 @@ whileLoop               : WHILE '(' exp ')' codeBlock                   {;}
                         ;
 forLoop                 : FOR '(' assignment ';' exp ';' assignment ')' codeBlock {;}
                         ;
-repeatUntilLoop        : REPEAT codeBlock UNTIL '(' exp ')' ';'        {;}
+repeatUntilLoop        : REPEAT codeBlock UNTIL '(' exp ')' ';'         {;}
                         ;
 
-case                    : CASE exp ':' statements                        {;}
-                        | DEFAULT ':' statements                         {;}
+case                    : CASE exp ':' statements                       {;}
+                        | DEFAULT ':' statements                        {;}
                         ;
 caseList                : caseList case
                         | case
@@ -202,12 +202,12 @@ functionArgs            : dataType IDENTIFIER                           {;}
                         | dataType IDENTIFIER ',' functionArgs          {;}
                         ;
 functionParams          : term                                          {;}
-                        | term ',' functionParams                        {;}
+                        | term ',' functionParams                       {;}
                         ;
 functionDef             : dataType IDENTIFIER '(' functionArgs ')' codeBlock {;}
                         | dataType IDENTIFIER '(' ')' codeBlock         {printf("functionDef\n");}
                         ;
-functionCall            : IDENTIFIER '(' functionParams ')'              {;}
+functionCall            : IDENTIFIER '(' functionParams ')'             {;}
                         | IDENTIFIER '(' ')'                            {;}
                         ;
 
