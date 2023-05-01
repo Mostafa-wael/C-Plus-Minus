@@ -8,7 +8,7 @@ int yylex();
 int line=1;
 #include <stdio.h>
 #include <stdarg.h>
-#define SHOW_LOGS 1
+#define SHOW_LOGS 0
 void log(const char* type, const char* value)
 {
     if(SHOW_LOGS)
@@ -96,7 +96,7 @@ FALSE [fF]alse | 0 | [nN]o
 "&&"                               {log("logical operator", yytext);return AND;} /*and Command*/
 "||"                               {log("logical operator", yytext);return OR;} /*or Command*/
 "!"                                {log("logical operator", yytext);return NOT;} /*not Command*/
-{arithmeticOps}                     {log("arithmtic operator", yytext);return yytext[0];} /*Return the character*/
+{arithmeticOps}                    {log("arithmtic operator", yytext);return yytext[0];} /*Return the character*/
 
 {punctuators}                      {log("punctuators", yytext);return yytext[0];} /*Return the character*/
 {endOfStatement}                   {log("end Of Statement", "; \n");return yytext[0];} /*Return the character*/
@@ -105,15 +105,15 @@ FALSE [fF]alse | 0 | [nN]o
 [fF]alse | 0 | [nN]o               {log("value", "false"); yylval.TYPE_BOOL=0; return FALSE_VAL;} /*false Command*/
 
 [a-zA-Z_][a-zA-Z0-9_]*             {log("identifier", yytext); yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
-{DIGIT}+                        {log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}
-{DIGIT}*"."{DIGIT}+             {log("float value", yytext);yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
+{DIGIT}+                           {log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}
+{DIGIT}*"."{DIGIT}+                {log("float value", yytext);yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
 \"[^\"]*\" 			               {log("string value", yytext);yylval.TYPE_STR = strdup(yytext); return STRING; }
 
-{NEW_LINE}                          line++; /*Ignore New Lines*/
+{NEW_LINE}                         line++; /*Ignore New Lines*/
 {SPACE}                            ; /*Ignore White SPACE*/
-{INLINE_COMMENT}                    {log("inline comment", yytext);} /*Ignore Comments*/
-{MULTILINE_COMMENT}                 {log("multiline comment", yytext);} /*Ignore Comments*/
-.                                   {log("unexpected character", yytext); ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
+{INLINE_COMMENT}                   {log("inline comment", yytext);} /*Ignore Comments*/
+{MULTILINE_COMMENT}                {log("multiline comment", yytext);} /*Ignore Comments*/
+.                                  {log("unexpected character", yytext); ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
 %%
 // C code
 // The wrapper function yywrap() 
