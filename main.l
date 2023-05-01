@@ -8,23 +8,26 @@ int yylex();
 int line=1;
 #include <stdio.h>
 #include <stdarg.h>
-#define SHOW_LOGS 0
+#define SHOW_LOGS 1
 void log(const char* type, const char* value)
 {
     if(SHOW_LOGS)
     {
         if (type == "int value")
         {
-            printf("\033[1;30mLex(%d) %s: %d\033[0m\n", line, type, atoi(value));
-            return;
+            printf("Lex(%d) %s: %d\n", line, type, atoi(value));
+            // printf("\033[1;30mLex(%d) %s: %d\033[0m\n", line, type, atoi(value));
         }
         else if (type == "float value")
         {
-            printf("\033[1;30mLex(%d) %s: %f\033[0m\n", line, type, atof(value));
-            return;
+            printf("Lex(%d) %s: %f\n", line, type, atof(value));
+            // printf("\033[1;30mLex(%d) %s: %f\033[0m\n", line, type, atof(value));
         }
-        // printf("Lex(%d) %s: %s\n", line, type, value);
-        printf("\033[1;30mLex(%d) %s: %s\033[0m\n", line, type, value);
+        else{
+            printf("Lex(%d) %s: %s\n", line, type, value);
+            // printf("\033[1;30mLex(%d) %s: %s\033[0m\n", line, type, value);
+
+        }
 
     }
 }
@@ -54,7 +57,7 @@ FALSE [fF]alse | 0 | [nN]o
 "assert"                           {log("command", yytext); return ASSERT;} /*assert Command*/
 "exit"				               {log("command", yytext); return EXIT;} /*exit Command*/
 
-"const"                            {log("data identifier", yytext); return CONST;} /*const Command*/
+"const"                            {log("data modifier", yytext); return CONST;} /*const Command*/
 
 "int"                              {log("data type", yytext);return INT_DATA_TYPE;} /*int Command*/
 "float"                            {log("data type", yytext);return FLOAT_DATA_TYPE;} /*float Command*/
@@ -76,6 +79,7 @@ FALSE [fF]alse | 0 | [nN]o
 "until"				               {log("control flow", yytext);return UNTIL;} /*until Command*/
 "break"				               {log("control flow", yytext);return BREAK;} /*break Command*/
 "continue"				           {log("control flow", yytext);return CONTINUE;} /*continue Command*/
+
 
 "return"				           {log("control flow", yytext);return RETURN;} /*return Command*/
 
@@ -101,8 +105,8 @@ FALSE [fF]alse | 0 | [nN]o
 {punctuators}                      {log("punctuators", yytext);return yytext[0];} /*Return the character*/
 {endOfStatement}                   {log("end Of Statement", "; \n");return yytext[0];} /*Return the character*/
 
-[tT]rue | 1 | [yY]es               {log("value", "true"); yylval.TYPE_BOOL=1; return TRUE_VAL;} /*true Command*/
-[fF]alse | 0 | [nN]o               {log("value", "false"); yylval.TYPE_BOOL=0; return FALSE_VAL;} /*false Command*/
+"true"                             {log("value", "true"); yylval.TYPE_BOOL=1; return TRUE_VAL;} /*true Command*/
+"false"                            {log("value", "false"); yylval.TYPE_BOOL=0; return FALSE_VAL;} /*false Command*/
 
 [a-zA-Z_][a-zA-Z0-9_]*             {log("identifier", yytext); yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
 {DIGIT}+                           {log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}

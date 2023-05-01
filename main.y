@@ -26,7 +26,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %union {
         int TYPE_INT; 
         char* TYPE_DATA_TYPE;
-        char* TYPE_DATA_IDENTIFIER;
+        char* TYPE_DATA_MODIFIER;
         float TYPE_FLOAT;
         char* TYPE_STR; 
         int TYPE_BOOL;
@@ -65,7 +65,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 
 // Declarations
 //======================
-%token <TYPE_DATA_IDENTIFIER> CONST
+%token <TYPE_DATA_MODIFIER> CONST
 %token <TYPE_DATA_TYPE> INT_DATA_TYPE FLOAT_DATA_TYPE STRING_DATA_TYPE BOOL_DATA_TYPE VOID_DATA_TYPE
 %token <TYPE_INT> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_INT
 
@@ -86,7 +86,11 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %type <TYPE_INT> term 
 %type <TYPE_INT> assignment 
 %type <TYPE_DATA_TYPE> dataType declaration
-%type <TYPE_DATA_IDENTIFIER> dataIdentifier
+%type <TYPE_DATA_MODIFIER> dataModifier
+
+//==============================================================================
+// To solve some shift/reduce conflicts
+
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
@@ -96,14 +100,13 @@ program                 : statements                            {;}
                         | functionDef program                   {;}
                         ;
 statements	        : statement ';'                         {;}
-                        | codeBlock                             {;}
+                        | '{' codeBlock '}'                     {;}
                         | controlstatement                      {;}
-                        | statements codeBlock                  {;}
+                        | statements '{' codeBlock '}'          {;}
                         | statements statement ';'              {;}
                         | statements controlstatement           {;}
                         ;
-codeBlock               : '{' statements '}'                    {;}
-                        | '{' '}'                               {;}
+codeBlock               :  statements                           {;}
                         ;
 controlstatement        : ifCondition
                         | whileLoop
@@ -124,9 +127,20 @@ statement               : assignment 		                {;}
                         | PRINT '(' STRING ')' 	                {printf("%s\n", $3);}
                         /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
                         ;
+//======================
+/* Decleration */
+//======================                    
+dataModifier            : CONST                                 {;}
+                        ;
+dataType                : INT_DATA_TYPE                         {$$ = $1;}
+                        | FLOAT_DATA_TYPE                       {$$ = $1;}
+                        | STRING_DATA_TYPE                      {$$ = $1;}
+                        | BOOL_DATA_TYPE                        {$$ = $1;}
+                        | VOID_DATA_TYPE                        {$$ = $1;}
+                        ;
 declaration             : dataType IDENTIFIER 		        {;}
                         | dataType assignment	                {;}
-                        | dataIdentifier declaration 	        {;}
+                        | dataModifier declaration 	        {;}
                         ;
 assignment              : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3);}
                         | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
@@ -135,31 +149,32 @@ assignment              : IDENTIFIER '=' exp                    {updateSymbolVal
                         ;
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {;}
+                        /* Negation */
                         | '-' term                              {$$ = -$2;}
                         | '~' term                              {$$ = ~$2;}
                         | NOT term                              {$$ = !$2;}
-
+                        /* Arithmatic */
                         | exp '+' exp                           {$$ = $1 + $3;}
                         | exp '-' exp                           {$$ = $1 - $3;}
                         | exp '*' exp                           {$$ = $1 * $3;}
                         | exp '/' exp                           {$$ = $1 / $3;}
                         | exp '%' exp                           {$$ = $1 % $3;}
-
+                        /* Bitwise */
                         | exp '|' exp                           {$$ = $1 | $3;}
                         | exp '&' exp                           {$$ = $1 & $3;}
                         | exp '^' exp                           {$$ = $1 ^ $3;}
                         | exp SHL exp                           {$$ = $1 << $3;}
                         | exp SHR exp                           {$$ = $1 >> $3;}
-
+                        /* Logical */
+                        | exp AND exp                           {$$ = $1 && $3;}
+                        | exp OR exp                            {$$ = $1 || $3;}
+                        /* Comparison */
                         | exp EQ exp                            {$$ = $1 == $3;}
                         | exp NEQ exp                           {$$ = $1 != $3;}
                         | exp GT exp                            {$$ = $1 > $3;}
                         | exp GEQ exp                           {$$ = $1 >= $3;}
                         | exp LT exp                            {$$ = $1 < $3;}
                         | exp LEQ exp                           {$$ = $1 <= $3;}
-
-                        | exp AND exp                           {$$ = $1 && $3;}
-                        | exp OR exp                            {$$ = $1 || $3;}
                         ;
 term   	                : NUMBER                                {$$ = $1;}
                         | FLOAT_NUMBER                          {$$ = $1;}
@@ -168,59 +183,63 @@ term   	                : NUMBER                                {$$ = $1;}
                         | IDENTIFIER	                        {$$ = symbolVal($1);} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
-dataIdentifier          : CONST                                         {;}
+//======================
+/* Conditions */
+//======================
+ifCondition             : IF '(' exp ')' '{' codeBlock '}'      {;}
+                        | IF '(' exp ')' '{' codeBlock '}' ELSE '{' codeBlock '}'       {;}
+                        | IF '(' exp ')' '{' codeBlock '}' ELIF '(' exp ')' '{' codeBlock '}' {;}
+                        | IF '(' exp ')' '{' codeBlock '}' ELIF '(' exp ')' '{' codeBlock '}' ELSE '{' codeBlock '}' {;}
                         ;
-dataType                : INT_DATA_TYPE                                 {$$ = $1;}
-                        | FLOAT_DATA_TYPE                               {$$ = $1;}
-                        | STRING_DATA_TYPE                              {$$ = $1;}
-                        | BOOL_DATA_TYPE                                {$$ = $1;}
-                        | VOID_DATA_TYPE                                {$$ = $1;}
-                        ;
-
-ifCondition             : IF '(' exp ')' codeBlock                      {;}
-                        | IF '(' exp ')' codeBlock ELSE codeBlock       {;}
-                        | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock {;}
-                        | IF '(' exp ')' codeBlock ELIF '(' exp ')' codeBlock ELSE codeBlock {;}
-                        ;
-whileLoop               : WHILE '(' exp ')' codeBlock                   {;}
-                        ;
-forLoop                 : FOR '(' assignment ';' exp ';' assignment ')' codeBlock {;}
-                        ;
-repeatUntilLoop        : REPEAT codeBlock UNTIL '(' exp ')' ';'         {;}
-                        ;
-
-case                    : CASE exp ':' statements                       {;}
-                        | DEFAULT ':' statements                        {;}
+case                    : CASE exp ':' statements               {;}
+                        | DEFAULT ':' statements                {;}
                         ;
 caseList                : caseList case
                         | case
                         ;
-switchCaseLoop          : SWITCH '(' exp ')' '{' caseList '}'           {;}
+switchCaseLoop          : SWITCH '(' exp ')' '{' caseList '}'   {;}
                         ;
-                                  
-functionArgs            : dataType IDENTIFIER                           {;}
-                        | dataType IDENTIFIER ',' functionArgs          {;}
+//======================
+/* Loops */
+//======================
+whileLoop               : WHILE '(' exp ')' '{' codeBlock '}'   {;}
                         ;
-functionParams          : term                                          {;}
-                        | term ',' functionParams                       {;}
+forLoop                 : FOR '(' assignment ';' exp ';' assignment ')' '{' codeBlock '}' {;}
                         ;
-functionDef             : dataType IDENTIFIER '(' functionArgs ')' codeBlock {;}
-                        | dataType IDENTIFIER '(' ')' codeBlock         {printf("functionDef\n");}
-                        ;
-functionCall            : IDENTIFIER '(' functionParams ')'             {;}
-                        | IDENTIFIER '(' ')'                            {;}
+repeatUntilLoop         : REPEAT '{' codeBlock '}' UNTIL '(' exp ')' ';'         {;}
                         ;
 
-enumDef	                : ENUM IDENTIFIER '{' enumBody '}'              {;}
+//======================
+/* Functions */
+//======================                        
+functionArgs            : dataType IDENTIFIER                   {;}
+                        | dataType IDENTIFIER ',' functionArgs  {;}
                         ;
-enumBody		: IDENTIFIER                                    {;}
-                        | IDENTIFIER '=' exp                            {;}
-                        | enumBody ',' IDENTIFIER                       {;}
-                        | enumBody ',' IDENTIFIER '=' exp               {;}
+functionParams          : term                                  {;}
+                        | term ',' functionParams               {;}
                         ;
-enumDeclaration         : IDENTIFIER IDENTIFIER                         {;}
-                        | IDENTIFIER IDENTIFIER '=' exp                 {;}
+functionDef             : dataType IDENTIFIER '(' functionArgs ')' '{' codeBlock '}' {;}
+                        | dataType IDENTIFIER '(' ')' '{' codeBlock '}'         {printf("functionDef\n");}
                         ;
+functionCall            : IDENTIFIER '(' functionParams ')'     {;}
+                        | IDENTIFIER '(' ')'                    {;}
+                        ;
+//======================
+/* Enumerations */
+//======================
+enumDef	                : ENUM IDENTIFIER '{' enumBody '}'      {;}
+                        ;
+enumBody		: IDENTIFIER                            {;}
+                        | IDENTIFIER '=' exp                    {;}
+                        | enumBody ',' IDENTIFIER               {;}
+                        | enumBody ',' IDENTIFIER '=' exp       {;}
+                        ;
+enumDeclaration         : IDENTIFIER IDENTIFIER                 {;}
+                        | IDENTIFIER IDENTIFIER '=' exp         {;}
+                        ;
+//======================
+/* Other */
+//======================
 
 %%                     
 /* C code */
