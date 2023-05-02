@@ -115,17 +115,17 @@ For convenience, the above steps are combined in a makefile. To run the makefile
    <tr>
       <td>punctuators</td>
       <td>[()={}:,]</td>
-      <td></td>
+      <td>Language punctuators.</td>
    </tr>
    <tr>
       <td>TRUE</td>
       <td>[tT]rue | 1 | [yY]es</td>
-      <td></td>
+      <td>True value.</td>
    </tr>
    <tr>
       <td>FALSE</td>
       <td>[fF]alse| 0 | [nN]o</td>
-      <td></td>
+      <td>False value.</td>
    </tr>
 </table>
 
