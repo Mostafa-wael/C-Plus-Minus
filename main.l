@@ -67,7 +67,6 @@ FALSE [fF]alse | 0 | [nN]o
 
 "if"				               {Log("control flow", yytext);return IF;} /*if Command*/
 "else"				               {Log("control flow", yytext);return ELSE;} /*else Command*/
-"elif"				               {Log("control flow", yytext);return ELIF;} /*elif Command*/
 
 "switch"				           {Log("control flow", yytext);return SWITCH;} /*switch Command*/
 "case"				               {Log("control flow", yytext);return CASE;} /*case Command*/

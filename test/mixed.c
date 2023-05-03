@@ -64,12 +64,11 @@ print((a >> c) == 2); // 1010 >> 0010 = 10 = 2
 print((~a) == -11); // -11
 print((a<<c)>>c == 10); // 10
 ////////////////////////////////
-print("conditions");
 if (a == 10) {
     print("if");
     print("another if");
 }
-elif (a == 11) {
+else if (a == 11) {
     print("elif");
     print("another elif");
 }
@@ -89,7 +88,7 @@ if (a == 10) {
     print("if");
     print("another if");
 }
-elif(a == 11) {
+else if(a == 11) {
     print("else");
     print("another else");
 }

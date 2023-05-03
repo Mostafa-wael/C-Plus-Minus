@@ -3,7 +3,7 @@ if (a == 10) {
     print("if");
     print("another if");
 }
-elif (a == 11) {
+else if (a == 11) {
     print("elif");
     print("another elif");
 }
@@ -23,7 +23,7 @@ if (a == 10) {
     print("if");
     print("another if");
 }
-elif(a == 11) {
+else if(a == 11) {
     print("else");
     print("another else");
 }

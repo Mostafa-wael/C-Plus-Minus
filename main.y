@@ -42,7 +42,7 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 
 // Control Flow
 //======================
-%token IF ELSE ELIF 
+%token IF ELSE  
 %token SWITCH CASE DEFAULT 
 %token WHILE FOR BREAK CONTINUE REPEAT UNTIL
 %token RETURN ENUM 
@@ -188,8 +188,8 @@ term   	                : NUMBER                                {$$ = $1;}
 //======================
 ifCondition             : IF '(' exp ')' '{' codeBlock '}'      {;}
                         | IF '(' exp ')' '{' codeBlock '}' ELSE '{' codeBlock '}'       {;}
-                        | IF '(' exp ')' '{' codeBlock '}' ELIF '(' exp ')' '{' codeBlock '}' {;}
-                        | IF '(' exp ')' '{' codeBlock '}' ELIF '(' exp ')' '{' codeBlock '}' ELSE '{' codeBlock '}' {;}
+                        | IF '(' exp ')' '{' codeBlock '}' ELSE IF '(' exp ')' '{' codeBlock '}' {;}
+                        | IF '(' exp ')' '{' codeBlock '}' ELSE IF '(' exp ')' '{' codeBlock '}' ELSE '{' codeBlock '}' {;}
                         ;
 case                    : CASE exp ':' statements               {;}
                         | DEFAULT ':' statements                {;}
