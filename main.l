@@ -8,8 +8,8 @@ int yylex();
 int line=1;
 #include <stdio.h>
 #include <stdarg.h>
-#define SHOW_LOGS 1
-void log(const char* type, const char* value)
+#define SHOW_LOGS 0
+void Log(const char* type, const char* value)
 {
     if(SHOW_LOGS)
     {
@@ -53,71 +53,71 @@ FALSE [fF]alse | 0 | [nN]o
 /* first store the value of the token, and the second return its type */
 /* e.g.: If you saw the string "print", return the token "print" */
 %%
-"print"				               {log("command", yytext); return PRINT;} /*print Command*/
-"assert"                           {log("command", yytext); return ASSERT;} /*assert Command*/
-"exit"				               {log("command", yytext); return EXIT;} /*exit Command*/
+"print"				               {Log("command", yytext); return PRINT;} /*print Command*/
+"assert"                           {Log("command", yytext); return ASSERT;} /*assert Command*/
+"exit"				               {Log("command", yytext); return EXIT;} /*exit Command*/
 
-"const"                            {log("data modifier", yytext); return CONST;} /*const Command*/
+"const"                            {Log("data modifier", yytext); return CONST;} /*const Command*/
 
-"int"                              {log("data type", yytext);return INT_DATA_TYPE;} /*int Command*/
-"float"                            {log("data type", yytext);return FLOAT_DATA_TYPE;} /*float Command*/
-"string"                           {log("data type", yytext);return STRING_DATA_TYPE;} /*string Command*/
-"bool"                             {log("data type", yytext);return BOOL_DATA_TYPE;} /*bool Command*/
-"void"                             {log("data type", yytext);return VOID_DATA_TYPE;} /*void Command*/
+"int"                              {Log("data type", yytext);return INT_DATA_TYPE;} /*int Command*/
+"float"                            {Log("data type", yytext);return FLOAT_DATA_TYPE;} /*float Command*/
+"string"                           {Log("data type", yytext);return STRING_DATA_TYPE;} /*string Command*/
+"bool"                             {Log("data type", yytext);return BOOL_DATA_TYPE;} /*bool Command*/
+"void"                             {Log("data type", yytext);return VOID_DATA_TYPE;} /*void Command*/
 
-"if"				               {log("control flow", yytext);return IF;} /*if Command*/
-"else"				               {log("control flow", yytext);return ELSE;} /*else Command*/
-"elif"				               {log("control flow", yytext);return ELIF;} /*elif Command*/
+"if"				               {Log("control flow", yytext);return IF;} /*if Command*/
+"else"				               {Log("control flow", yytext);return ELSE;} /*else Command*/
+"elif"				               {Log("control flow", yytext);return ELIF;} /*elif Command*/
 
-"switch"				           {log("control flow", yytext);return SWITCH;} /*switch Command*/
-"case"				               {log("control flow", yytext);return CASE;} /*case Command*/
-"default"				           {log("control flow", yytext);return DEFAULT;} /*default Command*/
+"switch"				           {Log("control flow", yytext);return SWITCH;} /*switch Command*/
+"case"				               {Log("control flow", yytext);return CASE;} /*case Command*/
+"default"				           {Log("control flow", yytext);return DEFAULT;} /*default Command*/
 
-"while"				               {log("control flow", yytext);return WHILE;} /*while Command*/
-"for"				               {log("control flow", yytext);return FOR;} /*for Command*/
-"repeat"				           {log("control flow", yytext);return REPEAT;} /*repeat Command*/
-"until"				               {log("control flow", yytext);return UNTIL;} /*until Command*/
-"break"				               {log("control flow", yytext);return BREAK;} /*break Command*/
-"continue"				           {log("control flow", yytext);return CONTINUE;} /*continue Command*/
-
-
-"return"				           {log("control flow", yytext);return RETURN;} /*return Command*/
-
-"enum"                             {log("enum", yytext);return ENUM;} /*enum Command*/
+"while"				               {Log("control flow", yytext);return WHILE;} /*while Command*/
+"for"				               {Log("control flow", yytext);return FOR;} /*for Command*/
+"repeat"				           {Log("control flow", yytext);return REPEAT;} /*repeat Command*/
+"until"				               {Log("control flow", yytext);return UNTIL;} /*until Command*/
+"break"				               {Log("control flow", yytext);return BREAK;} /*break Command*/
+"continue"				           {Log("control flow", yytext);return CONTINUE;} /*continue Command*/
 
 
-"<<"                               {log("bitwise operator", yytext);return SHL;} /*SHL Command*/
-">>"                               {log("bitwise operator", yytext);return SHR;} /*SHR Command*/
-{bitwiseOps}                       {log("bitwise operator", yytext);return yytext[0];} /*Return the character*/
+"return"				           {Log("control flow", yytext);return RETURN;} /*return Command*/
 
-"=="                               {log("comparetor operator", yytext);return EQ;} /*EQ Command*/
-"!="                               {log("comparetor operator", yytext);return NEQ;} /*NEQ Command*/
-"<="                               {log("comparetor operator", yytext);return LEQ;} /*LEQ Command*/
-">="                               {log("comparetor operator", yytext);return GEQ;} /*GEQ Command*/
-"<"                                {log("comparetor operator", yytext);return LT;} /*LT Command*/
-">"                                {log("comparetor operator", yytext);return GT;} /*GT Command*/
+"enum"                             {Log("enum", yytext);return ENUM;} /*enum Command*/
 
-"&&"                               {log("logical operator", yytext);return AND;} /*and Command*/
-"||"                               {log("logical operator", yytext);return OR;} /*or Command*/
-"!"                                {log("logical operator", yytext);return NOT;} /*not Command*/
-{arithmeticOps}                    {log("arithmtic operator", yytext);return yytext[0];} /*Return the character*/
 
-{punctuators}                      {log("punctuators", yytext);return yytext[0];} /*Return the character*/
-{endOfStatement}                   {log("end Of Statement", "; \n");return yytext[0];} /*Return the character*/
+"<<"                               {Log("bitwise operator", yytext);return SHL;} /*SHL Command*/
+">>"                               {Log("bitwise operator", yytext);return SHR;} /*SHR Command*/
+{bitwiseOps}                       {Log("bitwise operator", yytext);return yytext[0];} /*Return the character*/
 
-"true"                             {log("value", "true"); yylval.TYPE_BOOL=1; return TRUE_VAL;} /*true Command*/
-"false"                            {log("value", "false"); yylval.TYPE_BOOL=0; return FALSE_VAL;} /*false Command*/
+"=="                               {Log("comparetor operator", yytext);return EQ;} /*EQ Command*/
+"!="                               {Log("comparetor operator", yytext);return NEQ;} /*NEQ Command*/
+"<="                               {Log("comparetor operator", yytext);return LEQ;} /*LEQ Command*/
+">="                               {Log("comparetor operator", yytext);return GEQ;} /*GEQ Command*/
+"<"                                {Log("comparetor operator", yytext);return LT;} /*LT Command*/
+">"                                {Log("comparetor operator", yytext);return GT;} /*GT Command*/
 
-[a-zA-Z_][a-zA-Z0-9_]*             {log("identifier", yytext); yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
-{DIGIT}+                           {log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}
-{DIGIT}*"."{DIGIT}+                {log("float value", yytext);yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
-\"[^\"]*\" 			               {log("string value", yytext);yylval.TYPE_STR = strdup(yytext); return STRING; }
+"&&"                               {Log("logical operator", yytext);return AND;} /*and Command*/
+"||"                               {Log("logical operator", yytext);return OR;} /*or Command*/
+"!"                                {Log("logical operator", yytext);return NOT;} /*not Command*/
+{arithmeticOps}                    {Log("arithmtic operator", yytext);return yytext[0];} /*Return the character*/
+
+{punctuators}                      {Log("punctuators", yytext);return yytext[0];} /*Return the character*/
+{endOfStatement}                   {Log("end Of Statement", "; \n");return yytext[0];} /*Return the character*/
+
+"true"                             {Log("value", "true"); yylval.TYPE_BOOL=1; return TRUE_VAL;} /*true Command*/
+"false"                            {Log("value", "false"); yylval.TYPE_BOOL=0; return FALSE_VAL;} /*false Command*/
+
+[a-zA-Z_][a-zA-Z0-9_]*             {Log("identifier", yytext); yylval.TYPE_INT = yytext[0]; return IDENTIFIER;}
+{DIGIT}+                           {Log("int value", yytext);yylval.TYPE_INT = atoi(yytext); return NUMBER;}
+{DIGIT}*"."{DIGIT}+                {Log("float value", yytext);yylval.TYPE_FLOAT = atof(yytext); return FLOAT_NUMBER;}
+\"[^\"]*\" 			               {Log("string value", yytext);yylval.TYPE_STR = strdup(yytext); return STRING; }
 
 {NEW_LINE}                         line++; /*Ignore New Lines*/
 {SPACE}                            ; /*Ignore White SPACE*/
-{INLINE_COMMENT}                   {log("inline comment", yytext);} /*Ignore Comments*/
-{MULTILINE_COMMENT}                {log("multiline comment", yytext);} /*Ignore Comments*/
-.                                  {log("unexpected character", yytext); ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
+{INLINE_COMMENT}                   {Log("inline comment", yytext);} /*Ignore Comments*/
+{MULTILINE_COMMENT}                {Log("multiline comment", yytext);} /*Ignore Comments*/
+.                                  {Log("unexpected character", yytext); ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
 %%
 // C code
 // The wrapper function yywrap() 
