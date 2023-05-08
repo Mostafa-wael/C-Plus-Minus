@@ -6,12 +6,21 @@
 #include <stdio.h>     
 #include <stdlib.h>
 #include <ctype.h>
+/* if this is defined, then the vector will double in capacity each
+ * time it runs out of space. if it is not defined, then the vector will
+ * be conservative, and will have a capacity no larger than necessary.
+ * having this defined will minimize how often realloc gets called.
+ */
+#define CVECTOR_LOGARITHMIC_GROWTH
+#include "src/cvector.h"
+
 void yyerror (char *s); // in case of errors
 int yylex();
 
 // Symbol table
 //======================
-int symbolTable [52]; // 26 for lower case, 26 for upper case
+int temp [52]; // 26 for lower case, 26 for upper case
+cvector_vector_type(int) symbolTable = temp;
 int symbolVal(char symbol); // returns the value of a given symbol
 void updateSymbolVal(char symbol, int val); // updates the value of a given symbol
 %}
@@ -258,21 +267,21 @@ int computeSymbolIndex(char token)
 int symbolVal(char symbol)
 {
 	int bucket = computeSymbolIndex(symbol);
-	return symbolTable [bucket];
+	return symbolTable[bucket];
 }
 
 /* updates the value of a given symbol */
 void updateSymbolVal(char symbol, int val)
 {
 	int bucket = computeSymbolIndex(symbol);
-	symbolTable [bucket] = val;
+	symbolTable[bucket] = val;
 }
 
 int main (void) {
 	/* init symbol table */
 	int i;
 	for(i=0; i<52; i++) {
-		symbolTable [i] = 0;
+		symbolTable[i] = 0;
 	}
 
 	return yyparse ( );
