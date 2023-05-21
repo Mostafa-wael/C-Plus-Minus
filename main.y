@@ -6,14 +6,46 @@
 #include <stdio.h>     
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 void yyerror (char *s); // in case of errors
 int yylex();
 
+char buffer[500];
+
+
+// Types
+//======================
+struct nodeType {
+        char *type;
+        // add a union that carries the value of the type
+        union {
+                int intVal;
+                float floatVal;
+                char* stringVal;
+                int boolVal;
+        }value;
+};
+// type functions
+struct nodeType* intNode();
+struct nodeType* floatNode();
+struct nodeType* boolNode();
+struct nodeType* stringNode();
+void try(struct nodeType* type1, struct nodeType* type2);
+
+
 // Symbol table
 //======================
+struct symbol {
+        char *name;
+        char *type, *value;
+        int isDecl, isConst, isInit, isUsed;
+};
+// Symbol table functions
+struct symbol symbol_Table [52]; // 26 for lower case, 26 for upper case
 int symbolTable [52]; // 26 for lower case, 26 for upper case
 int symbolVal(char symbol); // returns the value of a given symbol
-void updateSymbolVal(char symbol, int val); // updates the value of a given symbol
+void updateSymbolVal(char symbol, struct nodeType* val); // updates the value of a given symbol
+
 %}
 /* Yacc definitions */
 //==============================================================================
@@ -31,6 +63,8 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
         char* TYPE_STR; 
         int TYPE_BOOL;
         void* TYPE_VOID;
+
+        struct nodeType* TYPE_NODE;
 ;}
 /* Tokens */// this will be added to the header file y.tab.h, hence the lexical analyzer will know about them
 
@@ -76,17 +110,20 @@ void updateSymbolVal(char symbol, int val); // updates the value of a given symb
 %token <TYPE_STR> STRING // this is a token called STRING returned by the lexical analyzer with as TYPE_STR
 %token <TYPE_BOOL> TRUE_VAL 
 %token <TYPE_BOOL> FALSE_VAL 
+
 // Return Types
 //======================
 // this defines the type of the non-terminals
 %type <TYPE_VOID> program statements statement controlstatement 
 %type <TYPE_VOID> ifCondition whileLoop forLoop repeatUntilLoop switchCaseLoop case caseList 
 %type <TYPE_VOID> codeBlock functionArgs functionParams  functionCall 
-%type <TYPE_INT> exp 
-%type <TYPE_INT> term 
-%type <TYPE_INT> assignment 
-%type <TYPE_DATA_TYPE> dataType declaration
+// %type <TYPE_INT> exp
+// %type <TYPE_INT> term
+// %type <TYPE_INT> assignment
+// %type <TYPE_DATA_TYPE> dataType declaration
 %type <TYPE_DATA_MODIFIER> dataModifier
+
+%type <TYPE_NODE> term exp assignment dataType declaration
 
 //==============================================================================
 // To solve some shift/reduce conflicts
@@ -132,17 +169,17 @@ statement               : assignment 		                {;}
 //======================                    
 dataModifier            : CONST                                 {;}
                         ;
-dataType                : INT_DATA_TYPE                         {$$ = $1;}
-                        | FLOAT_DATA_TYPE                       {$$ = $1;}
-                        | STRING_DATA_TYPE                      {$$ = $1;}
-                        | BOOL_DATA_TYPE                        {$$ = $1;}
-                        | VOID_DATA_TYPE                        {$$ = $1;}
+dataType                : INT_DATA_TYPE                         {$$ = intNode();}
+                        | FLOAT_DATA_TYPE                       {$$ = floatNode();}
+                        | STRING_DATA_TYPE                      {$$ = stringNode();}
+                        | BOOL_DATA_TYPE                        {$$ = boolNode();}
+                        | VOID_DATA_TYPE                        {;}
                         ;
-declaration             : dataType IDENTIFIER 		        {;}
-                        | dataType assignment	                {;}
-                        | dataModifier declaration 	        {;}
+declaration             : dataType IDENTIFIER 		        {/*Check declared*/ ;}
+                        | dataType assignment	                {/*Check declared & check type*/try($1, $2);}
+                        | dataModifier declaration 	        {/*Check declared*/;}
                         ;
-assignment              : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3);}
+assignment              : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3); $$ = $3;}
                         | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
                         | enumDeclaration                       {;}     
                         | enumDef                               {;}
@@ -150,37 +187,37 @@ assignment              : IDENTIFIER '=' exp                    {updateSymbolVal
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {;}
                         /* Negation */
-                        | '-' term                              {$$ = -$2;}
-                        | '~' term                              {$$ = ~$2;}
-                        | NOT term                              {$$ = !$2;}
-                        /* Arithmatic */
-                        | exp '+' exp                           {$$ = $1 + $3;}
-                        | exp '-' exp                           {$$ = $1 - $3;}
-                        | exp '*' exp                           {$$ = $1 * $3;}
-                        | exp '/' exp                           {$$ = $1 / $3;}
-                        | exp '%' exp                           {$$ = $1 % $3;}
-                        /* Bitwise */
-                        | exp '|' exp                           {$$ = $1 | $3;}
-                        | exp '&' exp                           {$$ = $1 & $3;}
-                        | exp '^' exp                           {$$ = $1 ^ $3;}
-                        | exp SHL exp                           {$$ = $1 << $3;}
-                        | exp SHR exp                           {$$ = $1 >> $3;}
-                        /* Logical */
-                        | exp AND exp                           {$$ = $1 && $3;}
-                        | exp OR exp                            {$$ = $1 || $3;}
-                        /* Comparison */
-                        | exp EQ exp                            {$$ = $1 == $3;}
-                        | exp NEQ exp                           {$$ = $1 != $3;}
-                        | exp GT exp                            {$$ = $1 > $3;}
-                        | exp GEQ exp                           {$$ = $1 >= $3;}
-                        | exp LT exp                            {$$ = $1 < $3;}
-                        | exp LEQ exp                           {$$ = $1 <= $3;}
+                        // | '-' term                              {$$ = -$2;}
+                        // | '~' term                              {$$ = ~$2;}
+                        // | NOT term                              {$$ = !$2;}
+                        // /* Arithmatic */
+                        // | exp '+' exp                           {$$ = $1 + $3;}
+                        // | exp '-' exp                           {$$ = $1 - $3;}
+                        // | exp '*' exp                           {$$ = $1 * $3;}
+                        // | exp '/' exp                           {$$ = $1 / $3;}
+                        // | exp '%' exp                           {$$ = $1 % $3;}
+                        // /* Bitwise */
+                        // | exp '|' exp                           {$$ = $1 | $3;}
+                        // | exp '&' exp                           {$$ = $1 & $3;}
+                        // | exp '^' exp                           {$$ = $1 ^ $3;}
+                        // | exp SHL exp                           {$$ = $1 << $3;}
+                        // | exp SHR exp                           {$$ = $1 >> $3;}
+                        // /* Logical */
+                        // | exp AND exp                           {$$ = $1 && $3;}
+                        // | exp OR exp                            {$$ = $1 || $3;}
+                        // /* Comparison */
+                        // | exp EQ exp                            {$$ = $1 == $3;}
+                        // | exp NEQ exp                           {$$ = $1 != $3;}
+                        // | exp GT exp                            {$$ = $1 > $3;}
+                        // | exp GEQ exp                           {$$ = $1 >= $3;}
+                        // | exp LT exp                            {$$ = $1 < $3;}
+                        // | exp LEQ exp                           {$$ = $1 <= $3;}
                         ;
-term   	                : NUMBER                                {$$ = $1;}
-                        | FLOAT_NUMBER                          {$$ = $1;}
-                        | TRUE_VAL                              {$$ = 1;}
-                        | FALSE_VAL                             {$$ = 0;}
-                        | IDENTIFIER	                        {$$ = symbolVal($1);} 
+term   	                : NUMBER                                {$$ = intNode(); $$->value.intVal = 0; $$->value.intVal = NUMBER; /*Pass value & type*/}
+                        | FLOAT_NUMBER                          {$$ = floatNode(); /*Pass value & type*/}
+                        | TRUE_VAL                              {$$ = boolNode();  /*Pass value & type*/}
+                        | FALSE_VAL                             {$$ = boolNode();  /*Pass value & type*/}
+                        | IDENTIFIER	                        {$$ = symbolVal($1); /*Pass value & type*/} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
@@ -262,12 +299,62 @@ int symbolVal(char symbol)
 }
 
 /* updates the value of a given symbol */
-void updateSymbolVal(char symbol, int val)
+void updateSymbolVal(char symbol, struct nodeType* val)
 {
 	int bucket = computeSymbolIndex(symbol);
-	symbolTable [bucket] = val;
+    if(val->type == "int")
+        printf("int\n");
+    else if(val->type == "float")
+        printf("float\n");
+    else if(val->type == "bool")
+        printf("bool\n");
+    else if(val->type == "string")
+        printf("string\n");
+	symbolTable [bucket] = val->value.intVal;
+
+
 }
 
+//------------------------------------------------------------------------------- 
+// Type checking functions 
+//-------------------------------------------------------------------------------  
+struct nodeType* intNode() {
+    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    p->type = "int";
+    p->value.stringVal = (void *)0;
+    return p;
+}
+
+struct nodeType* floatNode() {
+    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    p->type = "float";
+        p->value.stringVal = (void *)0;
+    return p;
+}
+
+struct nodeType* boolNode() {
+    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    p->type = "bool";
+        p->value.stringVal = (void *)0;
+
+    return p;
+}
+
+struct nodeType* stringNode() {
+    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    p->type = "string";
+        p->value.stringVal = (void *)0;
+
+    return p;
+}
+
+void try(struct nodeType* type1, struct nodeType* type2) {
+    if(strcmp(type1->type, type2->type) != 0) {
+        printf("Type Error\n");
+    }
+}
+
+//-------------------------------------------------------------------------------
 int main (void) {
 	/* init symbol table */
 	int i;
