@@ -38,14 +38,20 @@ struct nodeType* intNode();
 struct nodeType* floatNode();
 struct nodeType* boolNode();
 struct nodeType* stringNode();
-void try(struct nodeType* type1, struct nodeType* type2);
+void typeCheck(struct nodeType* type1, struct nodeType* type2);
 
 
 // Symbol table
 //======================
 struct symbol {
         char *name;
-        char *type, *value;
+        char *type;
+        union {
+                int intVal;
+                float floatVal;
+                char* stringVal;
+                int boolVal;
+        }value;
         int isDecl, isConst, isInit, isUsed;
 };
 // Symbol table functions
@@ -183,27 +189,27 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         | BOOL_DATA_TYPE                        {$$ = boolNode();}
                         | VOID_DATA_TYPE                        {;}
                         ;
-declaration             : dataType IDENTIFIER 		        {/*Check declared*/ ;}
-                        | dataType assignment	                {/*Check declared & check type*/try($1, $2);}
-                        | dataModifier declaration 	        {/*Check declared*/;}
+declaration             : dataType IDENTIFIER 		            {/*Check declared*/}
+                        | dataType assignment	                {/*Check declared & check type*/typeCheck($1, $2);}
+                        | dataModifier declaration 	            {/*Check declared*/;}
                         ;
-assignment              : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3); $$ = $3;}
-                        | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
-                        | enumDeclaration                       {;}     
+assignment              : IDENTIFIER '=' exp                    {/*Const, Decl, Type checks*/ /*Set Used*/updateSymbolVal($1,$3); $$ = $3;}
+                        | IDENTIFIER '=' STRING                 {/*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
+                        | enumDeclaration                       {/*Decl*/;}     
                         | enumDef                               {;}
                         ;
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {;}
                         /* Negation */
-                        // | '-' term                              {$$ = -$2;}
-                        // | '~' term                              {$$ = ~$2;}
-                        // | NOT term                              {$$ = !$2;}
+                        | '-' term                              {if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);}
+                        | '~' term                              {if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE);}
+                        | NOT term                              {if($2->type == "bool"){$$ = boolNode(); $$->value.boolVal = !$2->value.boolVal;} else{ if($2->value.intVal){$$ = boolNode(); $$->value.boolVal = 0;} else{$$ = boolNode(); $$->value.boolVal = 1;}}}
                         // /* Arithmatic */
-                        // | exp '+' exp                           {$$ = $1 + $3;}
-                        // | exp '-' exp                           {$$ = $1 - $3;}
-                        // | exp '*' exp                           {$$ = $1 * $3;}
-                        // | exp '/' exp                           {$$ = $1 / $3;}
-                        // | exp '%' exp                           {$$ = $1 % $3;}
+                        | exp '+' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal + $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal + $3->value.floatVal;} else exit(EXIT_FAILURE);}
+                        | exp '-' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal - $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal - $3->value.floatVal;} else exit(EXIT_FAILURE);}
+                        | exp '*' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal * $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal * $3->value.floatVal;} else exit(EXIT_FAILURE);}
+                        | exp '/' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal / $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal / $3->value.floatVal;} else exit(EXIT_FAILURE);}
+                        | exp '%' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal % $3->value.intVal;} else exit(EXIT_FAILURE);}
                         // /* Bitwise */
                         // | exp '|' exp                           {$$ = $1 | $3;}
                         // | exp '&' exp                           {$$ = $1 & $3;}
@@ -221,11 +227,11 @@ exp    	                : term                                  {$$ = $1;}
                         // | exp LT exp                            {$$ = $1 < $3;}
                         // | exp LEQ exp                           {$$ = $1 <= $3;}
                         ;
-term   	                : NUMBER                                {$$ = intNode(); $$->value.intVal = 0; $$->value.intVal = NUMBER; /*Pass value & type*/}
-                        | FLOAT_NUMBER                          {$$ = floatNode(); /*Pass value & type*/}
-                        | TRUE_VAL                              {$$ = boolNode();  /*Pass value & type*/}
-                        | FALSE_VAL                             {$$ = boolNode();  /*Pass value & type*/}
-                        | IDENTIFIER	                        {$$ = symbolVal($1); /*Pass value & type*/} 
+term   	                : NUMBER                                {$$ = intNode(); $$->value.intVal = $1;  /*Pass value & type*/}
+                        | FLOAT_NUMBER                          {$$ = floatNode(); $$->value.floatVal = $1; /*Pass value & type*/}
+                        | TRUE_VAL                              {$$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
+                        | FALSE_VAL                             {$$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
+                        | IDENTIFIER	                        {$$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
@@ -310,8 +316,16 @@ int symbolVal(char symbol)
 void updateSymbolVal(char symbol, struct nodeType* val)
 {
 	int bucket = computeSymbolIndex(symbol);
-    if(val->type == "int")
+    if(val->type == "int"){
         printf("int\n");
+        // char* value = malloc(sizeof(struct nodeType))
+        // symbol_Table[bucket].value = val->value.intVal;
+        // char result[50];
+        // float num = 23.34;
+        // sprintf(result, "%f", num);
+        // printf("\n The string for the num is %s", result);
+        // getchar();
+    }
     else if(val->type == "float")
         printf("float\n");
     else if(val->type == "bool")
@@ -319,8 +333,6 @@ void updateSymbolVal(char symbol, struct nodeType* val)
     else if(val->type == "string")
         printf("string\n");
 	symbolTable [bucket] = val->value.intVal;
-
-
 }
 
 //------------------------------------------------------------------------------- 
@@ -329,36 +341,35 @@ void updateSymbolVal(char symbol, struct nodeType* val)
 struct nodeType* intNode() {
     struct nodeType* p = malloc(sizeof(struct nodeType));;
     p->type = "int";
-    p->value.stringVal = (void *)0;
+    p->value.intVal = 0;
     return p;
 }
 
 struct nodeType* floatNode() {
     struct nodeType* p = malloc(sizeof(struct nodeType));;
     p->type = "float";
-        p->value.stringVal = (void *)0;
+    p->value.intVal = 0;
     return p;
 }
 
 struct nodeType* boolNode() {
     struct nodeType* p = malloc(sizeof(struct nodeType));;
     p->type = "bool";
-        p->value.stringVal = (void *)0;
-
+    p->value.intVal = 0;
     return p;
 }
 
 struct nodeType* stringNode() {
     struct nodeType* p = malloc(sizeof(struct nodeType));;
     p->type = "string";
-        p->value.stringVal = (void *)0;
-
+    p->value.intVal = 0;
     return p;
 }
 
-void try(struct nodeType* type1, struct nodeType* type2) {
+void typeCheck(struct nodeType* type1, struct nodeType* type2) {
     if(strcmp(type1->type, type2->type) != 0) {
-        printf("Type Error\n");
+        printf("Type Error\n"); //To-Do:
+        exit(EXIT_FAILURE);
     }
 }
 
