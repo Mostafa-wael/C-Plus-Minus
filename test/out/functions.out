@@ -25,14 +25,17 @@ Lex(5) end Of Statement: ;
 
 Lex(6) control flow: return
 Lex(6) int value: 0
+Quads() push 0
 Lex(6) end Of Statement: ; 
 
 Lex(7) punctuators: }
 Lex(8) identifier: x
 Lex(8) punctuators: (
 Lex(8) int value: 1
+Quads() push 1
 Lex(8) punctuators: ,
 Lex(8) int value: 2
+Quads() push 2
 Lex(8) punctuators: )
 Lex(8) end Of Statement: ; 
 
@@ -57,6 +60,7 @@ Lex(13) end Of Statement: ;
 
 Lex(14) control flow: return
 Lex(14) int value: 1
+Quads() push 1
 Lex(14) end Of Statement: ; 
 
 Lex(15) punctuators: }

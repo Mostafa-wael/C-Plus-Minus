@@ -1,3 +1,25 @@
 Symbol Table:
-Name:a,Type:int,Value:90,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
-Name:b,Type:float,Value:1120521421,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:a,Type:int,Value:2,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:b,Type:int,Value:4,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:c,Type:int,Value:13,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:d,Type:int,Value:26,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:a,Type:int,Value:5,Declared:1,Initialized:1,Used:0,Const:1,Scope:1
+Name:b,Type:int,Value:-5,Declared:1,Initialized:1,Used:0,Const:0,Scope:1
+Name:f,Type:float,Value:1085276160,Declared:1,Initialized:1,Used:0,Const:0,Scope:1
+Name:c,Type:bool,Value:1,Declared:1,Initialized:1,Used:0,Const:0,Scope:1
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:1,Scope:2
+Name:a,Type:bool,Value:1,Declared:1,Initialized:1,Used:0,Const:0,Scope:3
+Name:b,Type:bool,Value:0,Declared:1,Initialized:1,Used:0,Const:0,Scope:3
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:b,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:c,Type:int,Value:2,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:d,Type:int,Value:102,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:6
+Name:b,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:6
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:7
+Name:b,Type:int,Value:10,Declared:1,Initialized:1,Used:1,Const:0,Scope:7
+Name:c,Type:int,Value:2,Declared:1,Initialized:1,Used:0,Const:0,Scope:7
+Name:d,Type:int,Value:102,Declared:1,Initialized:1,Used:0,Const:0,Scope:7
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:8
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:12
+Name:a,Type:int,Value:12,Declared:1,Initialized:1,Used:1,Const:0,Scope:15

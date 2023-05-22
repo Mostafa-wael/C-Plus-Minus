@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <string.h>
 
-
+#define SHOW_Quads 1
 void yyerror (char *s); // in case of errors
 int yylex();
 // show semantic erros
@@ -27,28 +27,28 @@ void Log_SEMANTIC_ERROR(int semanticError, char var, int line)
         switch(semanticError)
         {
                 case TYPE_MISMATCH:
-                        printf("Semantic(%d) Type mismatch error with %c\n", line, var);
+                        printf("SemanticError(%d) Type mismatch error with %c\n", line, var);
                         break;
-                case UNDECLARED:
-                        printf("Semantic(%d) Undeclared variable %c at line %d\n", var, line);
+                case UNDECLARED: // TODO
+                        printf("SemanticError(%d) Undeclared variable %c at line %d\n", var, line);
                         break;
                 case UNINITIALIZED:
-                        printf("Semantic(%d) Uninitialized variable %c\n", line, var);
+                        printf("SemanticError(%d) Uninitialized variable %c\n", line, var);
                         break;
                 case UNUSED:
-                        printf("Semantic(%d) Unused variable %c\n", line, var);
+                        printf("SemanticError(%d) Unused variable %c\n", line, var);
                         break;
                 case REDECLARED:
-                        printf("Semantic(%d) Redeclared variable %c\n", line, var);
+                        printf("SemanticError(%d) Redeclared variable %c\n", line, var);
                         break;
                 case CONSTANT:
-                        printf("Semantic(%d) Constant variable %c\n", line, var);
+                        printf("SemanticError(%d) Constant variable %c\n", line, var);
                         break;
                 case OUT_OF_SCOPE:
-                        printf("Semantic(%d) Variable %c out of scope\n", line, var);
+                        printf("SemanticError(%d) Variable %c out of scope\n", line, var);
                         break;
                 default:
-                        printf("Semantic(%d) Unknown error at line %c\n", line);
+                        printf("SemanticError(%d) Unknown error at line %c\n", line);
                         break;
         }
         printSymbolTable();
@@ -253,7 +253,7 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         | VOID_DATA_TYPE                        {;}
                         ;
                     
-declaration             : dataType IDENTIFIER 		            {checkSameScope($2);
+declaration             : dataType IDENTIFIER 		        {checkSameScope($2);
                                                                 insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);/*Check declared when inserting*/}
                         | dataType IDENTIFIER                   {checkSameScope($2);} '=' exp {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); updateSymbolVal($2,$5); setInit($2);}
                         | dataModifier dataType IDENTIFIER      {checkSameScope($3);} '=' exp 
@@ -269,37 +269,37 @@ assignment              : IDENTIFIER '=' exp                    {checkOutOfScope
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {;}
                         /* Negation */
-                        | '-' term                              {if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);}
-                        | '~' term                              {if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE);}
-                        | NOT term                              {if($2->type == "bool"){$$ = boolNode(); $$->value.boolVal = !$2->value.boolVal;} else{ if($2->value.intVal){$$ = boolNode(); $$->value.boolVal = 0;} else{$$ = boolNode(); $$->value.boolVal = 1;}}}
+                        | '-' term                              {quadInstruction("NEG"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);}
+                        | '~' term                              {quadInstruction("COMPLEMENT"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE);}
+                        | NOT term                              {quadInstruction("NOT"); if($2->type == "bool"){$$ = boolNode(); $$->value.boolVal = !$2->value.boolVal;} else{ if($2->value.intVal){$$ = boolNode(); $$->value.boolVal = 0;} else{$$ = boolNode(); $$->value.boolVal = 1;}}}
                         // /* Arithmatic */
-                        | exp '+' exp                           {$$ = arithmatic($1,$3,'+');}
-                        | exp '-' exp                           {$$ = arithmatic($1,$3,'-');}
-                        | exp '*' exp                           {$$ = arithmatic($1,$3,'*');}
-                        | exp '/' exp                           {$$ = arithmatic($1,$3,'/');}
-                        | exp '%' exp                           {$$ = arithmatic($1,$3,'%');}
+                        | exp '+' exp                           {quadInstruction("ADD"); $$ = arithmatic($1,$3,'+');}
+                        | exp '-' exp                           {quadInstruction("SUB"); $$ = arithmatic($1,$3,'-');}
+                        | exp '*' exp                           {quadInstruction("MUL"); $$ = arithmatic($1,$3,'*');}
+                        | exp '/' exp                           {quadInstruction("DIV"); $$ = arithmatic($1,$3,'/');}
+                        | exp '%' exp                           {quadInstruction("MOD"); $$ = arithmatic($1,$3,'%');}
                         // /* Bitwise */
-                        | exp '|' exp                           {$$ = bitwise($1,$3,'|');}
-                        | exp '&' exp                           {$$ = bitwise($1,$3,'&');}
-                        | exp '^' exp                           {$$ = bitwise($1,$3,'^');}
-                        | exp SHL exp                           {$$ = bitwise($1,$3,'<');}
-                        | exp SHR exp                           {$$ = bitwise($1,$3,'>');}
+                        | exp '|' exp                           {quadInstruction("BITWISE_OR"); $$ = bitwise($1,$3,'|');}
+                        | exp '&' exp                           {quadInstruction("BITWISE_AND"); $$ = bitwise($1,$3,'&');}
+                        | exp '^' exp                           {quadInstruction("BITWISE_XOR"); $$ = bitwise($1,$3,'^');}
+                        | exp SHL exp                           {quadInstruction("SHL"); $$ = bitwise($1,$3,'<');}
+                        | exp SHR exp                           {quadInstruction("SHR"); $$ = bitwise($1,$3,'>');}
                         // /* Logical */
-                        | exp AND exp                           {$$ = logical($1,$3,'&');}
-                        | exp OR exp                            {$$ = logical($1,$3,'|');}
+                        | exp OR exp                            {quadInstruction("LOGICAL_OR"); $$ = logical($1,$3,'|');}
+                        | exp AND exp                           {quadInstruction("LOGICAL_AND"); $$ = logical($1,$3,'&');}
                         // /* Comparison */
-                        | exp EQ exp                            {$$ = comparison($1,$3,"==");}
-                        | exp NEQ exp                           {$$ = comparison($1,$3,"!=");}
-                        | exp GT exp                            {$$ = comparison($1,$3,">");}
-                        | exp GEQ exp                           {$$ = comparison($1,$3,">=");}
-                        | exp LT exp                            {$$ = comparison($1,$3,"<");}
-                        | exp LEQ exp                           {$$ = comparison($1,$3,"<=");}
+                        | exp EQ exp                            {quadInstruction("EQ"); $$ = comparison($1,$3,"==");}
+                        | exp NEQ exp                           {quadInstruction("NEQ"); $$ = comparison($1,$3,"!=");}
+                        | exp GT exp                            {quadInstruction("GT"); $$ = comparison($1,$3,">");}
+                        | exp GEQ exp                           {quadInstruction("GEQ"); $$ = comparison($1,$3,">=");}
+                        | exp LT exp                            {quadInstruction("LT"); $$ = comparison($1,$3,"<");}
+                        | exp LEQ exp                           {quadInstruction("LEQ"); $$ = comparison($1,$3,"<=");}
                         ;
-term   	                : NUMBER                                {$$ = intNode(); $$->value.intVal = $1;  /*Pass value & type*/}
-                        | FLOAT_NUMBER                          {$$ = floatNode(); $$->value.floatVal = $1; /*Pass value & type*/}
-                        | TRUE_VAL                              {$$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
-                        | FALSE_VAL                             {$$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
-                        | IDENTIFIER	                        {checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+term   	                : NUMBER                                {quadPushInt($1); $$ = intNode(); $$->value.intVal = $1;  /*Pass value & type*/}
+                        | FLOAT_NUMBER                          {quadPushFloat($1); $$ = floatNode(); $$->value.floatVal = $1; /*Pass value & type*/}
+                        | TRUE_VAL                              {quadPushInt(1); $$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
+                        | FALSE_VAL                             {quadPushInt(0); $$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
+                        | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
@@ -365,7 +365,40 @@ enumDeclaration         : IDENTIFIER IDENTIFIER                 {;}
 //======================
 
 %%  
-
+//======================
+/* Quadruples */
+//======================    
+void quadInstruction(const char* instruction)
+{
+        if (SHOW_Quads) {
+               
+                printf("Quads() %s\n", instruction);
+        }
+}
+void quadPushInt(int val)
+{
+       if (SHOW_Quads) {
+               printf("Quads() push %d\n", val);
+       }
+}
+void quadPushFloat(float val)
+{
+       if (SHOW_Quads) {
+               printf("Quads() push %f\n", val);
+       }
+}
+void quadPushIdentifier(char symbol)
+{
+       if (SHOW_Quads) {
+               printf("Quads() push %c\n", symbol);
+       }
+}
+void quadPop(char symbol)
+{
+       if (SHOW_Quads) {
+               printf("Quads() pop %c\n\n", symbol);
+       }
+}
 int sym_table_idx = 0;
 
 /* C code */
@@ -398,7 +431,7 @@ void insert(char name, char* type, int isConst, int isInit, int isUsed, int scop
     symbol_Table [sym_table_idx].scope = scope;
     ++sym_table_idx;
 
-    printf("inserted: %c, declared:%d, const:%d, Symbol table idx:%d\n", symbol_Table [sym_table_idx-1].name, symbol_Table [sym_table_idx-1].isDecl, symbol_Table [sym_table_idx-1].isConst, sym_table_idx);
+    /* printf("SymbolTable() inserted: %c, declared:%d, const:%d, Symbol table idx:%d\n", symbol_Table [sym_table_idx-1].name, symbol_Table [sym_table_idx-1].isDecl, symbol_Table [sym_table_idx-1].isConst, sym_table_idx); */
 }
 
 /* returns the value of a given symbol */

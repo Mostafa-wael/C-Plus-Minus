@@ -9,6 +9,7 @@ Lex(2) data type: int
 Lex(2) identifier: a
 Lex(2) punctuators: =
 Lex(2) int value: 10
+Quads() push 10
 Lex(2) end Of Statement: ; 
 
 inserted: a, declared:1, const:0, Symbol table idx:1
@@ -16,8 +17,11 @@ Lex(3) control flow: if
 Lex(3) punctuators: (
 Lex(3) identifier: a
 Lex(3) comparetor operator: ==
+Quads() push a
 Lex(3) int value: 10
+Quads() push 10
 Lex(3) punctuators: )
+Quads() EQ
 Lex(4) punctuators: {
 Lex(5) command: print
 Lex(5) punctuators: (
@@ -39,8 +43,11 @@ Lex(8) control flow: if
 Lex(8) punctuators: (
 Lex(8) identifier: a
 Lex(8) comparetor operator: ==
+Quads() push a
 Lex(8) int value: 11
+Quads() push 11
 Lex(8) punctuators: )
+Quads() EQ
 Lex(9) punctuators: {
 Lex(10) command: print
 Lex(10) punctuators: (
@@ -77,8 +84,11 @@ Lex(17) control flow: if
 Lex(17) punctuators: (
 Lex(17) identifier: a
 Lex(17) comparetor operator: ==
+Quads() push a
 Lex(17) int value: 10
+Quads() push 10
 Lex(17) punctuators: )
+Quads() EQ
 Lex(18) punctuators: {
 Lex(19) command: print
 Lex(19) punctuators: (
@@ -117,8 +127,11 @@ Lex(28) control flow: if
 Lex(28) punctuators: (
 Lex(28) identifier: a
 Lex(28) comparetor operator: ==
+Quads() push a
 Lex(28) int value: 10
+Quads() push 10
 Lex(28) punctuators: )
+Quads() EQ
 Lex(29) punctuators: {
 Lex(30) command: print
 Lex(30) punctuators: (
@@ -140,8 +153,11 @@ Lex(33) control flow: if
 Lex(33) punctuators: (
 Lex(33) identifier: a
 Lex(33) comparetor operator: ==
+Quads() push a
 Lex(33) int value: 11
+Quads() push 11
 Lex(33) punctuators: )
+Quads() EQ
 Lex(34) punctuators: {
 Lex(35) command: print
 Lex(35) punctuators: (
@@ -170,6 +186,7 @@ Lex(40) control flow: switch
 Lex(40) punctuators: (
 Lex(40) identifier: a
 Lex(40) punctuators: )
+Quads() push a
 Lex(41) punctuators: {
 Lex(42) control flow: default
 Lex(42) punctuators: :
@@ -188,9 +205,11 @@ Lex(46) control flow: switch
 Lex(46) punctuators: (
 Lex(46) identifier: a
 Lex(46) punctuators: )
+Quads() push a
 Lex(47) punctuators: {
 Lex(48) control flow: case
 Lex(48) int value: 1
+Quads() push 1
 Lex(48) punctuators: :
 Lex(49) command: print
 Lex(49) punctuators: (
@@ -204,6 +223,7 @@ Lex(50) end Of Statement: ;
 
 Lex(52) control flow: case
 Lex(52) int value: 2
+Quads() push 2
 Lex(52) punctuators: :
 Lex(53) command: print
 Lex(53) punctuators: (
@@ -217,6 +237,7 @@ Lex(54) end Of Statement: ;
 
 Lex(56) control flow: case
 Lex(56) int value: 3
+Quads() push 3
 Lex(56) punctuators: :
 Lex(57) command: print
 Lex(57) punctuators: (
@@ -233,9 +254,11 @@ Lex(61) control flow: switch
 Lex(61) punctuators: (
 Lex(61) identifier: a
 Lex(61) punctuators: )
+Quads() push a
 Lex(62) punctuators: {
 Lex(63) control flow: case
 Lex(63) int value: 1
+Quads() push 1
 Lex(63) punctuators: :
 Lex(64) command: print
 Lex(64) punctuators: (
@@ -249,6 +272,7 @@ Lex(65) end Of Statement: ;
 
 Lex(67) control flow: case
 Lex(67) int value: 2
+Quads() push 2
 Lex(67) punctuators: :
 Lex(68) command: print
 Lex(68) punctuators: (
@@ -262,6 +286,7 @@ Lex(69) end Of Statement: ;
 
 Lex(71) control flow: case
 Lex(71) int value: 3
+Quads() push 3
 Lex(71) punctuators: :
 Lex(72) command: print
 Lex(72) punctuators: (

@@ -13,19 +13,24 @@ Lex(2) end Of Statement: ;
 Lex(3) identifier: a
 Lex(3) punctuators: =
 Lex(3) int value: 0
+Quads() push 0
 Lex(3) end Of Statement: ; 
 
 Lex(4) control flow: while
 Lex(4) punctuators: (
 Lex(4) identifier: a
 Lex(4) comparetor operator: <
+Quads() push a
 Lex(4) int value: 20
+Quads() push 20
 Lex(4) punctuators: )
+Quads() LT
 Lex(5) punctuators: {
 Lex(6) command: print
 Lex(6) punctuators: (
 Lex(6) identifier: a
 Lex(6) punctuators: )
+Quads() push a
 0
 Lex(6) end Of Statement: ; 
 
@@ -33,14 +38,18 @@ Lex(7) identifier: a
 Lex(7) punctuators: =
 Lex(7) identifier: a
 Lex(7) arithmtic operator: +
+Quads() push a
 Lex(7) int value: 1
+Quads() push 1
 Lex(7) end Of Statement: ; 
 
+Quads() ADD
 Lex(8) punctuators: }
 Lex(9) command: print
 Lex(9) punctuators: (
 Lex(9) identifier: a
 Lex(9) punctuators: )
+Quads() push a
 1
 Lex(9) end Of Statement: ; 
 
@@ -48,20 +57,27 @@ Lex(10) control flow: while
 Lex(10) punctuators: (
 Lex(10) identifier: a
 Lex(10) comparetor operator: <
+Quads() push a
 Lex(10) int value: 20
+Quads() push 20
 Lex(10) punctuators: )
+Quads() LT
 Lex(11) punctuators: {
 Lex(12) control flow: if
 Lex(12) punctuators: (
 Lex(12) identifier: a
 Lex(12) comparetor operator: ==
+Quads() push a
 Lex(12) int value: 10
+Quads() push 10
 Lex(12) punctuators: )
+Quads() EQ
 Lex(13) punctuators: {
 Lex(14) command: print
 Lex(14) punctuators: (
 Lex(14) identifier: a
 Lex(14) punctuators: )
+Quads() push a
 1
 Lex(14) end Of Statement: ; 
 
@@ -70,14 +86,18 @@ Lex(16) identifier: a
 Lex(16) punctuators: =
 Lex(16) identifier: a
 Lex(16) arithmtic operator: +
+Quads() push a
 Lex(16) int value: 1
+Quads() push 1
 Lex(16) end Of Statement: ; 
 
+Quads() ADD
 Lex(17) punctuators: }
 Lex(18) command: print
 Lex(18) punctuators: (
 Lex(18) identifier: a
 Lex(18) punctuators: )
+Quads() push a
 2
 Lex(18) end Of Statement: ; 
 
@@ -94,24 +114,32 @@ Lex(21) punctuators: (
 Lex(21) identifier: a
 Lex(21) punctuators: =
 Lex(21) int value: 2
+Quads() push 2
 Lex(21) end Of Statement: ; 
 
 Lex(21) identifier: a
 Lex(21) comparetor operator: <
+Quads() push a
 Lex(21) int value: 10
+Quads() push 10
 Lex(21) end Of Statement: ; 
 
+Quads() LT
 Lex(21) identifier: a
 Lex(21) punctuators: =
 Lex(21) identifier: a
 Lex(21) arithmtic operator: +
+Quads() push a
 Lex(21) int value: 1
+Quads() push 1
 Lex(21) punctuators: )
+Quads() ADD
 Lex(22) punctuators: {
 Lex(23) command: print
 Lex(23) punctuators: (
 Lex(23) identifier: a
 Lex(23) punctuators: )
+Quads() push a
 3
 Lex(23) end Of Statement: ; 
 
@@ -126,24 +154,32 @@ Lex(26) punctuators: (
 Lex(26) identifier: a
 Lex(26) punctuators: =
 Lex(26) int value: 2
+Quads() push 2
 Lex(26) end Of Statement: ; 
 
 Lex(26) identifier: a
 Lex(26) comparetor operator: <
+Quads() push a
 Lex(26) int value: 10
+Quads() push 10
 Lex(26) end Of Statement: ; 
 
+Quads() LT
 Lex(26) identifier: a
 Lex(26) punctuators: =
 Lex(26) identifier: a
 Lex(26) arithmtic operator: +
+Quads() push a
 Lex(26) int value: 1
+Quads() push 1
 Lex(26) punctuators: )
+Quads() ADD
 Lex(27) punctuators: {
 Lex(28) command: print
 Lex(28) punctuators: (
 Lex(28) identifier: a
 Lex(28) punctuators: )
+Quads() push a
 3
 Lex(28) end Of Statement: ; 
 
@@ -152,19 +188,26 @@ Lex(29) punctuators: =
 Lex(29) identifier: a
 Lex(29) end Of Statement: ; 
 
+Quads() push a
 Lex(30) control flow: while
 Lex(30) punctuators: (
 Lex(30) identifier: b
 Lex(30) comparetor operator: <
+Quads() push b
 Lex(30) int value: 10
+Quads() push 10
 Lex(30) punctuators: )
+Quads() LT
 Lex(31) punctuators: {
 Lex(32) control flow: if
 Lex(32) punctuators: (
 Lex(32) identifier: b
 Lex(32) comparetor operator: ==
+Quads() push b
 Lex(32) int value: 5
+Quads() push 5
 Lex(32) punctuators: )
+Quads() EQ
 Lex(33) punctuators: {
 Lex(34) command: print
 Lex(34) punctuators: (
@@ -177,6 +220,7 @@ Lex(35) command: print
 Lex(35) punctuators: (
 Lex(35) identifier: b
 Lex(35) punctuators: )
+Quads() push b
 3
 Lex(35) end Of Statement: ; 
 
@@ -185,9 +229,12 @@ Lex(38) identifier: b
 Lex(38) punctuators: =
 Lex(38) identifier: b
 Lex(38) arithmtic operator: +
+Quads() push b
 Lex(38) int value: 1
+Quads() push 1
 Lex(38) end Of Statement: ; 
 
+Quads() ADD
 Lex(39) punctuators: }
 Lex(40) punctuators: }
 Lex(41) inline comment: ////////////////////////////////
@@ -201,6 +248,7 @@ Lex(42) end Of Statement: ;
 Lex(43) identifier: a
 Lex(43) punctuators: =
 Lex(43) int value: 0
+Quads() push 0
 Lex(43) end Of Statement: ; 
 
 Lex(44) control flow: repeat
@@ -209,6 +257,7 @@ Lex(46) command: print
 Lex(46) punctuators: (
 Lex(46) identifier: a
 Lex(46) punctuators: )
+Quads() push a
 0
 Lex(46) end Of Statement: ; 
 
@@ -216,13 +265,17 @@ Lex(47) identifier: a
 Lex(47) punctuators: =
 Lex(47) identifier: a
 Lex(47) arithmtic operator: +
+Quads() push a
 Lex(47) int value: 1
+Quads() push 1
 Lex(47) end Of Statement: ; 
 
+Quads() ADD
 Lex(48) command: print
 Lex(48) punctuators: (
 Lex(48) identifier: a
 Lex(48) punctuators: )
+Quads() push a
 1
 Lex(48) end Of Statement: ; 
 
@@ -231,8 +284,11 @@ Lex(50) control flow: until
 Lex(50) punctuators: (
 Lex(50) identifier: a
 Lex(50) comparetor operator: ==
+Quads() push a
 Lex(50) int value: 1
+Quads() push 1
 Lex(50) punctuators: )
+Quads() EQ
 Lex(50) end Of Statement: ; 
 
 Lex(51) control flow: repeat
@@ -241,6 +297,7 @@ Lex(53) command: print
 Lex(53) punctuators: (
 Lex(53) identifier: a
 Lex(53) punctuators: )
+Quads() push a
 1
 Lex(53) end Of Statement: ; 
 
@@ -248,20 +305,27 @@ Lex(54) identifier: a
 Lex(54) punctuators: =
 Lex(54) identifier: a
 Lex(54) arithmtic operator: +
+Quads() push a
 Lex(54) int value: 1
+Quads() push 1
 Lex(54) end Of Statement: ; 
 
+Quads() ADD
 Lex(55) control flow: if
 Lex(55) punctuators: (
 Lex(55) identifier: a
 Lex(55) comparetor operator: ==
+Quads() push a
 Lex(55) int value: 1
+Quads() push 1
 Lex(55) punctuators: )
+Quads() EQ
 Lex(56) punctuators: {
 Lex(57) command: print
 Lex(57) punctuators: (
 Lex(57) identifier: a
 Lex(57) punctuators: )
+Quads() push a
 2
 Lex(57) end Of Statement: ; 
 
@@ -271,8 +335,11 @@ Lex(60) control flow: until
 Lex(60) punctuators: (
 Lex(60) identifier: a
 Lex(60) comparetor operator: ==
+Quads() push a
 Lex(60) int value: 1
+Quads() push 1
 Lex(60) punctuators: )
+Quads() EQ
 Lex(60) end Of Statement: ; 
 
 Lex(61) command: exit
