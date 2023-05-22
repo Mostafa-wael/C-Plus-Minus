@@ -33,6 +33,7 @@ void exitScope();
 struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op);
+struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op);
 
 // Types
 //======================
@@ -251,18 +252,18 @@ exp    	                : term                                  {$$ = $1;}
                         | exp AND exp                           {$$ = logical($1,$3,'&');}
                         | exp OR exp                            {$$ = logical($1,$3,'|');}
                         // /* Comparison */
-                        // | exp EQ exp                            {$$ = $1 == $3;}
-                        // | exp NEQ exp                           {$$ = $1 != $3;}
-                        // | exp GT exp                            {$$ = $1 > $3;}
-                        // | exp GEQ exp                           {$$ = $1 >= $3;}
-                        // | exp LT exp                            {$$ = $1 < $3;}
-                        // | exp LEQ exp                           {$$ = $1 <= $3;}
+                        | exp EQ exp                            {$$ = comparison($1,$3,"==");}
+                        | exp NEQ exp                           {$$ = comparison($1,$3,"!=");}
+                        | exp GT exp                            {$$ = comparison($1,$3,">");}
+                        | exp GEQ exp                           {$$ = comparison($1,$3,">=");}
+                        | exp LT exp                            {$$ = comparison($1,$3,"<");}
+                        | exp LEQ exp                           {$$ = comparison($1,$3,"<=");}
                         ;
 term   	                : NUMBER                                {$$ = intNode(); $$->value.intVal = $1;  /*Pass value & type*/}
                         | FLOAT_NUMBER                          {$$ = floatNode(); $$->value.floatVal = $1; /*Pass value & type*/}
                         | TRUE_VAL                              {$$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
                         | FALSE_VAL                             {$$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
-                        | IDENTIFIER	                        {$$ = symbolVal($1); checkDeclaration($1); checkInitialization($1); /*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+                        | IDENTIFIER	                        {checkInitialization($1); $$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
@@ -330,13 +331,17 @@ int sym_table_idx = 0;
 
 /* C code */
 int computeSymbolIndex(char token){
-	int idx = -1;
-	if(islower(token)) {
-		idx = token - 'a' + 26;
-	} else if(isupper(token)) {
-		idx = token - 'A';
-	}
-	return idx;
+    int lvl;
+    for(int i=sym_table_idx-1; i>=0 ;i--) {
+        if(symbol_Table[i].name == token) {
+            lvl = symbol_Table[i].scope;
+            for(int j=scope_idx-1;j>=0;j--) {
+                if(lvl == scopes[j]) {
+                    return i;
+                }
+            }
+        }
+    }
 } 
 
 //======================
@@ -360,12 +365,20 @@ void insert(char name, char* type, int isConst, int isInit, int isUsed, int scop
 
 /* returns the value of a given symbol */
 struct nodeType* symbolVal(char symbol){
-    int bucket = computeSymbolIndex(symbol);
-	int value = symbol_Table[bucket].value.intVal;
 
+    int bucket = computeSymbolIndex(symbol);
     struct nodeType* p = malloc(sizeof(struct nodeType));;
-    p->type = "int";
-    p->value.intVal = value;
+    p->type = symbol_Table[bucket].type;
+
+    if(strcmp(symbol_Table[bucket].type, "int") == 0)
+        p->value.intVal = symbol_Table[bucket].value.intVal;
+    else if(strcmp(symbol_Table[bucket].type, "float") == 0)
+        p->value.floatVal = symbol_Table[bucket].value.floatVal;
+    else if(strcmp(symbol_Table[bucket].type, "bool") == 0)
+        p->value.boolVal = symbol_Table[bucket].value.boolVal;
+    else if(strcmp(symbol_Table[bucket].type, "string") == 0)
+        p->value.stringVal = symbol_Table[bucket].value.stringVal;
+
     return p;
 }
 
@@ -378,23 +391,14 @@ void updateSymbolName(char symbol, char newName){
 /* updates the value of a given symbol */
 void updateSymbolVal(char symbol, struct nodeType* val){
 	int bucket = computeSymbolIndex(symbol);
-    if(val->type == "int"){
-        printf("int\n");
-        // char* value = malloc(sizeof(struct nodeType))
-        // symbol_Table[bucket].value = val->value.intVal;
-        // char result[50];
-        // float num = 23.34;
-        // sprintf(result, "%f", num);
-        // printf("\n The string for the num is %s", result);
-        // getchar();
-    }
-    else if(val->type == "float")
-        printf("float\n");
-    else if(val->type == "bool")
-        printf("bool\n");
-    else if(val->type == "string")
-        printf("string\n");
-	symbol_Table [bucket].value.intVal = val->value.intVal;
+    if(strcmp(symbol_Table[bucket].type, "int") == 0)
+        symbol_Table [bucket].value.intVal = val->value.intVal;
+    else if(strcmp(symbol_Table[bucket].type, "float") == 0)
+        symbol_Table[bucket].value.floatVal = val->value.floatVal;
+    else if(strcmp(symbol_Table[bucket].type, "bool") == 0)
+        symbol_Table[bucket].value.boolVal = val->value.boolVal;
+    else if(strcmp(symbol_Table[bucket].type, "string") == 0)
+        symbol_Table[bucket].value.stringVal = val->value.stringVal;
 }
 
 //------------------------------------------------------------------------------- 
@@ -549,6 +553,65 @@ struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op){
     return p;
 }
 
+struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op){
+    struct nodeType* p = malloc(sizeof(struct nodeType));
+    p->type = "bool";
+    if(strcmp(op1->type, op2->type) != 0)
+    {
+        printf("Type mismatch\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if( strcmp(op1->type,"float") == 0){
+        if(strcmp(op, "==") == 0){
+            p->value.boolVal = op1->value.floatVal == op2->value.floatVal;
+        }
+        else if(strcmp(op, "!=") == 0){
+            p->value.boolVal = op1->value.floatVal != op2->value.floatVal;
+        }
+        else if(strcmp(op, ">") == 0){
+            p->value.boolVal = op1->value.floatVal > op2->value.floatVal;
+        }
+        else if(strcmp(op, ">=") == 0){
+            p->value.boolVal = op1->value.floatVal >= op2->value.floatVal;
+        }
+        else if(strcmp(op, "<") == 0){
+            p->value.boolVal = op1->value.floatVal < op2->value.floatVal;
+        }
+        else if(strcmp(op, "<=") == 0){
+            p->value.boolVal = op1->value.floatVal <= op2->value.floatVal;
+        }
+        else{
+            printf("Invalid operator\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else{
+        if(strcmp(op, "==") == 0){
+            p->value.boolVal = op1->value.intVal == op2->value.intVal;
+        }
+        else if(strcmp(op, "!=") == 0){
+            p->value.boolVal = op1->value.intVal != op2->value.intVal;
+        }
+        else if(strcmp(op, ">") == 0){
+            p->value.boolVal = op1->value.intVal > op2->value.intVal;
+        }
+        else if(strcmp(op, ">=") == 0){
+            p->value.boolVal = op1->value.intVal >= op2->value.intVal;
+        }
+        else if(strcmp(op, "<") == 0){
+            p->value.boolVal = op1->value.intVal < op2->value.intVal;
+        }
+        else if(strcmp(op, "<=") == 0){
+            p->value.boolVal = op1->value.intVal <= op2->value.intVal;
+        }
+        else{
+            printf("Invalid operator\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    return p;
+}
 //------------------------------------------------------------------------------- 
 // Type checking functions 
 //-------------------------------------------------------------------------------  

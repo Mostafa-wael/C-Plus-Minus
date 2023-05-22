@@ -1,16 +1,9 @@
 print("Custom");
 {
-    int a = 1;
-    const float b = 2.0;
-    bool c = true;
-    int d;
-
-    {
-        d = 9;
-        float e = 8.0;
-    }
-    print(a);
-    print(b);
-    print(c);
-    print(d);
+    int a = 10;         // 1010
+    int b = 10;         // 1010
+    print(a + b == 20); // 20
+    print(a - b == 0);  // 0
+    print(a / b == 1);  // 1
+    print(a * b - b + a / b == 91);
 }
