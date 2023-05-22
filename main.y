@@ -19,8 +19,6 @@
 void yyerror (char *s); // in case of errors
 int yylex();
 
-char* yytext; // the text of the current token
-
 char buffer[500];
 
 
@@ -60,7 +58,7 @@ struct symbol {
 };
 // Symbol table functions
 struct symbol symbol_Table [52]; // 26 for lower case, 26 for upper case
-int symbolTable [52]; // 26 for lower case, 26 for upper case
+// int symbolTable [52]; // 26 for lower case, 26 for upper case
 struct nodeType* symbolVal(char symbol); // returns the value of a given symbol
 void updateSymbolVal(char symbol, struct nodeType* val); // updates the value of a given symbol
 
@@ -314,7 +312,7 @@ int computeSymbolIndex(char token)
 struct nodeType* symbolVal(char symbol)
 {
     int bucket = computeSymbolIndex(symbol);
-	int value = symbolTable[bucket];
+	int value = symbol_Table[bucket].value.intVal;
 
     struct nodeType* p = malloc(sizeof(struct nodeType));;
     p->type = "int";
@@ -342,7 +340,7 @@ void updateSymbolVal(char symbol, struct nodeType* val)
         printf("bool\n");
     else if(val->type == "string")
         printf("string\n");
-	symbolTable [bucket] = val->value.intVal;
+	symbol_Table [bucket].value.intVal = val->value.intVal;
 }
 
 //------------------------------------------------------------------------------- 
@@ -388,74 +386,69 @@ void typeCheck(struct nodeType* type1, struct nodeType* type2) {
 //-------------------------------------------------------------------------------  
 
 // this function checks if a variable is used before declaration or out of scope
-void checkDeclaration(char name) {
+// void checkDeclaration(char name) {
 
-    //TODO: check for scope
-    //TODO: use yytext 
+//     //TODO: check for scope
+//     //TODO: use yytext 
 
-    int found = 0;
+//     int found = 0;
 
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        if(strcmp(symbol_Table[i].name, name) == 0) {
-            found = 1;
-            break;
-        }
-    }
+//     for(int i=symbolTableIndex-1;i>=0;i--) {
+//         if(strcmp(symbol_Table[i].name, name) == 0) {
+//             found = 1;
+//             break;
+//         }
+//     }
 
-    if(!found) {
-        printf("Variable %c not declared\n", name);
-    }
+//     if(!found) {
+//         printf("Variable %c not declared\n", name);
+//     }
 
-}
+// }
 
-// this function checks if a variable is initialized before use
-void checkInitialization(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        if(strcmp(symbol_Table[i].name, name) == 0) {
-            if(symbol_Table[i].isInit == 0) {
-                printf("Variable %c not initialized\n", name);
-                return;
-            }
-        }
-    }
-}
+// // this function checks if a variable is initialized before use
+// void checkInitialization(char name) {
+//     for(int i=symbolTableIndex-1;i>=0;i--) {
+//         if(strcmp(symbol_Table[i].name, name) == 0) {
+//             if(symbol_Table[i].isInit == 0) {
+//                 printf("Variable %c not initialized\n", name);
+//                 return;
+//             }
+//         }
+//     }
+// }
 
-// this function checks that all variables are used
-void checkUsage() {
-    for(int i=0;i<symbolTableIndex;i++) {
-        if(symbol_Table[i].isUsed == 0) {
-            printf("Variable %s not used\n", symbol_Table[i].name);
-        }
-    }
-}
+// // this function checks that all variables are used
+// void checkUsage() {
+//     for(int i=0;i<symbolTableIndex;i++) {
+//         if(symbol_Table[i].isUsed == 0) {
+//             printf("Variable %s not used\n", symbol_Table[i].name);
+//         }
+//     }
+// }
 
-// this function checks if a constant variable is assigned a value
-void checkConstantInitialization(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        if(strcmp(symbol_Table[i].name, name) == 0) {
-            if(symbol_Table[i].isConst == 1) {
-                printf("Constant variable %c cannot be assigned a value\n", name)
-                return;
-            }
-        }
-    }
-}
+// // this function checks if a constant variable is assigned a value
+// void checkConstantInitialization(char name) {
+//     for(int i=symbolTableIndex-1;i>=0;i--) {
+//         if(strcmp(symbol_Table[i].name, name) == 0) {
+//             if(symbol_Table[i].isConst == 1) {
+//                 printf("Constant variable %c cannot be assigned a value\n", name);
+//                 return;
+//             }
+//         }
+//     }
+// }
 
 
 
 //-------------------------------------------------------------------------------
 int main (void) {
 	/* init symbol table */
-	int i;
-	for(i=0; i<52; i++) {
-		symbolTable[i] = 0;
-	}
+	
     
     yyparse ( );
 	
-    checkUsage();
-
-    return 
+    return 0;
 }
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 
