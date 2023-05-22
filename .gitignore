@@ -2,3 +2,5 @@ y.tab.h
 y.tab.c
 lex.yy.c
 main.exe
+main
+.vscode/settings.json
