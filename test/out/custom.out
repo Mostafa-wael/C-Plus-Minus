@@ -4,12 +4,12 @@ float
 bool
 Variable d, Constant:
 int
-Variable a not initialized
+float
 1
-Variable b not initialized
 1073741824
-Variable c not initialized
 1
+9
 Variable a not used
 Variable b not used
 Variable c not used
+Variable e not used

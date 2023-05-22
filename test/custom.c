@@ -1,10 +1,16 @@
 print("Custom");
-int a = 1;
-float b = 2.0;
-bool c = true;
+{
+    int a = 1;
+    const float b = 2.0;
+    bool c = true;
+    int d;
 
-int d;
-d = 3;
-print(a);
-print(b);
-print(c);
+    {
+        d = 9;
+        float e = 8.0;
+    }
+    print(a);
+    print(b);
+    print(c);
+    print(d);
+}
