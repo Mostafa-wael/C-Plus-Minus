@@ -205,12 +205,17 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         | BOOL_DATA_TYPE                        {$$ = boolNode();}
                         | VOID_DATA_TYPE                        {;}
                         ;
-declaration             : dataType IDENTIFIER 		            {if(checkDeclaration($2)) exit(EXIT_FAILURE); insert($2, $1->type, 0, 0, 0);/*Check declared when inserting*/}
-                        | dataType IDENTIFIER   {if(checkDeclaration($2)) exit(EXIT_FAILURE);} '=' exp	    {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0); updateSymbolVal($2,$5); }
-                        | dataModifier dataType IDENTIFIER {if(checkDeclaration($3)) exit(EXIT_FAILURE);} '=' exp 	    {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0); updateSymbolVal($3,$6); }
+declaration             : dataType IDENTIFIER 		            {if(checkDeclaration($2)) exit(EXIT_FAILURE); 
+                                                                insert($2, $1->type, 0, 0, 0);/*Check declared when inserting*/}
+                        | dataType IDENTIFIER                   {if(checkDeclaration($2)) exit(EXIT_FAILURE);} '=' exp	    
+                                                                {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0); updateSymbolVal($2,$5); }
+                        | dataModifier dataType IDENTIFIER      {if(checkDeclaration($3)) exit(EXIT_FAILURE);} '=' exp 
+                                                                {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0); updateSymbolVal($3,$6); }
                         ;
-assignment              : IDENTIFIER '=' exp                    {if(!checkDeclaration($1)) exit(EXIT_FAILURE);  checkConstant($1); /*Const, Decl, Type checks*/ /*Set Used*/updateSymbolVal($1,$3); $$ = $3;}
-                        | IDENTIFIER '=' STRING                 {if(!checkDeclaration($1)) exit(EXIT_FAILURE);  checkConstant($1);  /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
+assignment              : IDENTIFIER '=' exp                    {if(!checkDeclaration($1)) exit(EXIT_FAILURE);  checkConstant($1); 
+                                                                typeCheck2($1, $3); setUsed($1); updateSymbolVal($1,$3); $$ = $3;}
+                        | IDENTIFIER '=' STRING                 {if(!checkDeclaration($1)) exit(EXIT_FAILURE);  checkConstant($1); 
+                                                                /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
                         | enumDef                               {;}             //
                         | dataType enumDeclaration              {/*Check declared*/;}
                         ;
@@ -572,6 +577,18 @@ void typeCheck(struct nodeType* type1, struct nodeType* type2) {
     return;
 }
 
+void typeCheck2(char symbol, struct nodeType* type2) {
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        if(symbol_Table[i].name == symbol) {
+            if(strcmp(symbol_Table[i].type, type2->type) != 0) {
+                printf("Type Error\n"); //To-Do:
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
+    return;
+}
+
 // ------------------------------------------------------------------------------- 
 // checking functions 
 // -------------------------------------------------------------------------------  
@@ -657,9 +674,8 @@ void setInit(char name) {
 }
 
 void setUsed(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        const char* na = &name;
-        if(strcmp(symbol_Table[i].name, na) == 0) {
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        if(symbol_Table[i].name == name) {
             symbol_Table[i].isUsed = 1;
             return;
         }
