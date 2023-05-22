@@ -1,14 +1,15 @@
 print("enums");
-enum Color{
-    RED=10,
-    GREEN,
-    BLUE=12,
-    RED
+enum W
+{
+    R = 10,
+    G,
+    B = 12,
+    R
 };
 print(0);
 {
-    Color c1;
-    Color c2=RED;
-    Color c3=3+5;
+    int C r;
+    int C t = 10;
+    int C v = 3 + 5;
 }
 exit;

@@ -1,0 +1,77 @@
+Lex(1) command: print
+Lex(1) punctuators: (
+Lex(1) string value: "functions"
+Lex(1) punctuators: )
+"functions"
+Lex(1) end Of Statement: ; 
+
+Lex(3) data type: int
+Lex(3) identifier: x
+Lex(3) punctuators: (
+Lex(3) data type: int
+Lex(3) identifier: a
+Lex(3) punctuators: ,
+Lex(3) data type: int
+Lex(3) identifier: b
+Lex(3) punctuators: )
+inserted: x, declared:1, const:0, Symbol table idx:1
+Lex(4) punctuators: {
+Lex(5) command: print
+Lex(5) punctuators: (
+Lex(5) string value: "add"
+Lex(5) punctuators: )
+"add"
+Lex(5) end Of Statement: ; 
+
+Lex(6) control flow: return
+Lex(6) int value: 0
+Lex(6) end Of Statement: ; 
+
+Lex(7) punctuators: }
+Lex(8) identifier: x
+Lex(8) punctuators: (
+Lex(8) int value: 1
+Lex(8) punctuators: ,
+Lex(8) int value: 2
+Lex(8) punctuators: )
+Lex(8) end Of Statement: ; 
+
+Lex(10) command: print
+Lex(10) punctuators: (
+Lex(10) string value: "x"
+Lex(10) punctuators: )
+"x"
+Lex(10) end Of Statement: ; 
+
+Lex(11) data type: int
+Lex(11) identifier: y
+Lex(11) punctuators: (
+Lex(11) punctuators: )
+Lex(12) punctuators: {
+Lex(13) command: print
+Lex(13) punctuators: (
+Lex(13) string value: "y"
+Lex(13) punctuators: )
+"y"
+Lex(13) end Of Statement: ; 
+
+Lex(14) control flow: return
+Lex(14) int value: 1
+Lex(14) end Of Statement: ; 
+
+Lex(15) punctuators: }
+Lex(16) inline comment: // int x(int a, int b)
+Lex(17) inline comment: // {
+Lex(18) inline comment: //     print("add");
+Lex(19) inline comment: //     return a + b;
+Lex(20) inline comment: // }
+Lex(21) inline comment: // a = y();
+Lex(22) command: print
+Lex(22) punctuators: (
+Lex(22) string value: "y done"
+Lex(22) punctuators: )
+"y done"
+Lex(22) end Of Statement: ; 
+
+Lex(23) inline comment: // you can't define a function inside any scope
+Lex(24) command: exit

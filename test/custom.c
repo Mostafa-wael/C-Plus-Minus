@@ -5,7 +5,7 @@ if (a == 3)
     print("if");
     print("another if");
 }
-elif (b == 2)
+else if (b == 2)
 {
     print("else");
     print("another else");

@@ -1,0 +1,289 @@
+Lex(1) command: print
+Lex(1) punctuators: (
+Lex(1) string value: "conditions"
+Lex(1) punctuators: )
+"conditions"
+Lex(1) end Of Statement: ; 
+
+Lex(2) data type: int
+Lex(2) identifier: a
+Lex(2) punctuators: =
+Lex(2) int value: 10
+Lex(2) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:1
+Lex(3) control flow: if
+Lex(3) punctuators: (
+Lex(3) identifier: a
+Lex(3) comparetor operator: ==
+Lex(3) int value: 10
+Lex(3) punctuators: )
+Lex(4) punctuators: {
+Lex(5) command: print
+Lex(5) punctuators: (
+Lex(5) string value: "if"
+Lex(5) punctuators: )
+"if"
+Lex(5) end Of Statement: ; 
+
+Lex(6) command: print
+Lex(6) punctuators: (
+Lex(6) string value: "another if"
+Lex(6) punctuators: )
+"another if"
+Lex(6) end Of Statement: ; 
+
+Lex(7) punctuators: }
+Lex(8) control flow: else
+Lex(8) control flow: if
+Lex(8) punctuators: (
+Lex(8) identifier: a
+Lex(8) comparetor operator: ==
+Lex(8) int value: 11
+Lex(8) punctuators: )
+Lex(9) punctuators: {
+Lex(10) command: print
+Lex(10) punctuators: (
+Lex(10) string value: "elif"
+Lex(10) punctuators: )
+"elif"
+Lex(10) end Of Statement: ; 
+
+Lex(11) command: print
+Lex(11) punctuators: (
+Lex(11) string value: "another elif"
+Lex(11) punctuators: )
+"another elif"
+Lex(11) end Of Statement: ; 
+
+Lex(12) punctuators: }
+Lex(13) control flow: else
+Lex(14) punctuators: {
+Lex(15) command: print
+Lex(15) punctuators: (
+Lex(15) string value: "else"
+Lex(15) punctuators: )
+"else"
+Lex(15) end Of Statement: ; 
+
+Lex(16) command: print
+Lex(16) punctuators: (
+Lex(16) string value: "another else"
+Lex(16) punctuators: )
+"another else"
+Lex(16) end Of Statement: ; 
+
+Lex(17) control flow: if
+Lex(17) punctuators: (
+Lex(17) identifier: a
+Lex(17) comparetor operator: ==
+Lex(17) int value: 10
+Lex(17) punctuators: )
+Lex(18) punctuators: {
+Lex(19) command: print
+Lex(19) punctuators: (
+Lex(19) string value: "if"
+Lex(19) punctuators: )
+"if"
+Lex(19) end Of Statement: ; 
+
+Lex(20) command: print
+Lex(20) punctuators: (
+Lex(20) string value: "another if"
+Lex(20) punctuators: )
+"another if"
+Lex(20) end Of Statement: ; 
+
+Lex(21) punctuators: }
+Lex(22) control flow: else
+Lex(23) punctuators: {
+Lex(24) command: print
+Lex(24) punctuators: (
+Lex(24) string value: "else"
+Lex(24) punctuators: )
+"else"
+Lex(24) end Of Statement: ; 
+
+Lex(25) command: print
+Lex(25) punctuators: (
+Lex(25) string value: "another else"
+Lex(25) punctuators: )
+"another else"
+Lex(25) end Of Statement: ; 
+
+Lex(26) punctuators: }
+Lex(27) punctuators: }
+Lex(28) control flow: if
+Lex(28) punctuators: (
+Lex(28) identifier: a
+Lex(28) comparetor operator: ==
+Lex(28) int value: 10
+Lex(28) punctuators: )
+Lex(29) punctuators: {
+Lex(30) command: print
+Lex(30) punctuators: (
+Lex(30) string value: "if"
+Lex(30) punctuators: )
+"if"
+Lex(30) end Of Statement: ; 
+
+Lex(31) command: print
+Lex(31) punctuators: (
+Lex(31) string value: "another if"
+Lex(31) punctuators: )
+"another if"
+Lex(31) end Of Statement: ; 
+
+Lex(32) punctuators: }
+Lex(33) control flow: else
+Lex(33) control flow: if
+Lex(33) punctuators: (
+Lex(33) identifier: a
+Lex(33) comparetor operator: ==
+Lex(33) int value: 11
+Lex(33) punctuators: )
+Lex(34) punctuators: {
+Lex(35) command: print
+Lex(35) punctuators: (
+Lex(35) string value: "else"
+Lex(35) punctuators: )
+"else"
+Lex(35) end Of Statement: ; 
+
+Lex(36) command: print
+Lex(36) punctuators: (
+Lex(36) string value: "another else"
+Lex(36) punctuators: )
+"another else"
+Lex(36) end Of Statement: ; 
+
+Lex(37) punctuators: }
+Lex(38) inline comment: ////////////////////////////////
+Lex(39) command: print
+Lex(39) punctuators: (
+Lex(39) string value: "switch case loops"
+Lex(39) punctuators: )
+"switch case loops"
+Lex(39) end Of Statement: ; 
+
+Lex(40) control flow: switch
+Lex(40) punctuators: (
+Lex(40) identifier: a
+Lex(40) punctuators: )
+Lex(41) punctuators: {
+Lex(42) control flow: default
+Lex(42) punctuators: :
+Lex(43) command: print
+Lex(43) punctuators: (
+Lex(43) string value: "default"
+Lex(43) punctuators: )
+"default"
+Lex(43) end Of Statement: ; 
+
+Lex(44) control flow: break
+Lex(44) end Of Statement: ; 
+
+Lex(45) punctuators: }
+Lex(46) control flow: switch
+Lex(46) punctuators: (
+Lex(46) identifier: a
+Lex(46) punctuators: )
+Lex(47) punctuators: {
+Lex(48) control flow: case
+Lex(48) int value: 1
+Lex(48) punctuators: :
+Lex(49) command: print
+Lex(49) punctuators: (
+Lex(49) string value: "1"
+Lex(49) punctuators: )
+"1"
+Lex(49) end Of Statement: ; 
+
+Lex(50) control flow: break
+Lex(50) end Of Statement: ; 
+
+Lex(52) control flow: case
+Lex(52) int value: 2
+Lex(52) punctuators: :
+Lex(53) command: print
+Lex(53) punctuators: (
+Lex(53) string value: "2"
+Lex(53) punctuators: )
+"2"
+Lex(53) end Of Statement: ; 
+
+Lex(54) control flow: break
+Lex(54) end Of Statement: ; 
+
+Lex(56) control flow: case
+Lex(56) int value: 3
+Lex(56) punctuators: :
+Lex(57) command: print
+Lex(57) punctuators: (
+Lex(57) string value: "3"
+Lex(57) punctuators: )
+"3"
+Lex(57) end Of Statement: ; 
+
+Lex(58) control flow: break
+Lex(58) end Of Statement: ; 
+
+Lex(59) punctuators: }
+Lex(61) control flow: switch
+Lex(61) punctuators: (
+Lex(61) identifier: a
+Lex(61) punctuators: )
+Lex(62) punctuators: {
+Lex(63) control flow: case
+Lex(63) int value: 1
+Lex(63) punctuators: :
+Lex(64) command: print
+Lex(64) punctuators: (
+Lex(64) string value: "1"
+Lex(64) punctuators: )
+"1"
+Lex(64) end Of Statement: ; 
+
+Lex(65) control flow: break
+Lex(65) end Of Statement: ; 
+
+Lex(67) control flow: case
+Lex(67) int value: 2
+Lex(67) punctuators: :
+Lex(68) command: print
+Lex(68) punctuators: (
+Lex(68) string value: "2"
+Lex(68) punctuators: )
+"2"
+Lex(68) end Of Statement: ; 
+
+Lex(69) control flow: break
+Lex(69) end Of Statement: ; 
+
+Lex(71) control flow: case
+Lex(71) int value: 3
+Lex(71) punctuators: :
+Lex(72) command: print
+Lex(72) punctuators: (
+Lex(72) string value: "3"
+Lex(72) punctuators: )
+"3"
+Lex(72) end Of Statement: ; 
+
+Lex(73) control flow: break
+Lex(73) end Of Statement: ; 
+
+Lex(75) control flow: default
+Lex(75) punctuators: :
+Lex(76) command: print
+Lex(76) punctuators: (
+Lex(76) string value: "default"
+Lex(76) punctuators: )
+"default"
+Lex(76) end Of Statement: ; 
+
+Lex(77) control flow: break
+Lex(77) end Of Statement: ; 
+
+Lex(78) punctuators: }
+Lex(79) command: exit

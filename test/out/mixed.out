@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Lex(1) punctuators: {
 Lex(2) data type: int
 Lex(2) identifier: a
@@ -998,239 +997,121 @@ Lex(179) punctuators: )
 Lex(179) end Of Statement: ; 
 
 Lex(180) inline comment: // ////////////////////////////////
-Lex(181) command: print
-Lex(181) punctuators: (
-Lex(181) string value: "switch case loops"
-Lex(181) punctuators: )
-"switch case loops"
-Lex(181) end Of Statement: ; 
-
-Lex(182) control flow: switch
-Lex(182) punctuators: (
-Lex(182) identifier: a
-Lex(182) punctuators: )
-Lex(183) punctuators: {
-Lex(184) control flow: default
-Lex(184) punctuators: :
-Lex(185) command: print
-Lex(185) punctuators: (
-Lex(185) string value: "default"
-Lex(185) punctuators: )
-"default"
-Lex(185) end Of Statement: ; 
-
-Lex(186) control flow: break
-Lex(186) end Of Statement: ; 
-
-Lex(187) punctuators: }
-Lex(188) control flow: switch
-Lex(188) punctuators: (
-Lex(188) identifier: a
-Lex(188) punctuators: )
-Lex(189) punctuators: {
-Lex(190) control flow: case
-Lex(190) int value: 1
-Lex(190) punctuators: :
-Lex(191) command: print
-Lex(191) punctuators: (
-Lex(191) string value: "1"
-Lex(191) punctuators: )
-"1"
-Lex(191) end Of Statement: ; 
-
-Lex(192) control flow: break
-Lex(192) end Of Statement: ; 
-
-Lex(194) control flow: case
-Lex(194) int value: 2
-Lex(194) punctuators: :
-Lex(195) command: print
-Lex(195) punctuators: (
-Lex(195) string value: "2"
-Lex(195) punctuators: )
-"2"
-Lex(195) end Of Statement: ; 
-
-Lex(196) control flow: break
-Lex(196) end Of Statement: ; 
-
-Lex(198) control flow: case
-Lex(198) int value: 3
-Lex(198) punctuators: :
-Lex(199) command: print
-Lex(199) punctuators: (
-Lex(199) string value: "3"
-Lex(199) punctuators: )
-"3"
-Lex(199) end Of Statement: ; 
-
-Lex(200) control flow: break
-Lex(200) end Of Statement: ; 
-
-Lex(201) punctuators: }
-Lex(203) control flow: switch
-Lex(203) punctuators: (
-Lex(203) identifier: a
-Lex(203) punctuators: )
-Lex(204) punctuators: {
-Lex(205) control flow: case
-Lex(205) int value: 1
-Lex(205) punctuators: :
-Lex(206) command: print
-Lex(206) punctuators: (
-Lex(206) string value: "1"
-Lex(206) punctuators: )
-"1"
-Lex(206) end Of Statement: ; 
-
-Lex(207) control flow: break
-Lex(207) end Of Statement: ; 
-
-Lex(209) control flow: case
-Lex(209) int value: 2
-Lex(209) punctuators: :
-Lex(210) command: print
-Lex(210) punctuators: (
-Lex(210) string value: "2"
-Lex(210) punctuators: )
-"2"
-Lex(210) end Of Statement: ; 
-
-Lex(211) control flow: break
-Lex(211) end Of Statement: ; 
-
-Lex(213) control flow: case
-Lex(213) int value: 3
-Lex(213) punctuators: :
-Lex(214) command: print
-Lex(214) punctuators: (
-Lex(214) string value: "3"
-Lex(214) punctuators: )
-"3"
-Lex(214) end Of Statement: ; 
-
-Lex(215) control flow: break
-Lex(215) end Of Statement: ; 
-
-Lex(217) control flow: default
-Lex(217) punctuators: :
-Lex(218) command: print
-Lex(218) punctuators: (
-Lex(218) string value: "default"
-Lex(218) punctuators: )
-"default"
-Lex(218) end Of Statement: ; 
-
-Lex(219) control flow: break
-Lex(219) end Of Statement: ; 
-
-Lex(220) punctuators: }
-Lex(221) punctuators: }
-Lex(222) inline comment: // ////////////////////////////////
-Lex(223) command: print
-Lex(223) punctuators: (
-Lex(223) string value: "functions"
-Lex(223) punctuators: )
-"functions"
-Lex(223) end Of Statement: ; 
-
-Lex(224) identifier: a
-Lex(224) arithmtic operator: +
-Lex(224) int value: 1
-Lex(224) end Of Statement: ; 
-
-Lex(226) data type: int
-Lex(226) identifier: x
-Lex(226) punctuators: (
-Lex(226) data type: int
-Lex(226) identifier: a
-Lex(226) punctuators: ,
-Lex(226) data type: int
-Lex(226) identifier: b
-Lex(226) punctuators: )
-inserted: x, declared:1, const:0, Symbol table idx:25
-Lex(227) punctuators: {
-Lex(228) command: print
-Lex(228) punctuators: (
-Lex(228) string value: "add"
-Lex(228) punctuators: )
-"add"
-Lex(228) end Of Statement: ; 
-
-Lex(229) control flow: return
-Lex(229) identifier: a
-Lex(229) arithmtic operator: +
-Lex(229) identifier: b
-Lex(229) end Of Statement: ; 
-
-Lex(230) punctuators: }
-Lex(231) identifier: x
-Lex(231) punctuators: (
-Lex(231) int value: 1
-Lex(231) punctuators: ,
-Lex(231) int value: 2
-Lex(231) punctuators: )
-Lex(231) end Of Statement: ; 
-
-Lex(232) command: print
-Lex(232) punctuators: (
-Lex(232) string value: "x"
-Lex(232) punctuators: )
-"x"
-Lex(232) end Of Statement: ; 
-
-Lex(233) inline comment: // int y()
-Lex(234) inline comment: // {
-Lex(235) inline comment: //     print("y");
-Lex(236) inline comment: //     return 1;
-Lex(237) inline comment: // }
-Lex(239) inline comment: // a = y();
-Lex(240) command: print
-Lex(240) punctuators: (
-Lex(240) string value: "y done"
-Lex(240) punctuators: )
-"y done"
-Lex(240) end Of Statement: ; 
-
-Lex(241) inline comment: ////////////////////////////////
-Lex(242) inline comment: // print("enums");
-Lex(243) inline comment: // enum W
-Lex(244) inline comment: // {
-Lex(245) inline comment: //     RED = 10,
-Lex(246) inline comment: //     GREEN,
-Lex(247) inline comment: //     BLUE = 12,
-Lex(248) inline comment: //     RED
-Lex(249) inline comment: // };
-Lex(250) inline comment: // print(0);
-Lex(251) inline comment: // {
-Lex(252) inline comment: //     int W r;
-Lex(253) inline comment: //     int W t = 1;
-Lex(254) inline comment: //     int W v = 3 + 5;
-Lex(255) inline comment: // }
-Lex(256) inline comment: // string q = "hi";
-Lex(257) inline comment: // int b = 5;
-Lex(258) inline comment: // print(true);
-Lex(259) inline comment: // print(b);
-Lex(260) command: exit
-=======
-int
-int
-Variable a not declared
-Variable b not declared
-int
-Variable b not declared
-Variable a not declared
-Variable c not declared
-int
-"declaration"
-int
-Variable b not declared
--5
-Variable b not declared
-5
-float
-Variable b not declared
-1085276160
-int
-Type Error
->>>>>>> 1f0be9e4dba92c2d5a347f8fe5d00f11ad7f63c5
+Lex(181) inline comment: // print("switch case loops");
+Lex(182) inline comment: // switch (a)
+Lex(183) inline comment: // {
+Lex(184) inline comment: // default:
+Lex(185) inline comment: //     print("default");
+Lex(186) inline comment: //     break;
+Lex(187) inline comment: // }
+Lex(188) inline comment: // switch (a)
+Lex(189) inline comment: // {
+Lex(190) inline comment: // case 1:
+Lex(191) inline comment: //     print("1");
+Lex(192) inline comment: //     break;
+Lex(194) inline comment: // case 2:
+Lex(195) inline comment: //     print("2");
+Lex(196) inline comment: //     break;
+Lex(198) inline comment: // case 3:
+Lex(199) inline comment: //     print("3");
+Lex(200) inline comment: //     break;
+Lex(201) inline comment: // }
+Lex(203) inline comment: // switch (a)
+Lex(204) inline comment: // {
+Lex(205) inline comment: // case 1:
+Lex(206) inline comment: //     print("1");
+Lex(207) inline comment: //     break;
+Lex(209) inline comment: // case 2:
+Lex(210) inline comment: //     print("2");
+Lex(211) inline comment: //     break;
+Lex(213) inline comment: // case 3:
+Lex(214) inline comment: //     print("3");
+Lex(215) inline comment: //     break;
+Lex(217) inline comment: // default:
+Lex(218) inline comment: //     print("default");
+Lex(219) inline comment: //     break;
+Lex(220) inline comment: // }
+Lex(221) inline comment: // ////////////////////////////////
+Lex(222) inline comment: // print("functions");
+Lex(223) inline comment: // a + 1;
+Lex(224) inline comment: // x(1, 2);
+Lex(225) inline comment: // print("x");
+Lex(226) inline comment: // int y()
+Lex(227) inline comment: // {
+Lex(228) inline comment: //     print("y");
+Lex(229) inline comment: //     return 1;
+Lex(230) inline comment: // }
+Lex(231) inline comment: // int x(int a, int b)
+Lex(232) inline comment: // {
+Lex(233) inline comment: //     print("add");
+Lex(234) inline comment: //     return a + b;
+Lex(235) inline comment: // }
+Lex(236) inline comment: // a = y();
+Lex(237) inline comment: // print("y done");
+Lex(238) inline comment: // ////////////////////////////////
+Lex(239) inline comment: // print("enums");
+Lex(240) inline comment: // enum Color
+Lex(241) inline comment: // {
+Lex(242) inline comment: //     RED = 10,
+Lex(243) inline comment: //     GREEN,
+Lex(244) inline comment: //     BLUE = 12,
+Lex(245) inline comment: //     RED
+Lex(246) inline comment: // };
+Lex(247) inline comment: // print(0);
+Lex(248) inline comment: // {
+Lex(249) inline comment: //     Color c1;
+Lex(250) inline comment: //     Color c2 = RED;
+Lex(251) inline comment: //     Color c3 = 3 + 5;
+Lex(252) inline comment: // }
+Lex(253) inline comment: // string a = "hi";
+Lex(254) inline comment: // int b = 5;
+Lex(255) inline comment: // print(true);
+Lex(256) inline comment: // print(b);
+Lex(257) inline comment: // exit;
+Variable a not used
+Variable b not used
+Variable c not used
+Variable d not used
+Variable a not used
+Variable b not used
+Variable f not used
+Variable c not used
+Variable a not used
+Variable a not used
+Variable b not used
+Variable a not used
+Variable b not used
+Variable c not used
+Variable d not used
+Variable a not used
+Variable b not used
+Variable a not used
+Variable c not used
+Variable d not used
+Variable a not used
+Variable a not used
+Symbol Table:
+Name:a,Type:int,Value:2,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:b,Type:int,Value:4,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:c,Type:int,Value:13,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:d,Type:int,Value:26,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:a,Type:int,Value:5,Declared:1,Initialized:1,Used:0,Const:1,Scope:1
+Name:b,Type:int,Value:-5,Declared:1,Initialized:1,Used:0,Const:0,Scope:1
+Name:f,Type:float,Value:1085276160,Declared:1,Initialized:1,Used:0,Const:0,Scope:1
+Name:c,Type:bool,Value:1,Declared:1,Initialized:1,Used:0,Const:0,Scope:1
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:1,Scope:2
+Name:a,Type:bool,Value:1,Declared:1,Initialized:1,Used:0,Const:0,Scope:3
+Name:b,Type:bool,Value:0,Declared:1,Initialized:1,Used:0,Const:0,Scope:3
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:b,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:c,Type:int,Value:2,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:d,Type:int,Value:102,Declared:1,Initialized:1,Used:0,Const:0,Scope:5
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:6
+Name:b,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:6
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:7
+Name:b,Type:int,Value:10,Declared:1,Initialized:1,Used:1,Const:0,Scope:7
+Name:c,Type:int,Value:2,Declared:1,Initialized:1,Used:0,Const:0,Scope:7
+Name:d,Type:int,Value:102,Declared:1,Initialized:1,Used:0,Const:0,Scope:7
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:8
+Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:12
+Name:a,Type:int,Value:12,Declared:1,Initialized:1,Used:1,Const:0,Scope:15

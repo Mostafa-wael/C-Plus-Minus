@@ -1,1 +1,2 @@
 Symbol Table:
+Name:W,Type:enum,Value:0,Declared:1,Initialized:0,Used:0,Const:0,Scope:0

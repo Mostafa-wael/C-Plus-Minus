@@ -178,27 +178,27 @@
     }
     until(a == 1);
     // ////////////////////////////////
-    print("switch case loops");
-    switch (a)
-    {
-    default:
-        print("default");
-        break;
-    }
-    switch (a)
-    {
-    case 1:
-        print("1");
-        break;
+    // print("switch case loops");
+    // switch (a)
+    // {
+    // default:
+    //     print("default");
+    //     break;
+    // }
+    // switch (a)
+    // {
+    // case 1:
+    //     print("1");
+    //     break;
 
-    case 2:
-        print("2");
-        break;
+    // case 2:
+    //     print("2");
+    //     break;
 
-    case 3:
-        print("3");
-        break;
-    }
+    // case 3:
+    //     print("3");
+    //     break;
+    // }
 
     // switch (a)
     // {

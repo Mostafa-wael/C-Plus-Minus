@@ -1,0 +1,56 @@
+Lex(1) command: print
+Lex(1) punctuators: (
+Lex(1) string value: "enums"
+Lex(1) punctuators: )
+"enums"
+Lex(1) end Of Statement: ; 
+
+Lex(2) enum: enum
+Lex(2) identifier: W
+inserted: W, declared:1, const:0, Symbol table idx:1
+Lex(3) punctuators: {
+Lex(4) identifier: R
+Lex(4) punctuators: =
+Lex(4) int value: 10
+Lex(4) punctuators: ,
+Lex(5) identifier: G
+Lex(5) punctuators: ,
+Lex(6) identifier: B
+Lex(6) punctuators: =
+Lex(6) int value: 12
+Lex(6) punctuators: ,
+Lex(7) identifier: R
+Lex(8) punctuators: }
+Lex(8) end Of Statement: ; 
+
+Lex(9) command: print
+Lex(9) punctuators: (
+Lex(9) int value: 0
+Lex(9) punctuators: )
+0
+Lex(9) end Of Statement: ; 
+
+Lex(10) punctuators: {
+Lex(11) data type: int
+Lex(11) identifier: C
+Lex(11) identifier: r
+Lex(11) end Of Statement: ; 
+
+Lex(12) data type: int
+Lex(12) identifier: C
+Lex(12) identifier: t
+Lex(12) punctuators: =
+Lex(12) int value: 10
+Lex(12) end Of Statement: ; 
+
+Lex(13) data type: int
+Lex(13) identifier: C
+Lex(13) identifier: v
+Lex(13) punctuators: =
+Lex(13) int value: 3
+Lex(13) arithmtic operator: +
+Lex(13) int value: 5
+Lex(13) end Of Statement: ; 
+
+Lex(14) punctuators: }
+Lex(15) command: exit

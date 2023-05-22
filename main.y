@@ -699,8 +699,8 @@ void typeCheck2(char symbol, struct nodeType* type2) {
 // checking functions 
 // -------------------------------------------------------------------------------  
 
-this function checks if a variable is used before declaration or out of scope
-void checkDeclaration(char name) {
+// this function checks if a variable is used before declaration or out of scope
+int checkDeclaration(char name) {
 
     //TODO: check for scope
     //TODO: use yytext 
