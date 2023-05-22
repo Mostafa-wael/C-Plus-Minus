@@ -1,9 +1,17 @@
-print("Custom");
+int a = 3;
+int b = 2;
+if (a == 3)
 {
-    int a = 10;         // 1010
-    int b = 10;         // 1010
-    print(a + b == 20); // 20
-    print(a - b == 0);  // 0
-    print(a / b == 1);  // 1
-    print(a * b - b + a / b == 91);
+    print("if");
+    print("another if");
+}
+elif (b == 2)
+{
+    print("else");
+    print("another else");
+}
+else
+{
+    print("else");
+    print("another else");
 }

@@ -1,0 +1,50 @@
+Lex(1) command: print
+Lex(1) punctuators: (
+Lex(1) string value: "declaration"
+Lex(1) punctuators: )
+"declaration"
+Lex(1) end Of Statement: ; 
+
+Lex(3) data type: int
+Lex(3) identifier: a
+Lex(3) punctuators: =
+Lex(3) int value: 90
+Lex(3) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:1
+Lex(4) command: print
+Lex(4) punctuators: (
+Lex(4) identifier: a
+Lex(4) punctuators: )
+90
+Lex(4) end Of Statement: ; 
+
+Lex(6) data type: float
+Lex(6) identifier: b
+Lex(6) punctuators: =
+Lex(6) float value: 100.900000
+Lex(6) end Of Statement: ; 
+
+inserted: b, declared:1, const:0, Symbol table idx:2
+Lex(7) command: print
+Lex(7) punctuators: (
+Lex(7) identifier: b
+Lex(7) punctuators: )
+1120521421
+Lex(7) end Of Statement: ; 
+
+Lex(9) data type: bool
+Lex(9) identifier: x
+Lex(9) punctuators: =
+Lex(9) value: true
+Lex(9) end Of Statement: ; 
+
+inserted: x, declared:1, const:0, Symbol table idx:3
+Lex(10) command: print
+Lex(10) punctuators: (
+Lex(10) identifier: x
+Lex(10) punctuators: )
+1
+Lex(10) end Of Statement: ; 
+
+Lex(12) command: exit

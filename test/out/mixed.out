@@ -1,66 +1,1213 @@
+Lex(1) punctuators: {
+Lex(2) data type: int
+Lex(2) identifier: a
+Lex(2) punctuators: =
+Lex(2) int value: 3
+Lex(2) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:1
+Lex(3) data type: int
+Lex(3) identifier: b
+Lex(3) punctuators: =
+Lex(3) int value: 10
+Lex(3) end Of Statement: ; 
+
+inserted: b, declared:1, const:0, Symbol table idx:2
+Lex(4) data type: int
+Lex(4) identifier: c
+Lex(4) punctuators: =
+Lex(4) identifier: a
+Lex(4) arithmtic operator: +
+Lex(4) identifier: b
+Lex(4) end Of Statement: ; 
+
+inserted: c, declared:1, const:0, Symbol table idx:3
+Lex(5) data type: int
+Lex(5) identifier: d
+Lex(5) punctuators: =
+Lex(5) identifier: b
+Lex(5) arithmtic operator: -
+Lex(5) identifier: a
+Lex(5) arithmtic operator: +
+Lex(5) identifier: c
+Lex(5) arithmtic operator: +
+Lex(5) punctuators: (
+Lex(5) int value: 2
+Lex(5) arithmtic operator: *
+Lex(5) int value: 3
+Lex(5) punctuators: )
+Lex(5) end Of Statement: ; 
+
+inserted: d, declared:1, const:0, Symbol table idx:4
+Lex(6) command: print
+Lex(6) punctuators: (
+Lex(6) string value: "declaration"
+Lex(6) punctuators: )
 "declaration"
+Lex(6) end Of Statement: ; 
+
+Lex(7) punctuators: {
+Lex(8) data modifier: const
+Lex(8) data type: int
+Lex(8) identifier: a
+Lex(8) punctuators: =
+Lex(8) int value: 5
+Lex(8) end Of Statement: ; 
+
+inserted: a, declared:1, const:1, Symbol table idx:5
+Lex(9) data type: int
+Lex(9) identifier: b
+Lex(9) punctuators: =
+Lex(9) arithmtic operator: -
+Lex(9) int value: 5
+Lex(9) end Of Statement: ; 
+
+inserted: b, declared:1, const:0, Symbol table idx:6
+Lex(10) command: print
+Lex(10) punctuators: (
+Lex(10) identifier: b
+Lex(10) punctuators: )
 -5
+Lex(10) end Of Statement: ; 
+
+Lex(11) command: print
+Lex(11) punctuators: (
+Lex(11) arithmtic operator: -
+Lex(11) identifier: b
+Lex(11) punctuators: )
 5
+Lex(11) end Of Statement: ; 
+
+Lex(12) data type: float
+Lex(12) identifier: f
+Lex(12) punctuators: =
+Lex(12) float value: 5.500000
+Lex(12) end Of Statement: ; 
+
+inserted: f, declared:1, const:0, Symbol table idx:7
+Lex(13) command: print
+Lex(13) punctuators: (
+Lex(13) identifier: b
+Lex(13) punctuators: )
 -5
+Lex(13) end Of Statement: ; 
+
+Lex(14) data type: bool
+Lex(14) identifier: c
+Lex(14) punctuators: =
+Lex(14) value: true
+Lex(14) end Of Statement: ; 
+
+inserted: c, declared:1, const:0, Symbol table idx:8
+Lex(15) inline comment: // string d = "hello";
+Lex(16) inline comment: // void e = 0;
+Lex(17) command: print
+Lex(17) punctuators: (
+Lex(17) identifier: c
+Lex(17) punctuators: )
 1
+Lex(17) end Of Statement: ; 
+
+Lex(17) inline comment: // 1
+Lex(18) command: print
+Lex(18) punctuators: (
+Lex(18) identifier: d
+Lex(18) punctuators: )
 26
+Lex(18) end Of Statement: ; 
+
+Lex(18) inline comment: // hello
+Lex(19) punctuators: {
+Lex(20) data modifier: const
+Lex(20) data type: int
+Lex(20) identifier: a
+Lex(20) punctuators: =
+Lex(20) int value: 10
+Lex(20) end Of Statement: ; 
+
+inserted: a, declared:1, const:1, Symbol table idx:9
+Lex(21) command: print
+Lex(21) punctuators: (
+Lex(21) identifier: a
+Lex(21) punctuators: )
 10
+Lex(21) end Of Statement: ; 
+
+Lex(22) punctuators: }
+Lex(23) punctuators: }
+Lex(24) inline comment: ////////////////////////////////
+Lex(25) punctuators: {
+Lex(26) command: print
+Lex(26) punctuators: (
+Lex(26) string value: "logic"
+Lex(26) punctuators: )
 "logic"
+Lex(26) end Of Statement: ; 
+
+Lex(27) data type: bool
+Lex(27) identifier: a
+Lex(27) punctuators: =
+Lex(27) value: true
+Lex(27) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:10
+Lex(28) data type: bool
+Lex(28) identifier: b
+Lex(28) punctuators: =
+Lex(28) value: false
+Lex(28) end Of Statement: ; 
+
+inserted: b, declared:1, const:0, Symbol table idx:11
+Lex(29) command: print
+Lex(29) punctuators: (
+Lex(29) identifier: a
+Lex(29) punctuators: )
 1
+Lex(29) end Of Statement: ; 
+
+Lex(29) inline comment: // 1
+Lex(30) command: print
+Lex(30) punctuators: (
+Lex(30) identifier: b
+Lex(30) punctuators: )
 0
+Lex(30) end Of Statement: ; 
+
+Lex(30) inline comment: // 0
+Lex(31) command: print
+Lex(31) punctuators: (
+Lex(31) identifier: a
+Lex(31) comparetor operator: ==
+Lex(31) identifier: b
+Lex(31) punctuators: )
 0
+Lex(31) end Of Statement: ; 
+
+Lex(31) inline comment: // 0
+Lex(32) command: print
+Lex(32) punctuators: (
+Lex(32) identifier: a
+Lex(32) comparetor operator: !=
+Lex(32) identifier: b
+Lex(32) punctuators: )
 1
+Lex(32) end Of Statement: ; 
+
+Lex(32) inline comment: // 1
+Lex(33) command: print
+Lex(33) punctuators: (
+Lex(33) identifier: a
+Lex(33) comparetor operator: <
+Lex(33) identifier: b
+Lex(33) punctuators: )
 0
+Lex(33) end Of Statement: ; 
+
+Lex(33) inline comment: // 0
+Lex(34) command: print
+Lex(34) punctuators: (
+Lex(34) identifier: a
+Lex(34) comparetor operator: >
+Lex(34) identifier: b
+Lex(34) punctuators: )
 1
+Lex(34) end Of Statement: ; 
+
+Lex(34) inline comment: // 1
+Lex(35) command: print
+Lex(35) punctuators: (
+Lex(35) identifier: a
+Lex(35) comparetor operator: <=
+Lex(35) identifier: b
+Lex(35) punctuators: )
 0
+Lex(35) end Of Statement: ; 
+
+Lex(35) inline comment: // 0
+Lex(36) command: print
+Lex(36) punctuators: (
+Lex(36) identifier: a
+Lex(36) comparetor operator: >=
+Lex(36) identifier: b
+Lex(36) punctuators: )
 1
+Lex(36) end Of Statement: ; 
+
+Lex(36) inline comment: // 1
+Lex(37) punctuators: }
+Lex(38) inline comment: // ////////////////////////////////
+Lex(39) command: print
+Lex(39) punctuators: (
+Lex(39) string value: "More logic"
+Lex(39) punctuators: )
 "More logic"
+Lex(39) end Of Statement: ; 
+
+Lex(40) punctuators: {
+Lex(41) command: print
+Lex(41) punctuators: (
+Lex(41) logical operator: !
+Lex(41) identifier: a
+Lex(41) punctuators: )
 0
+Lex(41) end Of Statement: ; 
+
+Lex(41) inline comment: // 0
+Lex(42) inline comment: // print(a && b);             // 0
+Lex(43) inline comment: // print(a || b);             // 1
+Lex(44) inline comment: // print((a && a && b) || a); // 1
+Lex(45) punctuators: }
+Lex(46) inline comment: // ////////////////////////////////
+Lex(47) punctuators: {
+Lex(48) command: print
+Lex(48) punctuators: (
+Lex(48) string value: "assignment"
+Lex(48) punctuators: )
 "assignment"
+Lex(48) end Of Statement: ; 
+
+Lex(49) data type: int
+Lex(49) identifier: a
+Lex(49) punctuators: =
+Lex(49) int value: 10
+Lex(49) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:12
+Lex(49) inline comment: // 1010
+Lex(50) data type: int
+Lex(50) identifier: b
+Lex(50) punctuators: =
+Lex(50) int value: 10
+Lex(50) end Of Statement: ; 
+
+inserted: b, declared:1, const:0, Symbol table idx:13
+Lex(50) inline comment: // 1010
+Lex(51) data type: int
+Lex(51) identifier: c
+Lex(51) punctuators: =
+Lex(51) int value: 2
+Lex(51) end Of Statement: ; 
+
+inserted: c, declared:1, const:0, Symbol table idx:14
+Lex(51) inline comment: // 0010
+Lex(52) data type: int
+Lex(52) identifier: d
+Lex(52) punctuators: =
+Lex(52) identifier: a
+Lex(52) arithmtic operator: *
+Lex(52) identifier: b
+Lex(52) arithmtic operator: +
+Lex(52) identifier: c
+Lex(52) end Of Statement: ; 
+
+inserted: d, declared:1, const:0, Symbol table idx:15
+Lex(53) command: print
+Lex(53) punctuators: (
+Lex(53) identifier: a
+Lex(53) comparetor operator: ==
+Lex(53) int value: 10
+Lex(53) punctuators: )
 1
+Lex(53) end Of Statement: ; 
+
+Lex(54) command: print
+Lex(54) punctuators: (
+Lex(54) identifier: b
+Lex(54) comparetor operator: ==
+Lex(54) int value: 10
+Lex(54) punctuators: )
 1
+Lex(54) end Of Statement: ; 
+
+Lex(55) command: print
+Lex(55) punctuators: (
+Lex(55) identifier: c
+Lex(55) comparetor operator: ==
+Lex(55) int value: 2
+Lex(55) punctuators: )
 1
+Lex(55) end Of Statement: ; 
+
+Lex(56) command: print
+Lex(56) punctuators: (
+Lex(56) identifier: d
+Lex(56) comparetor operator: ==
+Lex(56) int value: 102
+Lex(56) punctuators: )
 1
+Lex(56) end Of Statement: ; 
+
+Lex(56) inline comment: // 102
+Lex(57) punctuators: }
+Lex(58) inline comment: // ////////////////////////////////
+Lex(59) command: print
+Lex(59) punctuators: (
+Lex(59) string value: "arithmetic"
+Lex(59) punctuators: )
 "arithmetic"
+Lex(59) end Of Statement: ; 
+
+Lex(60) punctuators: {
+Lex(61) data type: int
+Lex(61) identifier: a
+Lex(61) punctuators: =
+Lex(61) int value: 10
+Lex(61) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:16
+Lex(61) inline comment: // 1010
+Lex(62) data type: int
+Lex(62) identifier: b
+Lex(62) punctuators: =
+Lex(62) int value: 10
+Lex(62) end Of Statement: ; 
+
+inserted: b, declared:1, const:0, Symbol table idx:17
+Lex(62) inline comment: // 1010
+Lex(63) command: print
+Lex(63) punctuators: (
+Lex(63) arithmtic operator: -
+Lex(63) identifier: a
+Lex(63) comparetor operator: ==
+Lex(63) arithmtic operator: -
+Lex(63) int value: 10
+Lex(63) punctuators: )
 1
+Lex(63) end Of Statement: ; 
+
+Lex(63) inline comment: // -10
+Lex(64) inline comment: // print(-3-4);
+Lex(65) command: print
+Lex(65) punctuators: (
+Lex(65) identifier: a
+Lex(65) arithmtic operator: +
+Lex(65) identifier: b
+Lex(65) comparetor operator: ==
+Lex(65) int value: 20
+Lex(65) punctuators: )
 1
+Lex(65) end Of Statement: ; 
+
+Lex(65) inline comment: // 20
+Lex(66) command: print
+Lex(66) punctuators: (
+Lex(66) identifier: a
+Lex(66) arithmtic operator: -
+Lex(66) identifier: b
+Lex(66) comparetor operator: ==
+Lex(66) int value: 0
+Lex(66) punctuators: )
 1
+Lex(66) end Of Statement: ; 
+
+Lex(66) inline comment: // 0
+Lex(67) command: print
+Lex(67) punctuators: (
+Lex(67) identifier: a
+Lex(67) arithmtic operator: /
+Lex(67) identifier: b
+Lex(67) comparetor operator: ==
+Lex(67) int value: 1
+Lex(67) punctuators: )
 1
+Lex(67) end Of Statement: ; 
+
+Lex(67) inline comment: // 1
+Lex(68) command: print
+Lex(68) punctuators: (
+Lex(68) identifier: a
+Lex(68) arithmtic operator: %
+Lex(68) identifier: c
+Lex(68) comparetor operator: ==
+Lex(68) int value: 0
+Lex(68) punctuators: )
 0
+Lex(68) end Of Statement: ; 
+
+Lex(68) inline comment: // 0
+Lex(69) command: print
+Lex(69) punctuators: (
+Lex(69) identifier: a
+Lex(69) arithmtic operator: *
+Lex(69) identifier: b
+Lex(69) arithmtic operator: -
+Lex(69) identifier: b
+Lex(69) arithmtic operator: +
+Lex(69) identifier: a
+Lex(69) arithmtic operator: /
+Lex(69) identifier: b
+Lex(69) comparetor operator: ==
+Lex(69) int value: 91
+Lex(69) punctuators: )
 1
+Lex(69) end Of Statement: ; 
+
+Lex(69) inline comment: // 91
+Lex(70) command: print
+Lex(70) punctuators: (
+Lex(70) int value: 100
+Lex(70) arithmtic operator: -
+Lex(70) int value: 5
+Lex(70) punctuators: )
 95
+Lex(70) end Of Statement: ; 
+
+Lex(71) command: print
+Lex(71) punctuators: (
+Lex(71) arithmtic operator: -
+Lex(71) int value: 100
+Lex(71) arithmtic operator: -
+Lex(71) int value: 5
+Lex(71) arithmtic operator: +
+Lex(71) int value: 5
+Lex(71) punctuators: )
 -100
+Lex(71) end Of Statement: ; 
+
+Lex(72) punctuators: }
+Lex(73) inline comment: // ////////////////////////////////
+Lex(74) command: print
+Lex(74) punctuators: (
+Lex(74) string value: "bitwise"
+Lex(74) punctuators: )
 "bitwise"
+Lex(74) end Of Statement: ; 
+
+Lex(75) punctuators: {
+Lex(76) data type: int
+Lex(76) identifier: a
+Lex(76) punctuators: =
+Lex(76) int value: 10
+Lex(76) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:18
+Lex(76) inline comment: // 1010
+Lex(77) data type: int
+Lex(77) identifier: b
+Lex(77) punctuators: =
+Lex(77) int value: 10
+Lex(77) end Of Statement: ; 
+
+inserted: b, declared:1, const:0, Symbol table idx:19
+Lex(77) inline comment: // 1010
+Lex(78) data type: int
+Lex(78) identifier: c
+Lex(78) punctuators: =
+Lex(78) int value: 2
+Lex(78) end Of Statement: ; 
+
+inserted: c, declared:1, const:0, Symbol table idx:20
+Lex(78) inline comment: // 0010
+Lex(79) data type: int
+Lex(79) identifier: d
+Lex(79) punctuators: =
+Lex(79) identifier: a
+Lex(79) arithmtic operator: *
+Lex(79) identifier: b
+Lex(79) arithmtic operator: +
+Lex(79) identifier: c
+Lex(79) end Of Statement: ; 
+
+inserted: d, declared:1, const:0, Symbol table idx:21
+Lex(80) command: print
+Lex(80) punctuators: (
+Lex(80) punctuators: (
+Lex(80) identifier: a
+Lex(80) bitwise operator: |
+Lex(80) identifier: c
+Lex(80) punctuators: )
+Lex(80) comparetor operator: ==
+Lex(80) int value: 10
+Lex(80) punctuators: )
 1
+Lex(80) end Of Statement: ; 
+
+Lex(80) inline comment: // 1010 | 0010 = 1010 = 10
+Lex(81) command: print
+Lex(81) punctuators: (
+Lex(81) punctuators: (
+Lex(81) identifier: a
+Lex(81) bitwise operator: &
+Lex(81) identifier: c
+Lex(81) punctuators: )
+Lex(81) comparetor operator: ==
+Lex(81) int value: 2
+Lex(81) punctuators: )
 1
+Lex(81) end Of Statement: ; 
+
+Lex(81) inline comment: // 1010 & 0010 = 0010 = 2
+Lex(82) command: print
+Lex(82) punctuators: (
+Lex(82) punctuators: (
+Lex(82) identifier: a
+Lex(82) bitwise operator: ^
+Lex(82) identifier: c
+Lex(82) punctuators: )
+Lex(82) comparetor operator: ==
+Lex(82) int value: 8
+Lex(82) punctuators: )
 1
+Lex(82) end Of Statement: ; 
+
+Lex(82) inline comment: // 1010 ^ 0010 = 1000 = 8
+Lex(83) command: print
+Lex(83) punctuators: (
+Lex(83) punctuators: (
+Lex(83) identifier: a
+Lex(83) bitwise operator: <<
+Lex(83) identifier: c
+Lex(83) punctuators: )
+Lex(83) comparetor operator: ==
+Lex(83) int value: 40
+Lex(83) punctuators: )
 1
+Lex(83) end Of Statement: ; 
+
+Lex(83) inline comment: // 1010 << 0010 = 101000 = 40
+Lex(84) command: print
+Lex(84) punctuators: (
+Lex(84) punctuators: (
+Lex(84) identifier: a
+Lex(84) bitwise operator: >>
+Lex(84) identifier: c
+Lex(84) punctuators: )
+Lex(84) comparetor operator: ==
+Lex(84) int value: 2
+Lex(84) punctuators: )
 1
+Lex(84) end Of Statement: ; 
+
+Lex(84) inline comment: // 1010 >> 0010 = 10 = 2
+Lex(85) command: print
+Lex(85) punctuators: (
+Lex(85) punctuators: (
+Lex(85) bitwise operator: ~
+Lex(85) identifier: a
+Lex(85) punctuators: )
+Lex(85) comparetor operator: ==
+Lex(85) arithmtic operator: -
+Lex(85) int value: 11
+Lex(85) punctuators: )
 1
+Lex(85) end Of Statement: ; 
+
+Lex(85) inline comment: // -11
+Lex(86) command: print
+Lex(86) punctuators: (
+Lex(86) punctuators: (
+Lex(86) identifier: a
+Lex(86) bitwise operator: <<
+Lex(86) identifier: c
+Lex(86) punctuators: )
+Lex(86) bitwise operator: >>
+Lex(86) identifier: c
+Lex(86) comparetor operator: ==
+Lex(86) int value: 10
+Lex(86) punctuators: )
 1
+Lex(86) end Of Statement: ; 
+
+Lex(86) inline comment: // 10
+Lex(87) punctuators: }
+Lex(89) inline comment: // ////////////////////////////////
+Lex(90) punctuators: {
+Lex(91) data type: int
+Lex(91) identifier: a
+Lex(91) punctuators: =
+Lex(91) int value: 10
+Lex(91) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:22
+Lex(91) inline comment: // 1010
+Lex(92) control flow: if
+Lex(92) punctuators: (
+Lex(92) identifier: a
+Lex(92) comparetor operator: ==
+Lex(92) int value: 10
+Lex(92) punctuators: )
+Lex(93) punctuators: {
+Lex(94) command: print
+Lex(94) punctuators: (
+Lex(94) string value: "if"
+Lex(94) punctuators: )
 "if"
-"another if"
+Lex(94) end Of Statement: ; 
+
+Lex(95) punctuators: }
+Lex(96) control flow: else
+Lex(96) control flow: if
+Lex(96) punctuators: (
+Lex(96) identifier: a
+Lex(96) comparetor operator: ==
+Lex(96) int value: 11
+Lex(96) punctuators: )
+Lex(97) punctuators: {
+Lex(98) command: print
+Lex(98) punctuators: (
+Lex(98) string value: "elif"
+Lex(98) punctuators: )
+"elif"
+Lex(98) end Of Statement: ; 
+
+Lex(99) punctuators: }
+Lex(100) control flow: else
+Lex(100) control flow: if
+Lex(100) punctuators: (
+Lex(100) identifier: a
+Lex(100) comparetor operator: ==
+Lex(100) int value: 12
+Lex(100) punctuators: )
+Lex(101) punctuators: {
+Lex(102) command: print
+Lex(102) punctuators: (
+Lex(102) string value: "elif"
+Lex(102) punctuators: )
+"elif"
+Lex(102) end Of Statement: ; 
+
+Lex(103) punctuators: }
+Lex(104) control flow: else
+Lex(105) punctuators: {
+Lex(106) data type: int
+Lex(106) identifier: a
+Lex(106) punctuators: =
+Lex(106) int value: 10
+Lex(106) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:23
+Lex(107) control flow: if
+Lex(107) punctuators: (
+Lex(107) identifier: a
+Lex(107) comparetor operator: ==
+Lex(107) int value: 10
+Lex(107) punctuators: )
+Lex(108) punctuators: {
+Lex(109) command: print
+Lex(109) punctuators: (
+Lex(109) string value: "if"
+Lex(109) punctuators: )
 "if"
+Lex(109) end Of Statement: ; 
+
+Lex(110) command: print
+Lex(110) punctuators: (
+Lex(110) string value: "another if"
+Lex(110) punctuators: )
 "another if"
-Variable a not used
-Variable b not used
-Variable c not used
-Variable d not used
-Variable a not used
-Variable b not used
-Variable f not used
-Variable c not used
-Variable a not used
-Variable a not used
-Variable b not used
-Variable a not used
-Variable b not used
-Variable c not used
-Variable d not used
-Variable a not used
-Variable b not used
-Variable a not used
-Variable b not used
-Variable c not used
-Variable d not used
-Variable a not used
+Lex(110) end Of Statement: ; 
+
+Lex(111) punctuators: }
+Lex(112) control flow: else
+Lex(112) control flow: if
+Lex(112) punctuators: (
+Lex(112) identifier: a
+Lex(112) comparetor operator: ==
+Lex(112) int value: 11
+Lex(112) punctuators: )
+Lex(113) punctuators: {
+Lex(114) command: print
+Lex(114) punctuators: (
+Lex(114) string value: "else"
+Lex(114) punctuators: )
+"else"
+Lex(114) end Of Statement: ; 
+
+Lex(115) command: print
+Lex(115) punctuators: (
+Lex(115) string value: "another else"
+Lex(115) punctuators: )
+"another else"
+Lex(115) end Of Statement: ; 
+
+Lex(116) punctuators: }
+Lex(117) punctuators: }
+Lex(118) punctuators: }
+Lex(119) inline comment: // ////////////////////////////////
+Lex(120) punctuators: {
+Lex(121) data type: int
+Lex(121) identifier: a
+Lex(121) punctuators: =
+Lex(121) int value: 10
+Lex(121) end Of Statement: ; 
+
+inserted: a, declared:1, const:0, Symbol table idx:24
+Lex(121) inline comment: // 1010
+Lex(122) command: print
+Lex(122) punctuators: (
+Lex(122) string value: "while loops"
+Lex(122) punctuators: )
+"while loops"
+Lex(122) end Of Statement: ; 
+
+Lex(123) control flow: while
+Lex(123) punctuators: (
+Lex(123) identifier: a
+Lex(123) comparetor operator: <
+Lex(123) int value: 20
+Lex(123) punctuators: )
+Lex(124) punctuators: {
+Lex(125) command: print
+Lex(125) punctuators: (
+Lex(125) identifier: a
+Lex(125) punctuators: )
+10
+Lex(125) end Of Statement: ; 
+
+Lex(126) identifier: a
+Lex(126) punctuators: =
+Lex(126) identifier: a
+Lex(126) arithmtic operator: +
+Lex(126) int value: 1
+Lex(126) end Of Statement: ; 
+
+Lex(127) punctuators: }
+Lex(128) command: print
+Lex(128) punctuators: (
+Lex(128) identifier: a
+Lex(128) punctuators: )
+11
+Lex(128) end Of Statement: ; 
+
+Lex(129) control flow: while
+Lex(129) punctuators: (
+Lex(129) identifier: a
+Lex(129) comparetor operator: <
+Lex(129) int value: 20
+Lex(129) punctuators: )
+Lex(130) punctuators: {
+Lex(131) control flow: if
+Lex(131) punctuators: (
+Lex(131) identifier: a
+Lex(131) comparetor operator: ==
+Lex(131) int value: 10
+Lex(131) punctuators: )
+Lex(132) punctuators: {
+Lex(133) command: print
+Lex(133) punctuators: (
+Lex(133) identifier: a
+Lex(133) punctuators: )
+11
+Lex(133) end Of Statement: ; 
+
+Lex(134) punctuators: }
+Lex(135) identifier: a
+Lex(135) punctuators: =
+Lex(135) identifier: a
+Lex(135) arithmtic operator: +
+Lex(135) int value: 1
+Lex(135) end Of Statement: ; 
+
+Lex(136) punctuators: }
+Lex(137) command: print
+Lex(137) punctuators: (
+Lex(137) identifier: a
+Lex(137) punctuators: )
+12
+Lex(137) end Of Statement: ; 
+
+Lex(138) punctuators: }
+Lex(139) inline comment: // ////////////////////////////////
+Lex(140) command: print
+Lex(140) punctuators: (
+Lex(140) string value: "for loops"
+Lex(140) punctuators: )
+"for loops"
+Lex(140) end Of Statement: ; 
+
+Lex(141) control flow: for
+Lex(141) punctuators: (
+Lex(141) identifier: a
+Lex(141) punctuators: =
+Lex(141) int value: 2
+Lex(141) end Of Statement: ; 
+
+Lex(141) identifier: a
+Lex(141) comparetor operator: <
+Lex(141) int value: 10
+Lex(141) end Of Statement: ; 
+
+Lex(141) identifier: a
+Lex(141) punctuators: =
+Lex(141) identifier: a
+Lex(141) arithmtic operator: +
+Lex(141) int value: 1
+Lex(141) punctuators: )
+Lex(142) punctuators: {
+Lex(143) command: print
+Lex(143) punctuators: (
+Lex(143) identifier: a
+Lex(143) punctuators: )
+3
+Lex(143) end Of Statement: ; 
+
+Lex(144) punctuators: }
+Lex(145) control flow: for
+Lex(145) punctuators: (
+Lex(145) identifier: a
+Lex(145) punctuators: =
+Lex(145) int value: 2
+Lex(145) end Of Statement: ; 
+
+Lex(145) identifier: a
+Lex(145) comparetor operator: <
+Lex(145) int value: 10
+Lex(145) end Of Statement: ; 
+
+Lex(145) identifier: a
+Lex(145) punctuators: =
+Lex(145) identifier: a
+Lex(145) arithmtic operator: +
+Lex(145) int value: 1
+Lex(145) punctuators: )
+Lex(146) punctuators: {
+Lex(147) command: print
+Lex(147) punctuators: (
+Lex(147) identifier: a
+Lex(147) punctuators: )
+3
+Lex(147) end Of Statement: ; 
+
+Lex(148) identifier: b
+Lex(148) punctuators: =
+Lex(148) identifier: a
+Lex(148) end Of Statement: ; 
+
+Lex(149) control flow: while
+Lex(149) punctuators: (
+Lex(149) identifier: b
+Lex(149) comparetor operator: <
+Lex(149) int value: 10
+Lex(149) punctuators: )
+Lex(150) punctuators: {
+Lex(151) control flow: if
+Lex(151) punctuators: (
+Lex(151) identifier: b
+Lex(151) comparetor operator: ==
+Lex(151) int value: 5
+Lex(151) punctuators: )
+Lex(152) punctuators: {
+Lex(153) command: print
+Lex(153) punctuators: (
+Lex(153) string value: "hi"
+Lex(153) punctuators: )
+"hi"
+Lex(153) end Of Statement: ; 
+
+Lex(154) command: print
+Lex(154) punctuators: (
+Lex(154) identifier: b
+Lex(154) punctuators: )
+3
+Lex(154) end Of Statement: ; 
+
+Lex(155) punctuators: }
+Lex(157) identifier: b
+Lex(157) punctuators: =
+Lex(157) identifier: b
+Lex(157) arithmtic operator: +
+Lex(157) int value: 1
+Lex(157) end Of Statement: ; 
+
+Lex(158) punctuators: }
+Lex(159) punctuators: }
+Lex(160) inline comment: // ////////////////////////////////
+Lex(161) command: print
+Lex(161) punctuators: (
+Lex(161) string value: "repeat loops"
+Lex(161) punctuators: )
+"repeat loops"
+Lex(161) end Of Statement: ; 
+
+Lex(162) identifier: a
+Lex(162) punctuators: =
+Lex(162) int value: 0
+Lex(162) end Of Statement: ; 
+
+Lex(163) control flow: repeat
+Lex(164) punctuators: {
+Lex(165) command: print
+Lex(165) punctuators: (
+Lex(165) identifier: a
+Lex(165) punctuators: )
+0
+Lex(165) end Of Statement: ; 
+
+Lex(166) identifier: a
+Lex(166) punctuators: =
+Lex(166) identifier: a
+Lex(166) arithmtic operator: +
+Lex(166) int value: 1
+Lex(166) end Of Statement: ; 
+
+Lex(167) command: print
+Lex(167) punctuators: (
+Lex(167) identifier: a
+Lex(167) punctuators: )
+1
+Lex(167) end Of Statement: ; 
+
+Lex(168) punctuators: }
+Lex(169) control flow: until
+Lex(169) punctuators: (
+Lex(169) identifier: a
+Lex(169) comparetor operator: ==
+Lex(169) int value: 1
+Lex(169) punctuators: )
+Lex(169) end Of Statement: ; 
+
+Lex(170) control flow: repeat
+Lex(171) punctuators: {
+Lex(172) command: print
+Lex(172) punctuators: (
+Lex(172) identifier: a
+Lex(172) punctuators: )
+1
+Lex(172) end Of Statement: ; 
+
+Lex(173) identifier: a
+Lex(173) punctuators: =
+Lex(173) identifier: a
+Lex(173) arithmtic operator: +
+Lex(173) int value: 1
+Lex(173) end Of Statement: ; 
+
+Lex(174) control flow: if
+Lex(174) punctuators: (
+Lex(174) identifier: a
+Lex(174) comparetor operator: ==
+Lex(174) int value: 1
+Lex(174) punctuators: )
+Lex(175) punctuators: {
+Lex(176) command: print
+Lex(176) punctuators: (
+Lex(176) identifier: a
+Lex(176) punctuators: )
+2
+Lex(176) end Of Statement: ; 
+
+Lex(177) punctuators: }
+Lex(178) punctuators: }
+Lex(179) control flow: until
+Lex(179) punctuators: (
+Lex(179) identifier: a
+Lex(179) comparetor operator: ==
+Lex(179) int value: 1
+Lex(179) punctuators: )
+Lex(179) end Of Statement: ; 
+
+Lex(180) inline comment: // ////////////////////////////////
+Lex(181) command: print
+Lex(181) punctuators: (
+Lex(181) string value: "switch case loops"
+Lex(181) punctuators: )
+"switch case loops"
+Lex(181) end Of Statement: ; 
+
+Lex(182) control flow: switch
+Lex(182) punctuators: (
+Lex(182) identifier: a
+Lex(182) punctuators: )
+Lex(183) punctuators: {
+Lex(184) control flow: default
+Lex(184) punctuators: :
+Lex(185) command: print
+Lex(185) punctuators: (
+Lex(185) string value: "default"
+Lex(185) punctuators: )
+"default"
+Lex(185) end Of Statement: ; 
+
+Lex(186) control flow: break
+Lex(186) end Of Statement: ; 
+
+Lex(187) punctuators: }
+Lex(188) control flow: switch
+Lex(188) punctuators: (
+Lex(188) identifier: a
+Lex(188) punctuators: )
+Lex(189) punctuators: {
+Lex(190) control flow: case
+Lex(190) int value: 1
+Lex(190) punctuators: :
+Lex(191) command: print
+Lex(191) punctuators: (
+Lex(191) string value: "1"
+Lex(191) punctuators: )
+"1"
+Lex(191) end Of Statement: ; 
+
+Lex(192) control flow: break
+Lex(192) end Of Statement: ; 
+
+Lex(194) control flow: case
+Lex(194) int value: 2
+Lex(194) punctuators: :
+Lex(195) command: print
+Lex(195) punctuators: (
+Lex(195) string value: "2"
+Lex(195) punctuators: )
+"2"
+Lex(195) end Of Statement: ; 
+
+Lex(196) control flow: break
+Lex(196) end Of Statement: ; 
+
+Lex(198) control flow: case
+Lex(198) int value: 3
+Lex(198) punctuators: :
+Lex(199) command: print
+Lex(199) punctuators: (
+Lex(199) string value: "3"
+Lex(199) punctuators: )
+"3"
+Lex(199) end Of Statement: ; 
+
+Lex(200) control flow: break
+Lex(200) end Of Statement: ; 
+
+Lex(201) punctuators: }
+Lex(203) control flow: switch
+Lex(203) punctuators: (
+Lex(203) identifier: a
+Lex(203) punctuators: )
+Lex(204) punctuators: {
+Lex(205) control flow: case
+Lex(205) int value: 1
+Lex(205) punctuators: :
+Lex(206) command: print
+Lex(206) punctuators: (
+Lex(206) string value: "1"
+Lex(206) punctuators: )
+"1"
+Lex(206) end Of Statement: ; 
+
+Lex(207) control flow: break
+Lex(207) end Of Statement: ; 
+
+Lex(209) control flow: case
+Lex(209) int value: 2
+Lex(209) punctuators: :
+Lex(210) command: print
+Lex(210) punctuators: (
+Lex(210) string value: "2"
+Lex(210) punctuators: )
+"2"
+Lex(210) end Of Statement: ; 
+
+Lex(211) control flow: break
+Lex(211) end Of Statement: ; 
+
+Lex(213) control flow: case
+Lex(213) int value: 3
+Lex(213) punctuators: :
+Lex(214) command: print
+Lex(214) punctuators: (
+Lex(214) string value: "3"
+Lex(214) punctuators: )
+"3"
+Lex(214) end Of Statement: ; 
+
+Lex(215) control flow: break
+Lex(215) end Of Statement: ; 
+
+Lex(217) control flow: default
+Lex(217) punctuators: :
+Lex(218) command: print
+Lex(218) punctuators: (
+Lex(218) string value: "default"
+Lex(218) punctuators: )
+"default"
+Lex(218) end Of Statement: ; 
+
+Lex(219) control flow: break
+Lex(219) end Of Statement: ; 
+
+Lex(220) punctuators: }
+Lex(221) punctuators: }
+Lex(222) inline comment: // ////////////////////////////////
+Lex(223) command: print
+Lex(223) punctuators: (
+Lex(223) string value: "functions"
+Lex(223) punctuators: )
+"functions"
+Lex(223) end Of Statement: ; 
+
+Lex(224) identifier: a
+Lex(224) arithmtic operator: +
+Lex(224) int value: 1
+Lex(224) end Of Statement: ; 
+
+Lex(226) data type: int
+Lex(226) identifier: x
+Lex(226) punctuators: (
+Lex(226) data type: int
+Lex(226) identifier: a
+Lex(226) punctuators: ,
+Lex(226) data type: int
+Lex(226) identifier: b
+Lex(226) punctuators: )
+inserted: x, declared:1, const:0, Symbol table idx:25
+Lex(227) punctuators: {
+Lex(228) command: print
+Lex(228) punctuators: (
+Lex(228) string value: "add"
+Lex(228) punctuators: )
+"add"
+Lex(228) end Of Statement: ; 
+
+Lex(229) control flow: return
+Lex(229) identifier: a
+Lex(229) arithmtic operator: +
+Lex(229) identifier: b
+Lex(229) end Of Statement: ; 
+
+Lex(230) punctuators: }
+Lex(231) identifier: x
+Lex(231) punctuators: (
+Lex(231) int value: 1
+Lex(231) punctuators: ,
+Lex(231) int value: 2
+Lex(231) punctuators: )
+Lex(231) end Of Statement: ; 
+
+Lex(232) command: print
+Lex(232) punctuators: (
+Lex(232) string value: "x"
+Lex(232) punctuators: )
+"x"
+Lex(232) end Of Statement: ; 
+
+Lex(233) inline comment: // int y()
+Lex(234) inline comment: // {
+Lex(235) inline comment: //     print("y");
+Lex(236) inline comment: //     return 1;
+Lex(237) inline comment: // }
+Lex(239) inline comment: // a = y();
+Lex(240) command: print
+Lex(240) punctuators: (
+Lex(240) string value: "y done"
+Lex(240) punctuators: )
+"y done"
+Lex(240) end Of Statement: ; 
+
+Lex(241) inline comment: ////////////////////////////////
+Lex(242) inline comment: // print("enums");
+Lex(243) inline comment: // enum W
+Lex(244) inline comment: // {
+Lex(245) inline comment: //     RED = 10,
+Lex(246) inline comment: //     GREEN,
+Lex(247) inline comment: //     BLUE = 12,
+Lex(248) inline comment: //     RED
+Lex(249) inline comment: // };
+Lex(250) inline comment: // print(0);
+Lex(251) inline comment: // {
+Lex(252) inline comment: //     int W r;
+Lex(253) inline comment: //     int W t = 1;
+Lex(254) inline comment: //     int W v = 3 + 5;
+Lex(255) inline comment: // }
+Lex(256) inline comment: // string q = "hi";
+Lex(257) inline comment: // int b = 5;
+Lex(258) inline comment: // print(true);
+Lex(259) inline comment: // print(b);
+Lex(260) command: exit

@@ -21,7 +21,7 @@ int yylex();
 
 char buffer[500];
 
-int scope_idx = 0;
+int scope_idx = 1;
 int scope_cnt = 0;
 int scopes[100];
 
@@ -263,16 +263,17 @@ term   	                : NUMBER                                {$$ = intNode();
                         | FLOAT_NUMBER                          {$$ = floatNode(); $$->value.floatVal = $1; /*Pass value & type*/}
                         | TRUE_VAL                              {$$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
                         | FALSE_VAL                             {$$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
-                        | IDENTIFIER	                        {checkInitialization($1); $$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+                        | IDENTIFIER	                        {checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
 /* Conditions */
 //======================
-ifCondition             : IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();}      {;}
-                        | IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ELSE '{'{enterScope();} codeBlock '}'{exitScope();}       {;}
-                        | IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ELSE IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} {;}
-                        | IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ELSE IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ELSE '{'{enterScope();} codeBlock '}'{exitScope();} {;}
+ifCondition             : IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
+                        ;
+ElseCondition           : {;}
+                        | ELSE '{'{enterScope();} codeBlock '}'{exitScope();} {;}
+                        | ELSE IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
                         ;
 case                    : CASE exp ':' statements               {;}
                         | DEFAULT ':' statements                {;}
@@ -301,24 +302,26 @@ functionArgs            : dataType IDENTIFIER                   {;}
 functionParams          : term                                  {;}
                         | term ',' functionParams               {;}
                         ;
-functionDef             : dataType IDENTIFIER '(' functionArgs ')' '{'{enterScope();} codeBlock '}'{exitScope();} {;}
-                        | dataType IDENTIFIER '(' ')' '{'{enterScope();} codeBlock '}'{exitScope();}         {printf("functionDef\n");}
+functionDef             : dataType IDENTIFIER '(' functionArgs ')' {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);} 
+                        '{'{enterScope();} codeBlock '}' {exitScope();}
+                        | dataType IDENTIFIER '(' ')' '{'{enterScope();} codeBlock '}'              {exitScope();}
                         ;
-functionCall            : IDENTIFIER '(' functionParams ')'     {checkDeclaration($1);}
-                        | IDENTIFIER '(' ')'                    {checkDeclaration($1);}
+functionCall            : IDENTIFIER '(' functionParams ')'     {checkOutOfScope($1);}
+                        | IDENTIFIER '(' ')'                    {checkOutOfScope($1);}
                         ;
 //======================
 /* Enumerations */
 //======================
-enumDef	                : ENUM IDENTIFIER '{'{enterScope();} enumBody '}'{exitScope();}      {;}
+enumDef	                : ENUM IDENTIFIER {checkSameScope($2); insert($2, "enum", 0, 0, 0, scopes[scope_idx-1]);} 
+                        '{'{enterScope();} enumBody '}'{exitScope();}
                         ;
 enumBody		        : IDENTIFIER                            {;}
                         | IDENTIFIER '=' exp                    {;}
                         | enumBody ',' IDENTIFIER               {;}
                         | enumBody ',' IDENTIFIER '=' exp       {;}
                         ;
-enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkDeclaration($1);}
-                        | IDENTIFIER IDENTIFIER '=' exp         {checkDeclaration($1);}
+enumDeclaration         : IDENTIFIER IDENTIFIER                 {;}
+                        | IDENTIFIER IDENTIFIER '=' exp         {;}
                         ;
 
 //======================
@@ -354,13 +357,12 @@ void insert(char name, char* type, int isConst, int isInit, int isUsed, int scop
     symbol_Table [sym_table_idx].isDecl = 1;
     symbol_Table [sym_table_idx].isConst = isConst;
 
-    // symbol_Table [sym_table_idx].value.intVal = value;
     symbol_Table [sym_table_idx].isInit = isInit;
     symbol_Table [sym_table_idx].isUsed = isUsed;
     symbol_Table [sym_table_idx].scope = scope;
     ++sym_table_idx;
 
-    // printf("inserted: %c, declared:%d, Symbol table idx:%d\n", symbol_Table [sym_table_idx-1].name, symbol_Table [sym_table_idx-1].isDecl, sym_table_idx);
+    printf("inserted: %c, declared:%d, const:%d, Symbol table idx:%d\n", symbol_Table [sym_table_idx-1].name, symbol_Table [sym_table_idx-1].isDecl, symbol_Table [sym_table_idx-1].isConst, sym_table_idx);
 }
 
 /* returns the value of a given symbol */
@@ -399,6 +401,27 @@ void updateSymbolVal(char symbol, struct nodeType* val){
         symbol_Table[bucket].value.boolVal = val->value.boolVal;
     else if(strcmp(symbol_Table[bucket].type, "string") == 0)
         symbol_Table[bucket].value.stringVal = val->value.stringVal;
+}
+
+void printSymbolTable(){
+    printf("Symbol Table:\n");
+    for(int i=0;i<sym_table_idx;i++){
+        printf("Name:%c,Type:%s,Value:%d,Declared:%d,Initialized:%d,Used:%d,Const:%d,Scope:%d\n", symbol_Table[i].name, symbol_Table[i].type, symbol_Table[i].value.intVal, symbol_Table[i].isDecl, symbol_Table[i].isInit, symbol_Table[i].isUsed, symbol_Table[i].isConst, symbol_Table[i].scope);
+    }
+
+    // Print to file
+    FILE *f = fopen("symbol_table.txt", "w");
+    if (f == NULL)
+    {
+        printf("Error opening file!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* print some text */
+    fprintf(f, "Symbol Table:\n");
+    for(int i=0;i<sym_table_idx;i++){
+        fprintf(f, "Name:%c,Type:%s,Value:%d,Declared:%d,Initialized:%d,Used:%d,Const:%d,Scope:%d\n", symbol_Table[i].name, symbol_Table[i].type, symbol_Table[i].value.intVal, symbol_Table[i].isDecl, symbol_Table[i].isInit, symbol_Table[i].isUsed, symbol_Table[i].isConst, symbol_Table[i].scope);
+    }
 }
 
 //------------------------------------------------------------------------------- 
@@ -654,9 +677,18 @@ void typeCheck(struct nodeType* type1, struct nodeType* type2) {
 void typeCheck2(char symbol, struct nodeType* type2) {
     for(int i=sym_table_idx-1;i>=0;i--) {
         if(symbol_Table[i].name == symbol) {
-            if(strcmp(symbol_Table[i].type, type2->type) != 0) {
-                printf("Type Error\n"); //To-Do:
-                exit(EXIT_FAILURE);
+            for(int j=scope_idx-1;j>=0;j--) {
+                if(symbol_Table[i].scope == scopes[j]) {
+                    if(strcmp(symbol_Table[i].type, type2->type) != 0) {
+                        printf("Type Errrror\n"); //To-Do:
+                        printf("%s\n", symbol_Table[i].type);
+                        printSymbolTable();
+                        exit(EXIT_FAILURE);
+                    }
+                    else{
+                        return;
+                    }
+                }
             }
         }
     }
@@ -714,6 +746,8 @@ void checkOutOfScope(char name) {
         }
     }
     printf("Variable %c out of scope(undeclared or removed)\n", name);
+    printSymbolTable();
+
     exit(EXIT_FAILURE);
 }
 // this function checks if a variable is initialized before use
@@ -742,11 +776,17 @@ void checkUsage() {
 void checkConstant(char name) {
     for(int i=sym_table_idx-1;i>=0;i--) {
         if(symbol_Table[i].name == name) {
-            printf("Variable %c, Constant:\n", name, symbol_Table[i].isConst);
-            if(symbol_Table[i].isConst == 1) {
-                printf("Constant variable %c cannot be assigned a value\n", name);
-                exit(EXIT_FAILURE);
-                return;
+            for(int j=scope_idx-1;j>=0;j--) {
+                if(symbol_Table[i].scope == scopes[j]) {
+                    if(symbol_Table[i].isConst == 1) {
+                        printf("Constant variable %c cannot be assigned a value\n", name);
+                        exit(EXIT_FAILURE);
+                        return;
+                    }
+                    else{
+                        return;
+                    }
+                }
             }
         }
     }
@@ -810,6 +850,8 @@ int main (void) {
     yyparse ( );
 	
     checkUsage();
+
+    printSymbolTable();
 
     return 0;
 }

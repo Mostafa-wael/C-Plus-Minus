@@ -87,178 +87,174 @@
     }
 
     // ////////////////////////////////
-    if (a == 3)
     {
-        print("if");
-        print("another if");
+        int a = 10; // 1010
+        if (a == 10)
+        {
+            print("if");
+        }
+        else if (a == 11)
+        {
+            print("elif");
+        }
+        else if (a == 12)
+        {
+            print("elif");
+        }
+        else
+        {
+            int a = 10;
+            if (a == 10)
+            {
+                print("if");
+                print("another if");
+            }
+            else if (a == 11)
+            {
+                print("else");
+                print("another else");
+            }
+        }
     }
-    // else if (a > 5)
-    // {
-    //     print("elif");
-    //     print("another elif");
-    // }
-    // else
-    // {
-    //     print("else");
-    //     print("another else");
-    //     // if (a == 10)
-    //     // {
-    //     //     print("if");
-    //     //     print("another if");
-    //     // }
-    //     // else
-    //     // {
-    //     //     print("else");
-    //     //     print("another else");
-    //     // }
-    // }
-    // {
-    //     int a = 10;
-    //     if (a == 10)
-    //     {
-    //         print("if");
-    //         print("another if");
-    //     }
-    //     else if (a == 11)
-    //     {
-    //         print("else");
-    //         print("another else");
-    //     }
-    // }
     // ////////////////////////////////
-    // print("while loops");
-    // int a = 0;
-    // while (a < 20)
-    // {
-    //     print(a);
-    //     a = a + 1;
-    // }
-    // print(a);
-    // while (a < 20)
-    // {
-    //     if (a == 10)
-    //     {
-    //         print(a);
-    //     }
-    //     a = a + 1;
-    // }
-    // print(a);
+    {
+        int a = 10; // 1010
+        print("while loops");
+        while (a < 20)
+        {
+            print(a);
+            a = a + 1;
+        }
+        print(a);
+        while (a < 20)
+        {
+            if (a == 10)
+            {
+                print(a);
+            }
+            a = a + 1;
+        }
+        print(a);
+    }
     // ////////////////////////////////
-    // print("for loops");
-    // for (a = 2; a < 10; a = a + 1)
-    // {
-    //     print(a);
-    // }
-    // for (a = 2; a < 10; a = a + 1)
-    // {
-    //     print(a);
-    //     b = a;
-    //     while (b < 10)
-    //     {
-    //         if (b == 5)
-    //         {
-    //             print("hi");
-    //             print(b);
-    //         }
+    print("for loops");
+    for (a = 2; a < 10; a = a + 1)
+    {
+        print(a);
+    }
+    for (a = 2; a < 10; a = a + 1)
+    {
+        print(a);
+        b = a;
+        while (b < 10)
+        {
+            if (b == 5)
+            {
+                print("hi");
+                print(b);
+            }
 
-    //         b = b + 1;
-    //     }
-    // }
+            b = b + 1;
+        }
+    }
     // ////////////////////////////////
-    // print("repeat loops");
-    // a = 0;
-    // repeat
-    // {
-    //     print(a);
-    //     a = a + 1;
-    //     print(a);
-    // }
-    // until(a == 1);
-    // repeat
-    // {
-    //     print(a);
-    //     a = a + 1;
-    //     if (a == 1)
-    //     {
-    //         print(a);
-    //     }
-    // }
-    // until(a == 1);
+    print("repeat loops");
+    a = 0;
+    repeat
+    {
+        print(a);
+        a = a + 1;
+        print(a);
+    }
+    until(a == 1);
+    repeat
+    {
+        print(a);
+        a = a + 1;
+        if (a == 1)
+        {
+            print(a);
+        }
+    }
+    until(a == 1);
     // ////////////////////////////////
-    // print("switch case loops");
-    // switch (a)
-    // {
-    // default:
-    //     print("default");
-    //     break;
-    // }
-    // switch (a)
-    // {
-    // case 1:
-    //     print("1");
-    //     break;
+    print("switch case loops");
+    switch (a)
+    {
+    default:
+        print("default");
+        break;
+    }
+    switch (a)
+    {
+    case 1:
+        print("1");
+        break;
 
-    // case 2:
-    //     print("2");
-    //     break;
+    case 2:
+        print("2");
+        break;
 
-    // case 3:
-    //     print("3");
-    //     break;
-    // }
+    case 3:
+        print("3");
+        break;
+    }
 
-    // switch (a)
-    // {
-    // case 1:
-    //     print("1");
-    //     break;
+    switch (a)
+    {
+    case 1:
+        print("1");
+        break;
 
-    // case 2:
-    //     print("2");
-    //     break;
+    case 2:
+        print("2");
+        break;
 
-    // case 3:
-    //     print("3");
-    //     break;
+    case 3:
+        print("3");
+        break;
 
-    // default:
-    //     print("default");
-    //     break;
-    // }
-    // ////////////////////////////////
-    // print("functions");
-    // a + 1;
-    // x(1, 2);
-    // print("x");
-    // int y()
-    // {
-    //     print("y");
-    //     return 1;
-    // }
-    // int x(int a, int b)
-    // {
-    //     print("add");
-    //     return a + b;
-    // }
-    // a = y();
-    // print("y done");
-    // ////////////////////////////////
-    // print("enums");
-    // enum Color
-    // {
-    //     RED = 10,
-    //     GREEN,
-    //     BLUE = 12,
-    //     RED
-    // };
-    // print(0);
-    // {
-    //     Color c1;
-    //     Color c2 = RED;
-    //     Color c3 = 3 + 5;
-    // }
-    // string a = "hi";
-    // int b = 5;
-    // print(true);
-    // print(b);
-    // exit;
+    default:
+        print("default");
+        break;
+    }
+}
+// ////////////////////////////////
+print("functions");
+a + 1;
+
+int x(int a, int b)
+{
+    print("add");
+    return a + b;
+}
+x(1, 2);
+print("x");
+// int y()
+// {
+//     print("y");
+//     return 1;
+// }
+
+// a = y();
+print("y done");
+////////////////////////////////
+// print("enums");
+// enum W
+// {
+//     RED = 10,
+//     GREEN,
+//     BLUE = 12,
+//     RED
+// };
+// print(0);
+// {
+//     int W r;
+//     int W t = 1;
+//     int W v = 3 + 5;
+// }
+// string q = "hi";
+// int b = 5;
+// print(true);
+// print(b);
+exit;
