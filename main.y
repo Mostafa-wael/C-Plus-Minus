@@ -259,7 +259,7 @@ statement               : assignment 		                {;}
                         | CONTINUE 		                {;}
                         | RETURN 		                {;}
                         | RETURN exp 		                {;}
-                        | PRINT '(' IDENTIFIER ')' 		{printf("%c\n", $3);}
+                        | PRINT '(' IDENTIFIER ')' 		{printf("%d\n", symbolVal($3)->value.intVal);}
                         | PRINT '(' exp ')' 		        {printf("%d\n", $3->value.intVal);}
                         | PRINT '(' STRING ')' 	                {printf("%s\n", $3);}
                         /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
