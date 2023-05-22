@@ -6,7 +6,6 @@ Lex(2) int value: 3
 Quads() push 3
 Lex(2) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:1
 Lex(3) data type: int
 Lex(3) identifier: b
 Lex(3) punctuators: =
@@ -14,7 +13,6 @@ Lex(3) int value: 10
 Quads() push 10
 Lex(3) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:2
 Lex(4) data type: int
 Lex(4) identifier: c
 Lex(4) punctuators: =
@@ -26,7 +24,6 @@ Lex(4) end Of Statement: ;
 
 Quads() push b
 Quads() ADD
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:3
 Lex(5) data type: int
 Lex(5) identifier: d
 Lex(5) punctuators: =
@@ -52,7 +49,6 @@ Lex(5) punctuators: )
 Lex(5) end Of Statement: ; 
 
 Quads() ADD
-SymbolTable() inserted: d, declared:1, const:0, Symbol table idx:4
 Lex(6) command: print
 Lex(6) punctuators: (
 Lex(6) string value: "declaration"
@@ -69,7 +65,6 @@ Lex(8) int value: 5
 Quads() push 5
 Lex(8) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:1, Symbol table idx:5
 Lex(9) data type: int
 Lex(9) identifier: b
 Lex(9) punctuators: =
@@ -79,7 +74,6 @@ Quads() push 5
 Quads() NEG
 Lex(9) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:6
 Lex(10) command: print
 Lex(10) punctuators: (
 Lex(10) identifier: b
@@ -105,7 +99,6 @@ Lex(12) float value: 5.500000
 Quads() push 0.000000
 Lex(12) end Of Statement: ; 
 
-SymbolTable() inserted: f, declared:1, const:0, Symbol table idx:7
 Lex(13) command: print
 Lex(13) punctuators: (
 Lex(13) identifier: b
@@ -121,7 +114,6 @@ Lex(14) value: true
 Quads() push 1
 Lex(14) end Of Statement: ; 
 
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:8
 Lex(15) inline comment: // string d = "hello";
 Lex(16) inline comment: // void e = 0;
 Lex(17) command: print
@@ -151,7 +143,6 @@ Lex(20) int value: 10
 Quads() push 10
 Lex(20) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:1, Symbol table idx:9
 Lex(21) command: print
 Lex(21) punctuators: (
 Lex(21) identifier: a
@@ -178,7 +169,6 @@ Lex(27) value: true
 Quads() push 1
 Lex(27) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:10
 Lex(28) data type: bool
 Lex(28) identifier: b
 Lex(28) punctuators: =
@@ -186,7 +176,6 @@ Lex(28) value: false
 Quads() push 0
 Lex(28) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:11
 Lex(29) command: print
 Lex(29) punctuators: (
 Lex(29) identifier: a
@@ -324,7 +313,6 @@ Lex(49) int value: 10
 Quads() push 10
 Lex(49) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:12
 Lex(49) inline comment: // 1010
 Lex(50) data type: int
 Lex(50) identifier: b
@@ -333,7 +321,6 @@ Lex(50) int value: 10
 Quads() push 10
 Lex(50) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:13
 Lex(50) inline comment: // 1010
 Lex(51) data type: int
 Lex(51) identifier: c
@@ -342,7 +329,6 @@ Lex(51) int value: 2
 Quads() push 2
 Lex(51) end Of Statement: ; 
 
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:14
 Lex(51) inline comment: // 0010
 Lex(52) data type: int
 Lex(52) identifier: d
@@ -359,7 +345,6 @@ Lex(52) end Of Statement: ;
 
 Quads() push c
 Quads() ADD
-SymbolTable() inserted: d, declared:1, const:0, Symbol table idx:15
 Lex(53) command: print
 Lex(53) punctuators: (
 Lex(53) identifier: a
@@ -426,7 +411,6 @@ Lex(61) int value: 10
 Quads() push 10
 Lex(61) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:16
 Lex(61) inline comment: // 1010
 Lex(62) data type: int
 Lex(62) identifier: b
@@ -435,7 +419,6 @@ Lex(62) int value: 10
 Quads() push 10
 Lex(62) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:17
 Lex(62) inline comment: // 1010
 Lex(63) command: print
 Lex(63) punctuators: (
@@ -599,7 +582,6 @@ Lex(76) int value: 10
 Quads() push 10
 Lex(76) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:18
 Lex(76) inline comment: // 1010
 Lex(77) data type: int
 Lex(77) identifier: b
@@ -608,7 +590,6 @@ Lex(77) int value: 10
 Quads() push 10
 Lex(77) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:19
 Lex(77) inline comment: // 1010
 Lex(78) data type: int
 Lex(78) identifier: c
@@ -617,7 +598,6 @@ Lex(78) int value: 2
 Quads() push 2
 Lex(78) end Of Statement: ; 
 
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:20
 Lex(78) inline comment: // 0010
 Lex(79) data type: int
 Lex(79) identifier: d
@@ -634,7 +614,6 @@ Lex(79) end Of Statement: ;
 
 Quads() push c
 Quads() ADD
-SymbolTable() inserted: d, declared:1, const:0, Symbol table idx:21
 Lex(80) command: print
 Lex(80) punctuators: (
 Lex(80) punctuators: (
@@ -782,7 +761,6 @@ Lex(91) int value: 10
 Quads() push 10
 Lex(91) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:22
 Lex(91) inline comment: // 1010
 Lex(92) control flow: if
 Lex(92) punctuators: (
@@ -849,7 +827,6 @@ Lex(106) int value: 10
 Quads() push 10
 Lex(106) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:23
 Lex(107) control flow: if
 Lex(107) punctuators: (
 Lex(107) identifier: a
@@ -912,7 +889,6 @@ Lex(121) int value: 10
 Quads() push 10
 Lex(121) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:24
 Lex(121) inline comment: // 1010
 Lex(122) command: print
 Lex(122) punctuators: (

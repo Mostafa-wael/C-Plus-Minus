@@ -14,7 +14,6 @@ Lex(3) punctuators: ,
 Lex(3) data type: int
 Lex(3) identifier: b
 Lex(3) punctuators: )
-inserted: x, declared:1, const:0, Symbol table idx:1
 Lex(4) punctuators: {
 Lex(5) command: print
 Lex(5) punctuators: (

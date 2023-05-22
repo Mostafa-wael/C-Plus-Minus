@@ -917,11 +917,11 @@ int main (void) {
 
         /* init symbol table */
     
-        yyparse ( );
-                
+        yyparse ( );  
         checkUsage();
+        printSymbolTable();
 
     return 0;
 }
 
-void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 
+void yyerror (char *s) {printf ("%s\n", s);} 
