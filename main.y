@@ -57,7 +57,7 @@ struct symbol {
 // Symbol table functions
 struct symbol symbol_Table [52]; // 26 for lower case, 26 for upper case
 int symbolTable [52]; // 26 for lower case, 26 for upper case
-int symbolVal(char symbol); // returns the value of a given symbol
+struct nodeType* symbolVal(char symbol); // returns the value of a given symbol
 void updateSymbolVal(char symbol, struct nodeType* val); // updates the value of a given symbol
 
 %}
@@ -115,7 +115,7 @@ void updateSymbolVal(char symbol, struct nodeType* val); // updates the value of
 //======================
 %token <TYPE_DATA_MODIFIER> CONST
 %token <TYPE_DATA_TYPE> INT_DATA_TYPE FLOAT_DATA_TYPE STRING_DATA_TYPE BOOL_DATA_TYPE VOID_DATA_TYPE
-%token <TYPE_INT> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_INT
+%token <TYPE_NODE> IDENTIFIER // this is a token called IDENTIFIER returned by the lexical analyzer with as TYPE_NODE
 
 // Data Types
 //======================
@@ -174,7 +174,7 @@ statement               : assignment 		                {;}
                         | CONTINUE 		                {;}
                         | RETURN 		                {;}
                         | RETURN exp 		                {;}
-                        | PRINT '(' exp ')' 		        {printf("%d\n", $3);}
+                        | PRINT '(' exp ')' 		        {printf("%d\n", $3->value.intVal);}
                         | PRINT '(' STRING ')' 	                {printf("%s\n", $3);}
                         /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
                         ;
@@ -190,13 +190,13 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         | VOID_DATA_TYPE                        {;}
                         ;
 declaration             : dataType IDENTIFIER 		            {/*Check declared*/}
-                        | dataType assignment	                {/*Check declared & check type*/typeCheck($1, $2);}
-                        | dataModifier declaration 	            {/*Check declared*/;}
+                        | dataType IDENTIFIER '=' exp	        {/*Check declared & check type*/updateSymbolVal($2,$4); typeCheck($1, $4);}
+                        | dataModifier dataType IDENTIFIER '=' exp 	    {/*Check declared*/;}
                         ;
 assignment              : IDENTIFIER '=' exp                    {/*Const, Decl, Type checks*/ /*Set Used*/updateSymbolVal($1,$3); $$ = $3;}
                         | IDENTIFIER '=' STRING                 {/*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
-                        | enumDeclaration                       {/*Decl*/;}     
-                        | enumDef                               {;}
+                        | enumDef                               {;}             //
+                        | dataType enumDeclaration              {/*Check declared*/;}
                         ;
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {;}
@@ -288,6 +288,7 @@ enumBody		: IDENTIFIER                            {;}
 enumDeclaration         : IDENTIFIER IDENTIFIER                 {;}
                         | IDENTIFIER IDENTIFIER '=' exp         {;}
                         ;
+
 //======================
 /* Other */
 //======================
@@ -306,10 +307,15 @@ int computeSymbolIndex(char token)
 } 
 
 /* returns the value of a given symbol */
-int symbolVal(char symbol)
+struct nodeType* symbolVal(char symbol)
 {
-	int bucket = computeSymbolIndex(symbol);
-	return symbolTable[bucket];
+    int bucket = computeSymbolIndex(symbol);
+	int value = symbolTable[bucket];
+
+    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    p->type = "int";
+    p->value.intVal = value;
+    return p;
 }
 
 /* updates the value of a given symbol */
