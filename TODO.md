@@ -60,6 +60,8 @@ Errors ->
 - The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
 - Warning in case of if statement whose condition is always false.
 - strings
+- function parameters
+- fix types inside symbol table
 
 GUI ->
 - Level 2

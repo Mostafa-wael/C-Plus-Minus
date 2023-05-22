@@ -259,9 +259,9 @@ statement               : assignment 		                {;}
                         | CONTINUE 		                {;}
                         | RETURN 		                {;}
                         | RETURN exp 		                {;}
-                        | PRINT '(' IDENTIFIER ')' 		{printf("%d\n", symbolVal($3)->value.intVal);}
-                        | PRINT '(' exp ')' 		        {printf("%d\n", $3->value.intVal);}
-                        | PRINT '(' STRING ')' 	                {printf("%s\n", $3);}
+                        | PRINT '(' IDENTIFIER ')' 		    {printNode(symbolVal($3)); setUsed($3);}
+                        | PRINT '(' exp ')' 		        {printNode($3);}
+                        | PRINT '(' STRING ')' 	            {printf("%s\n", $3);}
                         /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
                         ;
 //======================
@@ -494,6 +494,18 @@ void updateSymbolVal(char symbol, struct nodeType* val){
         symbol_Table[bucket].value.boolVal = val->value.boolVal;
     else if(strcmp(symbol_Table[bucket].type, "string") == 0)
         symbol_Table[bucket].value.stringVal = val->value.stringVal;
+}
+
+void printNode(struct nodeType* x)
+{
+    if(strcmp(x->type, "int") == 0)
+        printf("%d", x->value.intVal);
+    else if(strcmp(x->type, "float") == 0)
+        printf("%f", x->value.floatVal);
+    else if(strcmp(x->type, "bool") == 0)
+        printf("%d", x->value.boolVal);
+    else if(strcmp(x->type, "string") == 0)
+        printf("%s", x->value.stringVal);
 }
 
 void printSymbolTable(){
