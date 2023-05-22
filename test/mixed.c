@@ -200,61 +200,58 @@
         break;
     }
 
-    switch (a)
-    {
-    case 1:
-        print("1");
-        break;
+    // switch (a)
+    // {
+    // case 1:
+    //     print("1");
+    //     break;
 
-    case 2:
-        print("2");
-        break;
+    // case 2:
+    //     print("2");
+    //     break;
 
-    case 3:
-        print("3");
-        break;
+    // case 3:
+    //     print("3");
+    //     break;
 
-    default:
-        print("default");
-        break;
-    }
-}
-// ////////////////////////////////
-print("functions");
-a + 1;
-
-int x(int a, int b)
-{
-    print("add");
-    return a + b;
-}
-x(1, 2);
-print("x");
-// int y()
-// {
-//     print("y");
-//     return 1;
-// }
-
-// a = y();
-print("y done");
-////////////////////////////////
-// print("enums");
-// enum W
-// {
-//     RED = 10,
-//     GREEN,
-//     BLUE = 12,
-//     RED
-// };
-// print(0);
-// {
-//     int W r;
-//     int W t = 1;
-//     int W v = 3 + 5;
-// }
-// string q = "hi";
-// int b = 5;
-// print(true);
-// print(b);
-exit;
+    // default:
+    //     print("default");
+    //     break;
+    // }
+    // ////////////////////////////////
+    // print("functions");
+    // a + 1;
+    // x(1, 2);
+    // print("x");
+    // int y()
+    // {
+    //     print("y");
+    //     return 1;
+    // }
+    // int x(int a, int b)
+    // {
+    //     print("add");
+    //     return a + b;
+    // }
+    // a = y();
+    // print("y done");
+    // ////////////////////////////////
+    // print("enums");
+    // enum Color
+    // {
+    //     RED = 10,
+    //     GREEN,
+    //     BLUE = 12,
+    //     RED
+    // };
+    // print(0);
+    // {
+    //     Color c1;
+    //     Color c2 = RED;
+    //     Color c3 = 3 + 5;
+    // }
+    // string a = "hi";
+    // int b = 5;
+    // print(true);
+    // print(b);
+    // exit;

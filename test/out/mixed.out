@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Lex(1) punctuators: {
 Lex(2) data type: int
 Lex(2) identifier: a
@@ -1211,3 +1212,25 @@ Lex(257) inline comment: // int b = 5;
 Lex(258) inline comment: // print(true);
 Lex(259) inline comment: // print(b);
 Lex(260) command: exit
+=======
+int
+int
+Variable a not declared
+Variable b not declared
+int
+Variable b not declared
+Variable a not declared
+Variable c not declared
+int
+"declaration"
+int
+Variable b not declared
+-5
+Variable b not declared
+5
+float
+Variable b not declared
+1085276160
+int
+Type Error
+>>>>>>> 1f0be9e4dba92c2d5a347f8fe5d00f11ad7f63c5
