@@ -21,6 +21,13 @@ int yylex();
 
 char buffer[500];
 
+int scope_idx = 0;
+int scope_cnt = 0;
+int scopes[100];
+for(int i=0;i<100;i++) {
+    scopes[i] = -1;
+}
+
 struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op);
@@ -53,8 +60,6 @@ void setConst(char name);
 void setInit(char name);
 void setUsed(char name);
 void setDecl(char name);
-
-int symbolTableIndex = 0; // index of the symbol table
 
 // Symbol table
 //======================
@@ -616,9 +621,9 @@ int checkDeclaration(char name) {
 
 // this function checks if a variable is initialized before use
 void checkInitialization(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        const char* na = &name;
-        if(strcmp(symbol_Table[i].name, na) == 0) {
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        
+        if(symbol_Table[i].name == name) {
             if(symbol_Table[i].isInit == 0) {
                 printf("Variable %c not initialized\n", name);
                 return;
@@ -629,9 +634,9 @@ void checkInitialization(char name) {
 
 // this function checks that all variables are used
 void checkUsage() {
-    for(int i=0;i<symbolTableIndex;i++) {
+    for(int i=0;i<sym_table_idx;i++) {
         if(symbol_Table[i].isUsed == 0) {
-            printf("Variable %s not used\n", symbol_Table[i].name);
+            printf("Variable %c not used\n", symbol_Table[i].name);
         }
     }
 }
@@ -654,9 +659,8 @@ void checkConstant(char name) {
 // Setter functions 
 // -------------------------------------------------------------------------------  
 void setConst(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        const char* na = &name;
-        if(strcmp(symbol_Table[i].name, na) == 0) {
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        if(symbol_Table[i].name == name) {
             symbol_Table[i].isConst = 1;
             return;
         }
@@ -664,9 +668,8 @@ void setConst(char name) {
 }
 
 void setInit(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        const char* na = &name;
-        if(strcmp(symbol_Table[i].name, na) == 0) {
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        if(symbol_Table[i].name == name) {
             symbol_Table[i].isInit = 1;
             return;
         }
@@ -683,9 +686,8 @@ void setUsed(char name) {
 }
 
 void setDecl(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        const char* na = &name;
-        if(strcmp(symbol_Table[i].name, na) == 0) {
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        if(symbol_Table[i].name == name) { 
             symbol_Table[i].isDecl = 1;
             return;
         }
