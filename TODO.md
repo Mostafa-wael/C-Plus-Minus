@@ -1,5 +1,7 @@
 # TODOs
+
 ## Phase 2
+
 - [ ] Design a suitable and extensible format for the symbol table.
 - [ ] Implement a proper syntax error handler.
 - [ ] Design suitable action rules to produce the output quadruples.
@@ -11,6 +13,7 @@
   - [ ] Warning in case of if statement whose condition is always false.
 
 ## Bonus
+
 - [ ] Level 1 (input/output fields):
   - [ ] Should have input and output fields with the “Compile” button.
   - [ ] User inputs the code in the input field (better be a code editor field e.g. supports line numbering) and sees the output quadruples in the output field.
@@ -24,12 +27,11 @@
   - [ ] Should show the symbol table as part of the UI
   - [ ] Should update the symbol table every step if changed
 
-
 ## Work Distribution
+
 - [ ] Design & implement AST. [Yousif Atef] -> 5/5
 - [ ] Design a suitable and extensible format for the symbol table [MW, Zoz] -> 5/5
 - [ ] Design suitable action rules to produce the output quadruples [Gendy] -> 5/5
-
 
 -------
 Continue other types
@@ -49,13 +51,15 @@ conversions
 if always True or False
 line of each error
 
+## Quad
 
-
-Quad -> 
 - If-then-else statement, while loops, repeat-until loops, for loops, switch statement.   (nested)
 - functions, enums
+- show quad line number
 
-Errors ->
+## Errors
+
+- check todos in code
 - enums (and the inside of enums to symbol table).
 - The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
 - Warning in case of if statement whose condition is always false.
@@ -63,9 +67,10 @@ Errors ->
 - function parameters
 - fix types inside symbol table
 
-GUI ->
-- Level 2
-- Level 3
+## GUI
+
+- Test cases.
+- line by line
 
 Done:
 [x] functions without parameters -> change functionCall to Node_type & $$ = val($1)
