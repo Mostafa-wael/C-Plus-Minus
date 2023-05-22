@@ -12,7 +12,6 @@ Lex(2) int value: 10
 Quads() push 10
 Lex(2) end Of Statement: ; 
 
-inserted: a, declared:1, const:0, Symbol table idx:1
 Lex(3) control flow: if
 Lex(3) punctuators: (
 Lex(3) identifier: a

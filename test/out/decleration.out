@@ -12,7 +12,6 @@ Lex(3) int value: 90
 Quads() push 90
 Lex(3) end Of Statement: ; 
 
-inserted: a, declared:1, const:0, Symbol table idx:1
 Lex(4) command: print
 Lex(4) punctuators: (
 Lex(4) identifier: a
@@ -28,7 +27,6 @@ Lex(6) float value: 100.900000
 Quads() push -0.000000
 Lex(6) end Of Statement: ; 
 
-inserted: b, declared:1, const:0, Symbol table idx:2
 Lex(7) command: print
 Lex(7) punctuators: (
 Lex(7) identifier: b
@@ -44,7 +42,6 @@ Lex(9) value: true
 Quads() push 1
 Lex(9) end Of Statement: ; 
 
-inserted: x, declared:1, const:0, Symbol table idx:3
 Lex(10) command: print
 Lex(10) punctuators: (
 Lex(10) identifier: x

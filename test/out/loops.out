@@ -2,7 +2,6 @@ Lex(1) data type: int
 Lex(1) identifier: a
 Lex(1) end Of Statement: ; 
 
-inserted: a, declared:1, const:0, Symbol table idx:1
 Lex(2) command: print
 Lex(2) punctuators: (
 Lex(2) string value: "while loops"
@@ -148,7 +147,6 @@ Lex(25) data type: int
 Lex(25) identifier: b
 Lex(25) end Of Statement: ; 
 
-inserted: b, declared:1, const:0, Symbol table idx:2
 Lex(26) control flow: for
 Lex(26) punctuators: (
 Lex(26) identifier: a

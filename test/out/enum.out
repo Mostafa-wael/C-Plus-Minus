@@ -7,7 +7,6 @@ Lex(1) end Of Statement: ;
 
 Lex(2) enum: enum
 Lex(2) identifier: W
-inserted: W, declared:1, const:0, Symbol table idx:1
 Lex(3) punctuators: {
 Lex(4) identifier: R
 Lex(4) punctuators: =

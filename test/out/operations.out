@@ -12,7 +12,6 @@ Lex(2) int value: 10
 Quads() push 10
 Lex(2) end Of Statement: ; 
 
-inserted: a, declared:1, const:0, Symbol table idx:1
 Lex(3) data type: int
 Lex(3) identifier: b
 Lex(3) punctuators: =
@@ -20,7 +19,6 @@ Lex(3) int value: 10
 Quads() push 10
 Lex(3) end Of Statement: ; 
 
-inserted: b, declared:1, const:0, Symbol table idx:2
 Lex(4) data type: int
 Lex(4) identifier: c
 Lex(4) punctuators: =
@@ -28,7 +26,6 @@ Lex(4) int value: 2
 Quads() push 2
 Lex(4) end Of Statement: ; 
 
-inserted: c, declared:1, const:0, Symbol table idx:3
 Lex(5) command: print
 Lex(5) punctuators: (
 Lex(5) arithmtic operator: -
@@ -486,7 +483,6 @@ Lex(40) value: true
 Quads() push 1
 Lex(40) end Of Statement: ; 
 
-inserted: x, declared:1, const:0, Symbol table idx:4
 Lex(41) data type: bool
 Lex(41) identifier: y
 Lex(41) punctuators: =
@@ -494,7 +490,6 @@ Lex(41) value: false
 Quads() push 0
 Lex(41) end Of Statement: ; 
 
-inserted: y, declared:1, const:0, Symbol table idx:5
 Lex(42) command: print
 Lex(42) punctuators: (
 Lex(42) identifier: x
