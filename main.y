@@ -21,6 +21,9 @@ int yylex();
 
 char buffer[500];
 
+struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op);
+struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op);
+struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op);
 
 // Types
 //======================
@@ -39,14 +42,24 @@ struct nodeType* intNode();
 struct nodeType* floatNode();
 struct nodeType* boolNode();
 struct nodeType* stringNode();
+
 void typeCheck(struct nodeType* type1, struct nodeType* type2);
+void checkConstant(char name);
+void checkInitialization(char name);
+int checkDeclaration(char name);
+void checkUsage();
+
+void setConst(char name);
+void setInit(char name);
+void setUsed(char name);
+void setDecl(char name);
 
 int symbolTableIndex = 0; // index of the symbol table
 
 // Symbol table
 //======================
 struct symbol {
-        char *name;
+        char name;
         char *type;
         union {
                 int intVal;
@@ -57,9 +70,10 @@ struct symbol {
         int isDecl, isConst, isInit, isUsed;
 };
 // Symbol table functions
-struct symbol symbol_Table [52]; // 26 for lower case, 26 for upper case
-// int symbolTable [52]; // 26 for lower case, 26 for upper case
+struct symbol symbol_Table [100]; // 26 for lower case, 26 for upper case
+void insert(char name, char* type, int isConst, int isInit, int isUsed);
 struct nodeType* symbolVal(char symbol); // returns the value of a given symbol
+void updateSymbolName(char symbol, char newName);
 void updateSymbolVal(char symbol, struct nodeType* val); // updates the value of a given symbol
 
 %}
@@ -191,12 +205,12 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         | BOOL_DATA_TYPE                        {$$ = boolNode();}
                         | VOID_DATA_TYPE                        {;}
                         ;
-declaration             : dataType IDENTIFIER 		            {/*Check declared when inserting*/}
-                        | dataType IDENTIFIER '=' exp	        {/*Check declared when inserting & check type*/updateSymbolVal($2,$4); typeCheck($1, $4);}
-                        | dataModifier dataType IDENTIFIER '=' exp 	    {/*Check declared when inserting*/;}
+declaration             : dataType IDENTIFIER 		            {if(checkDeclaration($2)) exit(EXIT_FAILURE); insert($2, $1->type, 0, 0, 0);/*Check declared when inserting*/}
+                        | dataType IDENTIFIER   {if(checkDeclaration($2)) exit(EXIT_FAILURE);} '=' exp	    {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0); updateSymbolVal($2,$5); }
+                        | dataModifier dataType IDENTIFIER {if(checkDeclaration($3)) exit(EXIT_FAILURE);} '=' exp 	    {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0); updateSymbolVal($3,$6); }
                         ;
-assignment              : IDENTIFIER '=' exp                    {checkDeclaration($1); checkConstant($1); /*Const, Decl, Type checks*/ /*Set Used*/updateSymbolVal($1,$3); $$ = $3;}
-                        | IDENTIFIER '=' STRING                 {checkDeclaration($1); checkConstant($1);  /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
+assignment              : IDENTIFIER '=' exp                    {if(!checkDeclaration($1)) exit(EXIT_FAILURE);  checkConstant($1); /*Const, Decl, Type checks*/ /*Set Used*/updateSymbolVal($1,$3); $$ = $3;}
+                        | IDENTIFIER '=' STRING                 {if(!checkDeclaration($1)) exit(EXIT_FAILURE);  checkConstant($1);  /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
                         | enumDef                               {;}             //
                         | dataType enumDeclaration              {/*Check declared*/;}
                         ;
@@ -207,20 +221,20 @@ exp    	                : term                                  {$$ = $1;}
                         | '~' term                              {if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE);}
                         | NOT term                              {if($2->type == "bool"){$$ = boolNode(); $$->value.boolVal = !$2->value.boolVal;} else{ if($2->value.intVal){$$ = boolNode(); $$->value.boolVal = 0;} else{$$ = boolNode(); $$->value.boolVal = 1;}}}
                         // /* Arithmatic */
-                        | exp '+' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal + $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal + $3->value.floatVal;} else exit(EXIT_FAILURE);}
-                        | exp '-' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal - $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal - $3->value.floatVal;} else exit(EXIT_FAILURE);}
-                        | exp '*' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal * $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal * $3->value.floatVal;} else exit(EXIT_FAILURE);}
-                        | exp '/' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal / $3->value.intVal;} else if($1->type == "float" && $3->type == "float"){$$ = floatNode(); $$->value.floatVal = $1->value.floatVal / $3->value.floatVal;} else exit(EXIT_FAILURE);}
-                        | exp '%' exp                           {if($1->type == "int" && $3->type == "int"){$$ = intNode(); $$->value.intVal = $1->value.intVal % $3->value.intVal;} else exit(EXIT_FAILURE);}
+                        | exp '+' exp                           {$$ = arithmatic($1,$3,'+');}
+                        | exp '-' exp                           {$$ = arithmatic($1,$3,'-');}
+                        | exp '*' exp                           {$$ = arithmatic($1,$3,'*');}
+                        | exp '/' exp                           {$$ = arithmatic($1,$3,'/');}
+                        | exp '%' exp                           {$$ = arithmatic($1,$3,'%');}
                         // /* Bitwise */
-                        // | exp '|' exp                           {$$ = $1 | $3;}
-                        // | exp '&' exp                           {$$ = $1 & $3;}
-                        // | exp '^' exp                           {$$ = $1 ^ $3;}
-                        // | exp SHL exp                           {$$ = $1 << $3;}
-                        // | exp SHR exp                           {$$ = $1 >> $3;}
+                        | exp '|' exp                           {$$ = bitwise($1,$3,'|');}
+                        | exp '&' exp                           {$$ = bitwise($1,$3,'&');}
+                        | exp '^' exp                           {$$ = bitwise($1,$3,'^');}
+                        | exp SHL exp                           {$$ = bitwise($1,$3,'<');}
+                        | exp SHR exp                           {$$ = bitwise($1,$3,'>');}
                         // /* Logical */
-                        // | exp AND exp                           {$$ = $1 && $3;}
-                        // | exp OR exp                            {$$ = $1 || $3;}
+                        | exp AND exp                           {$$ = logical($1,$3,'&');}
+                        | exp OR exp                            {$$ = logical($1,$3,'|');}
                         // /* Comparison */
                         // | exp EQ exp                            {$$ = $1 == $3;}
                         // | exp NEQ exp                           {$$ = $1 != $3;}
@@ -295,10 +309,12 @@ enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkDeclaratio
 /* Other */
 //======================
 
-%%                     
+%%  
+
+int sym_table_idx = 0;
+
 /* C code */
-int computeSymbolIndex(char token)
-{
+int computeSymbolIndex(char token){
 	int idx = -1;
 	if(islower(token)) {
 		idx = token - 'a' + 26;
@@ -308,9 +324,26 @@ int computeSymbolIndex(char token)
 	return idx;
 } 
 
+//======================
+// Symbol table functions
+//======================
+void insert(char name, char* type, int isConst, int isInit, int isUsed){
+
+    symbol_Table [sym_table_idx].name = name;
+    symbol_Table [sym_table_idx].type = type;
+    symbol_Table [sym_table_idx].isDecl = 1;
+    symbol_Table [sym_table_idx].isConst = isConst;
+
+    // symbol_Table [sym_table_idx].value.intVal = value;
+    symbol_Table [sym_table_idx].isInit = isInit;
+    symbol_Table [sym_table_idx].isUsed = isUsed;
+    ++sym_table_idx;
+
+    // printf("inserted: %c, declared:%d, Symbol table idx:%d\n", symbol_Table [sym_table_idx-1].name, symbol_Table [sym_table_idx-1].isDecl, sym_table_idx);
+}
+
 /* returns the value of a given symbol */
-struct nodeType* symbolVal(char symbol)
-{
+struct nodeType* symbolVal(char symbol){
     int bucket = computeSymbolIndex(symbol);
 	int value = symbol_Table[bucket].value.intVal;
 
@@ -320,9 +353,14 @@ struct nodeType* symbolVal(char symbol)
     return p;
 }
 
+void updateSymbolName(char symbol, char newName){
+    int bucket = computeSymbolIndex(symbol);
+    symbol_Table [bucket].name = newName;
+}
+
+
 /* updates the value of a given symbol */
-void updateSymbolVal(char symbol, struct nodeType* val)
-{
+void updateSymbolVal(char symbol, struct nodeType* val){
 	int bucket = computeSymbolIndex(symbol);
     if(val->type == "int"){
         printf("int\n");
@@ -344,10 +382,162 @@ void updateSymbolVal(char symbol, struct nodeType* val)
 }
 
 //------------------------------------------------------------------------------- 
+// Op functions 
+//-------------------------------------------------------------------------------  
+struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op){
+    struct nodeType* p = malloc(sizeof(struct nodeType));
+    if(strcmp(op1->type, "int") == 0 && strcmp(op2->type, "int") == 0){
+        p->type = "int";
+        switch(op){
+            case '+':
+                p->value.intVal = op1->value.intVal + op2->value.intVal;
+                break;
+            case '-':
+                p->value.intVal = op1->value.intVal - op2->value.intVal;
+                break;
+            case '*':
+                p->value.intVal = op1->value.intVal * op2->value.intVal;
+                break;
+            case '/':
+                p->value.intVal = op1->value.intVal / op2->value.intVal;
+                break;
+            case '%':
+                p->value.intVal = op1->value.intVal % op2->value.intVal;
+                break;
+            default:
+                printf("Invalid operator\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else if(strcmp(op1->type, "float") == 0 && strcmp(op2->type, "float") == 0){
+        p->type = "float";
+        switch(op){
+            case '+':
+                p->value.floatVal = op1->value.floatVal + op2->value.floatVal;
+                break;
+            case '-':
+                p->value.floatVal = op1->value.floatVal - op2->value.floatVal;
+                break;
+            case '*':
+                p->value.floatVal = op1->value.floatVal * op2->value.floatVal;
+                break;
+            case '/':
+                p->value.floatVal = op1->value.floatVal / op2->value.floatVal;
+                break;
+            default:
+                printf("Invalid operator\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else if (strcmp(op1->type, "int") == 0 && strcmp(op2->type, "float") == 0){
+        p->type = "float";
+        switch(op){
+            case '+':
+                p->value.floatVal = op1->value.intVal + op2->value.floatVal;
+                break;
+            case '-':
+                p->value.floatVal = op1->value.intVal - op2->value.floatVal;
+                break;
+            case '*':
+                p->value.floatVal = op1->value.intVal * op2->value.floatVal;
+                break;
+            case '/':
+                p->value.floatVal = op1->value.intVal / op2->value.floatVal;
+                break;
+            default:
+                printf("Invalid operator\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else if (strcmp(op1->type, "float") == 0 && strcmp(op2->type, "int") == 0){
+        p->type = "float";
+        switch(op){
+            case '+':
+                p->value.floatVal = op1->value.floatVal + op2->value.intVal;
+                break;
+            case '-':
+                p->value.floatVal = op1->value.floatVal - op2->value.intVal;
+                break;
+            case '*':
+                p->value.floatVal = op1->value.floatVal * op2->value.intVal;
+                break;
+            case '/':
+                p->value.floatVal = op1->value.floatVal / op2->value.intVal;
+                break;
+            default:
+                printf("Invalid operator\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else{
+        printf("Type Error\n");
+        exit(EXIT_FAILURE);
+    }
+    return p;
+}
+
+struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op){
+    struct nodeType* p = malloc(sizeof(struct nodeType));
+    if(strcmp(op1->type, "int") == 0 && strcmp(op2->type, "int") == 0){
+        p->type = "int";
+        switch(op){
+            case '|':
+                p->value.intVal = op1->value.intVal | op2->value.intVal;
+                break;
+            case '&':
+                p->value.intVal = op1->value.intVal & op2->value.intVal;
+                break;
+            case '^':
+                p->value.intVal = op1->value.intVal ^ op2->value.intVal;
+                break;
+            case '<':
+                p->value.intVal = op1->value.intVal << op2->value.intVal;
+                break;
+            case '>':
+                p->value.intVal = op1->value.intVal >> op2->value.intVal;
+                break;
+            default:
+                printf("Invalid operator\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else{
+        printf("Type Error\n");
+        exit(EXIT_FAILURE);
+    }
+    return p;
+}
+
+struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op){
+    struct nodeType* p = malloc(sizeof(struct nodeType));
+    if(strcmp(op1->type, "bool") == 0 && strcmp(op2->type, "bool") == 0){
+        p->type = "bool";
+        switch(op){
+            case '&':
+                p->value.boolVal = op1->value.boolVal && op2->value.boolVal;
+                break;
+            case '|':
+                p->value.boolVal = op1->value.boolVal || op2->value.boolVal;
+                break;
+            default:
+                printf("Invalid operator\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else{
+        printf("Type Error\n"); /// ISSUE HERE
+        printf("%s\n", op1->type);
+        printf("%s\n", op2->type);
+        exit(EXIT_FAILURE);
+    }
+    return p;
+}
+
+//------------------------------------------------------------------------------- 
 // Type checking functions 
 //-------------------------------------------------------------------------------  
 struct nodeType* intNode() {
-    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    struct nodeType* p = malloc(sizeof(struct nodeType));
     p->type = "int";
     p->value.intVal = 0;
     return p;
@@ -379,37 +569,39 @@ void typeCheck(struct nodeType* type1, struct nodeType* type2) {
         printf("Type Error\n"); //To-Do:
         exit(EXIT_FAILURE);
     }
+    return;
 }
 
-------------------------------------------------------------------------------- 
-checking functions 
--------------------------------------------------------------------------------  
+// ------------------------------------------------------------------------------- 
+// checking functions 
+// -------------------------------------------------------------------------------  
 
-this function checks if a variable is used before declaration or out of scope
-void checkDeclaration(char name) {
+// this function checks if a variable is used before declaration or out of scope
+int checkDeclaration(char name) {
 
     //TODO: check for scope
     //TODO: use yytext 
 
     int found = 0;
 
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        if(strcmp(symbol_Table[i].name, name) == 0) {
-            found = 1;
-            break;
-        }
+    for(int i=0; i<sym_table_idx ;i++) {
+            if(symbol_Table[i].name == name) {
+                found = 1;
+                break;
+            }
     }
 
-    if(!found) {
-        printf("Variable %c not declared\n", name);
-    }
-
+    // if(!found) {
+    //     printf("Variable %c not declared\n", name);
+    // }
+    return found;
 }
 
 // this function checks if a variable is initialized before use
 void checkInitialization(char name) {
     for(int i=symbolTableIndex-1;i>=0;i--) {
-        if(strcmp(symbol_Table[i].name, name) == 0) {
+        const char* na = &name;
+        if(strcmp(symbol_Table[i].name, na) == 0) {
             if(symbol_Table[i].isInit == 0) {
                 printf("Variable %c not initialized\n", name);
                 return;
@@ -429,16 +621,60 @@ void checkUsage() {
 
 // this function checks if a constant variable is re-assigned a value  
 void checkConstant(char name) {
-    for(int i=symbolTableIndex-1;i>=0;i--) {
-        if(strcmp(symbol_Table[i].name, name) == 0) {
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        if(symbol_Table[i].name == name) {
+            printf("Variable %c, Constant:\n", name, symbol_Table[i].isConst);
             if(symbol_Table[i].isConst == 1) {
                 printf("Constant variable %c cannot be assigned a value\n", name);
+                exit(EXIT_FAILURE);
                 return;
             }
         }
     }
 }
 
+// ------------------------------------------------------------------------------- 
+// Setter functions 
+// -------------------------------------------------------------------------------  
+void setConst(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        const char* na = &name;
+        if(strcmp(symbol_Table[i].name, na) == 0) {
+            symbol_Table[i].isConst = 1;
+            return;
+        }
+    }
+}
+
+void setInit(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        const char* na = &name;
+        if(strcmp(symbol_Table[i].name, na) == 0) {
+            symbol_Table[i].isInit = 1;
+            return;
+        }
+    }
+}
+
+void setUsed(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        const char* na = &name;
+        if(strcmp(symbol_Table[i].name, na) == 0) {
+            symbol_Table[i].isUsed = 1;
+            return;
+        }
+    }
+}
+
+void setDecl(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        const char* na = &name;
+        if(strcmp(symbol_Table[i].name, na) == 0) {
+            symbol_Table[i].isDecl = 1;
+            return;
+        }
+    }
+}
 //-------------------------------------------------------------------------------
 int main (void) {
 	/* init symbol table */
@@ -448,7 +684,7 @@ int main (void) {
 	
     checkUsage();
 
-    return 
+    return 0;
 }
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 

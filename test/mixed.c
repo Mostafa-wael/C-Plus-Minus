@@ -3,7 +3,7 @@ print("declaration");
 const int a = 5;
 int b = -5;
 print(b);
-// print(-b);
+print(-b);
 float b = 5.5;
 print(b);
 bool c = true;
@@ -29,31 +29,31 @@ print(b); // 0
 // print(a >= b); // 1
 // ////////////////////////////////
 // print("More logic");
-// print(!a);                 // 0
+print(!a); // 0
 // print(a &&b);              // 0
 // print(a || b);             // 1
 // print((a && a && b) || a); // 1
 // ////////////////////////////////
-// print("assignment");
-// int a = 10; // 1010
-// int b = 10; // 1010
-// int c = 2;  // 0010
-// int d = a * b + c;
+print("assignment");
+int a = 10; // 1010
+int b = 10; // 1010
+int c = 2;  // 0010
+int d = a * b + c;
 // print(a == 10);
 // print(b == 10);
 // print(c == 2);
 // print(d == 102); // 102
 // ////////////////////////////////
-// print("arithmetic");
+print("arithmetic");
 // print(-a == -10); // -10
-// // print(-3-4);
+print(-3 - 4);
 // print(a + b == 20);            // 20
 // print(a - b == 0);             // 0
 // print(a / b == 1);             // 1
 // print(a % c == 0);             // 0
 // print(a *b - b + a / b == 91); // 91
-// print(100 - 5);
-// print(-100 - 5 + 5);
+print(100 - 5);
+print(-100 - 5 + 5);
 // ////////////////////////////////
 // print("bitwise");
 // print((a | c) == 10);       // 1010 | 0010 = 1010 = 10

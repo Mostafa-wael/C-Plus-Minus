@@ -1,14 +1,8 @@
 print("Custom");
-
-int a = 90;
+const int a = 1;
+float b = 2.0;
+bool c = true;
 
 print(a);
-
-bool b = !0.0;
 print(b);
-
-int x = 0;
-int y = 4;
-
-int z = y + a % 2;
-print(z);
+print(c);

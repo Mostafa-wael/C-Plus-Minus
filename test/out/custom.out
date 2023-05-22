@@ -1,9 +1,7 @@
 "Custom"
 int
-90
+float
 bool
 1
-int
-int
-int
-4
+1073741824
+1

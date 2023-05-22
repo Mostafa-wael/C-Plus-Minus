@@ -1,0 +1,37 @@
+"declaration"
+int
+Variable b not declared
+-5
+Variable b not declared
+5
+float
+Variable b not declared
+1085276160
+bool
+Variable c not declared
+1
+Variable a not declared
+0
+"logic"
+bool
+bool
+Variable a not declared
+1
+Variable b not declared
+0
+Variable a not declared
+0
+"assignment"
+int
+int
+int
+Variable a not declared
+Variable b not declared
+Variable c not declared
+int
+"arithmetic"
+-7
+95
+-100
+Variable a not declared
+Variable c not declared
