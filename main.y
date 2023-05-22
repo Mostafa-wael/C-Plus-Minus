@@ -193,14 +193,14 @@ void checkOutOfScope(char name);
 // this defines the type of the non-terminals
 %type <TYPE_VOID> program statements statement controlstatement 
 %type <TYPE_VOID> ifCondition whileLoop forLoop repeatUntilLoop switchCaseLoop case caseList 
-%type <TYPE_VOID> codeBlock functionArgs functionParams  functionCall 
+%type <TYPE_VOID> codeBlock functionArgs functionParams  
 // %type <TYPE_INT> exp
 // %type <TYPE_INT> term
 // %type <TYPE_INT> assignment
 // %type <TYPE_DATA_TYPE> dataType declaration
 %type <TYPE_DATA_MODIFIER> dataModifier
 
-%type <TYPE_NODE> term exp assignment dataType declaration
+%type <TYPE_NODE> term exp assignment dataType declaration functionCall
 
 //==============================================================================
 // To solve some shift/reduce conflicts
@@ -340,10 +340,11 @@ functionParams          : term                                  {;}
                         ;
 functionDef             : dataType IDENTIFIER '(' functionArgs ')' {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);} 
                         '{'{enterScope();} codeBlock '}' {exitScope();}
-                        | dataType IDENTIFIER '(' ')' '{'{enterScope();} codeBlock '}'              {exitScope();}
+                        | dataType IDENTIFIER '('              ')' {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);}
+                        '{'{enterScope();} codeBlock '}'              {exitScope();}
                         ;
 functionCall            : IDENTIFIER '(' functionParams ')'     {checkOutOfScope($1);}
-                        | IDENTIFIER '(' ')'                    {checkOutOfScope($1);}
+                        | IDENTIFIER '(' ')'                    {checkOutOfScope($1); $$ = symbolVal($1);}
                         ;
 //======================
 /* Enumerations */

@@ -6,7 +6,6 @@ Lex(2) int value: 3
 Quads() push 3
 Lex(2) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:1
 Lex(3) data type: int
 Lex(3) identifier: b
 Lex(3) punctuators: =
@@ -14,7 +13,6 @@ Lex(3) int value: 10
 Quads() push 10
 Lex(3) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:2
 Lex(4) data type: int
 Lex(4) identifier: c
 Lex(4) punctuators: =
@@ -26,7 +24,6 @@ Lex(4) end Of Statement: ;
 
 Quads() push b
 Quads() ADD
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:3
 Lex(5) data type: int
 Lex(5) identifier: d
 Lex(5) punctuators: =
@@ -52,7 +49,6 @@ Lex(5) punctuators: )
 Lex(5) end Of Statement: ; 
 
 Quads() ADD
-SymbolTable() inserted: d, declared:1, const:0, Symbol table idx:4
 Lex(6) command: print
 Lex(6) punctuators: (
 Lex(6) string value: "declaration"
@@ -69,7 +65,6 @@ Lex(8) int value: 5
 Quads() push 5
 Lex(8) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:1, Symbol table idx:5
 Lex(9) data type: int
 Lex(9) identifier: b
 Lex(9) punctuators: =
@@ -79,7 +74,6 @@ Quads() push 5
 Quads() NEG
 Lex(9) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:6
 Lex(10) command: print
 Lex(10) punctuators: (
 Lex(10) identifier: b
@@ -105,7 +99,6 @@ Lex(12) float value: 5.500000
 Quads() push 0.000000
 Lex(12) end Of Statement: ; 
 
-SymbolTable() inserted: f, declared:1, const:0, Symbol table idx:7
 Lex(13) command: print
 Lex(13) punctuators: (
 Lex(13) identifier: b
@@ -121,7 +114,6 @@ Lex(14) value: true
 Quads() push 1
 Lex(14) end Of Statement: ; 
 
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:8
 Lex(15) inline comment: // string d = "hello";
 Lex(16) inline comment: // void e = 0;
 Lex(17) command: print
@@ -151,7 +143,6 @@ Lex(20) int value: 10
 Quads() push 10
 Lex(20) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:1, Symbol table idx:9
 Lex(21) command: print
 Lex(21) punctuators: (
 Lex(21) identifier: a
@@ -178,7 +169,6 @@ Lex(27) value: true
 Quads() push 1
 Lex(27) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:10
 Lex(28) data type: bool
 Lex(28) identifier: b
 Lex(28) punctuators: =
@@ -186,7 +176,6 @@ Lex(28) value: false
 Quads() push 0
 Lex(28) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:11
 Lex(29) command: print
 Lex(29) punctuators: (
 Lex(29) identifier: a
@@ -324,7 +313,6 @@ Lex(49) int value: 10
 Quads() push 10
 Lex(49) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:12
 Lex(49) inline comment: // 1010
 Lex(50) data type: int
 Lex(50) identifier: b
@@ -333,7 +321,6 @@ Lex(50) int value: 10
 Quads() push 10
 Lex(50) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:13
 Lex(50) inline comment: // 1010
 Lex(51) data type: int
 Lex(51) identifier: c
@@ -342,7 +329,6 @@ Lex(51) int value: 2
 Quads() push 2
 Lex(51) end Of Statement: ; 
 
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:14
 Lex(51) inline comment: // 0010
 Lex(52) data type: int
 Lex(52) identifier: d
@@ -359,7 +345,6 @@ Lex(52) end Of Statement: ;
 
 Quads() push c
 Quads() ADD
-SymbolTable() inserted: d, declared:1, const:0, Symbol table idx:15
 Lex(53) command: print
 Lex(53) punctuators: (
 Lex(53) identifier: a
@@ -426,7 +411,6 @@ Lex(61) int value: 10
 Quads() push 10
 Lex(61) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:16
 Lex(61) inline comment: // 1010
 Lex(62) data type: int
 Lex(62) identifier: b
@@ -435,7 +419,6 @@ Lex(62) int value: 10
 Quads() push 10
 Lex(62) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:17
 Lex(62) inline comment: // 1010
 Lex(63) command: print
 Lex(63) punctuators: (
@@ -599,7 +582,6 @@ Lex(76) int value: 10
 Quads() push 10
 Lex(76) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:18
 Lex(76) inline comment: // 1010
 Lex(77) data type: int
 Lex(77) identifier: b
@@ -608,7 +590,6 @@ Lex(77) int value: 10
 Quads() push 10
 Lex(77) end Of Statement: ; 
 
-SymbolTable() inserted: b, declared:1, const:0, Symbol table idx:19
 Lex(77) inline comment: // 1010
 Lex(78) data type: int
 Lex(78) identifier: c
@@ -617,7 +598,6 @@ Lex(78) int value: 2
 Quads() push 2
 Lex(78) end Of Statement: ; 
 
-SymbolTable() inserted: c, declared:1, const:0, Symbol table idx:20
 Lex(78) inline comment: // 0010
 Lex(79) data type: int
 Lex(79) identifier: d
@@ -634,7 +614,6 @@ Lex(79) end Of Statement: ;
 
 Quads() push c
 Quads() ADD
-SymbolTable() inserted: d, declared:1, const:0, Symbol table idx:21
 Lex(80) command: print
 Lex(80) punctuators: (
 Lex(80) punctuators: (
@@ -782,7 +761,6 @@ Lex(91) int value: 10
 Quads() push 10
 Lex(91) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:22
 Lex(91) inline comment: // 1010
 Lex(92) control flow: if
 Lex(92) punctuators: (
@@ -849,7 +827,6 @@ Lex(106) int value: 10
 Quads() push 10
 Lex(106) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:23
 Lex(107) control flow: if
 Lex(107) punctuators: (
 Lex(107) identifier: a
@@ -912,7 +889,6 @@ Lex(121) int value: 10
 Quads() push 10
 Lex(121) end Of Statement: ; 
 
-SymbolTable() inserted: a, declared:1, const:0, Symbol table idx:24
 Lex(121) inline comment: // 1010
 Lex(122) command: print
 Lex(122) punctuators: (
@@ -1244,74 +1220,253 @@ Quads() EQ
 Lex(179) end Of Statement: ; 
 
 Lex(180) inline comment: // ////////////////////////////////
-Lex(181) inline comment: // print("switch case loops");
-Lex(182) inline comment: // switch (a)
-Lex(183) inline comment: // {
-Lex(184) inline comment: // default:
-Lex(185) inline comment: //     print("default");
-Lex(186) inline comment: //     break;
-Lex(187) inline comment: // }
-Lex(188) inline comment: // switch (a)
-Lex(189) inline comment: // {
-Lex(190) inline comment: // case 1:
-Lex(191) inline comment: //     print("1");
-Lex(192) inline comment: //     break;
-Lex(194) inline comment: // case 2:
-Lex(195) inline comment: //     print("2");
-Lex(196) inline comment: //     break;
-Lex(198) inline comment: // case 3:
-Lex(199) inline comment: //     print("3");
-Lex(200) inline comment: //     break;
-Lex(201) inline comment: // }
-Lex(203) inline comment: // switch (a)
-Lex(204) inline comment: // {
-Lex(205) inline comment: // case 1:
-Lex(206) inline comment: //     print("1");
-Lex(207) inline comment: //     break;
-Lex(209) inline comment: // case 2:
-Lex(210) inline comment: //     print("2");
-Lex(211) inline comment: //     break;
-Lex(213) inline comment: // case 3:
-Lex(214) inline comment: //     print("3");
-Lex(215) inline comment: //     break;
-Lex(217) inline comment: // default:
-Lex(218) inline comment: //     print("default");
-Lex(219) inline comment: //     break;
-Lex(220) inline comment: // }
-Lex(221) inline comment: // ////////////////////////////////
-Lex(222) inline comment: // print("functions");
-Lex(223) inline comment: // a + 1;
-Lex(224) inline comment: // x(1, 2);
-Lex(225) inline comment: // print("x");
-Lex(226) inline comment: // int y()
-Lex(227) inline comment: // {
-Lex(228) inline comment: //     print("y");
-Lex(229) inline comment: //     return 1;
-Lex(230) inline comment: // }
-Lex(231) inline comment: // int x(int a, int b)
-Lex(232) inline comment: // {
-Lex(233) inline comment: //     print("add");
-Lex(234) inline comment: //     return a + b;
-Lex(235) inline comment: // }
-Lex(236) inline comment: // a = y();
-Lex(237) inline comment: // print("y done");
-Lex(238) inline comment: // ////////////////////////////////
-Lex(239) inline comment: // print("enums");
-Lex(240) inline comment: // enum Color
-Lex(241) inline comment: // {
-Lex(242) inline comment: //     RED = 10,
-Lex(243) inline comment: //     GREEN,
-Lex(244) inline comment: //     BLUE = 12,
-Lex(245) inline comment: //     RED
-Lex(246) inline comment: // };
-Lex(247) inline comment: // print(0);
-Lex(248) inline comment: // {
-Lex(249) inline comment: //     Color c1;
-Lex(250) inline comment: //     Color c2 = RED;
-Lex(251) inline comment: //     Color c3 = 3 + 5;
-Lex(252) inline comment: // }
-Lex(253) inline comment: // string a = "hi";
-Lex(254) inline comment: // int b = 5;
-Lex(255) inline comment: // print(true);
-Lex(256) inline comment: // print(b);
-Lex(257) command: exit
+Lex(181) command: print
+Lex(181) punctuators: (
+Lex(181) string value: "switch case loops"
+Lex(181) punctuators: )
+"switch case loops"
+Lex(181) end Of Statement: ; 
+
+Lex(182) control flow: switch
+Lex(182) punctuators: (
+Lex(182) identifier: a
+Lex(182) punctuators: )
+Quads() push a
+Lex(183) punctuators: {
+Lex(184) control flow: default
+Lex(184) punctuators: :
+Lex(185) command: print
+Lex(185) punctuators: (
+Lex(185) string value: "default"
+Lex(185) punctuators: )
+"default"
+Lex(185) end Of Statement: ; 
+
+Lex(186) control flow: break
+Lex(186) end Of Statement: ; 
+
+Lex(187) punctuators: }
+Lex(188) control flow: switch
+Lex(188) punctuators: (
+Lex(188) identifier: a
+Lex(188) punctuators: )
+Quads() push a
+Lex(189) punctuators: {
+Lex(190) control flow: case
+Lex(190) int value: 1
+Quads() push 1
+Lex(190) punctuators: :
+Lex(191) command: print
+Lex(191) punctuators: (
+Lex(191) string value: "1"
+Lex(191) punctuators: )
+"1"
+Lex(191) end Of Statement: ; 
+
+Lex(192) control flow: break
+Lex(192) end Of Statement: ; 
+
+Lex(194) control flow: case
+Lex(194) int value: 2
+Quads() push 2
+Lex(194) punctuators: :
+Lex(195) command: print
+Lex(195) punctuators: (
+Lex(195) string value: "2"
+Lex(195) punctuators: )
+"2"
+Lex(195) end Of Statement: ; 
+
+Lex(196) control flow: break
+Lex(196) end Of Statement: ; 
+
+Lex(198) control flow: case
+Lex(198) int value: 3
+Quads() push 3
+Lex(198) punctuators: :
+Lex(199) command: print
+Lex(199) punctuators: (
+Lex(199) string value: "3"
+Lex(199) punctuators: )
+"3"
+Lex(199) end Of Statement: ; 
+
+Lex(200) control flow: break
+Lex(200) end Of Statement: ; 
+
+Lex(201) punctuators: }
+Lex(203) control flow: switch
+Lex(203) punctuators: (
+Lex(203) identifier: a
+Lex(203) punctuators: )
+Quads() push a
+Lex(204) punctuators: {
+Lex(205) control flow: case
+Lex(205) int value: 1
+Quads() push 1
+Lex(205) punctuators: :
+Lex(206) command: print
+Lex(206) punctuators: (
+Lex(206) string value: "1"
+Lex(206) punctuators: )
+"1"
+Lex(206) end Of Statement: ; 
+
+Lex(207) control flow: break
+Lex(207) end Of Statement: ; 
+
+Lex(209) control flow: case
+Lex(209) int value: 2
+Quads() push 2
+Lex(209) punctuators: :
+Lex(210) command: print
+Lex(210) punctuators: (
+Lex(210) string value: "2"
+Lex(210) punctuators: )
+"2"
+Lex(210) end Of Statement: ; 
+
+Lex(211) control flow: break
+Lex(211) end Of Statement: ; 
+
+Lex(213) control flow: case
+Lex(213) int value: 3
+Quads() push 3
+Lex(213) punctuators: :
+Lex(214) command: print
+Lex(214) punctuators: (
+Lex(214) string value: "3"
+Lex(214) punctuators: )
+"3"
+Lex(214) end Of Statement: ; 
+
+Lex(215) control flow: break
+Lex(215) end Of Statement: ; 
+
+Lex(217) control flow: default
+Lex(217) punctuators: :
+Lex(218) command: print
+Lex(218) punctuators: (
+Lex(218) string value: "default"
+Lex(218) punctuators: )
+"default"
+Lex(218) end Of Statement: ; 
+
+Lex(219) control flow: break
+Lex(219) end Of Statement: ; 
+
+Lex(220) punctuators: }
+Lex(221) punctuators: }
+Lex(222) data type: int
+Lex(222) identifier: y
+Lex(222) punctuators: (
+Lex(222) punctuators: )
+Lex(223) punctuators: {
+Lex(224) command: print
+Lex(224) punctuators: (
+Lex(224) string value: "y"
+Lex(224) punctuators: )
+"y"
+Lex(224) end Of Statement: ; 
+
+Lex(225) control flow: return
+Lex(225) int value: 1
+Quads() push 1
+Lex(225) end Of Statement: ; 
+
+Lex(226) punctuators: }
+Lex(227) data type: int
+Lex(227) identifier: x
+Lex(227) punctuators: (
+Lex(227) data type: int
+Lex(227) identifier: a
+Lex(227) punctuators: ,
+Lex(227) data type: int
+Lex(227) identifier: b
+Lex(227) punctuators: )
+Lex(228) punctuators: {
+Lex(229) command: print
+Lex(229) punctuators: (
+Lex(229) string value: "add"
+Lex(229) punctuators: )
+"add"
+Lex(229) end Of Statement: ; 
+
+Lex(230) control flow: return
+Lex(230) identifier: a
+Lex(230) arithmtic operator: +
+Quads() push a
+Lex(230) identifier: b
+Lex(230) end Of Statement: ; 
+
+Quads() push b
+Quads() ADD
+Lex(231) punctuators: }
+Lex(232) punctuators: {
+Lex(233) inline comment: // ////////////////////////////////
+Lex(234) command: print
+Lex(234) punctuators: (
+Lex(234) string value: "functions"
+Lex(234) punctuators: )
+"functions"
+Lex(234) end Of Statement: ; 
+
+Lex(235) identifier: a
+Lex(235) arithmtic operator: +
+Quads() push a
+Lex(235) int value: 1
+Quads() push 1
+Lex(235) end Of Statement: ; 
+
+Quads() ADD
+Lex(236) identifier: x
+Lex(236) punctuators: (
+Lex(236) int value: 1
+Quads() push 1
+Lex(236) punctuators: ,
+Lex(236) int value: 2
+Quads() push 2
+Lex(236) punctuators: )
+Lex(236) end Of Statement: ; 
+
+Lex(237) command: print
+Lex(237) punctuators: (
+Lex(237) string value: "x"
+Lex(237) punctuators: )
+"x"
+Lex(237) end Of Statement: ; 
+
+Lex(239) identifier: a
+Lex(239) punctuators: =
+Lex(239) identifier: y
+Lex(239) punctuators: (
+Lex(239) punctuators: )
+Lex(239) end Of Statement: ; 
+
+Lex(240) command: print
+Lex(240) punctuators: (
+Lex(240) string value: "y done"
+Lex(240) punctuators: )
+"y done"
+Lex(240) end Of Statement: ; 
+
+Lex(241) inline comment: // ////////////////////////////////
+Lex(242) inline comment: // print("enums");
+Lex(243) inline comment: // enum Color
+Lex(244) inline comment: // {
+Lex(245) inline comment: //     RED = 10,
+Lex(246) inline comment: //     GREEN,
+Lex(247) inline comment: //     BLUE = 12,
+Lex(248) inline comment: //     RED
+Lex(249) inline comment: // };
+Lex(250) inline comment: // print(0);
+Lex(251) inline comment: // {
+Lex(252) inline comment: //     Color c1;
+Lex(253) inline comment: //     Color c2 = RED;
+Lex(254) inline comment: //     Color c3 = 3 + 5;
+Lex(255) inline comment: // }
+Lex(256) inline comment: // string a = "hi";
+Lex(257) inline comment: // int b = 5;
+Lex(258) inline comment: // print(true);
+Lex(259) inline comment: // print(b);
+Lex(260) command: exit

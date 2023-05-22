@@ -178,63 +178,66 @@
     }
     until(a == 1);
     // ////////////////////////////////
-    // print("switch case loops");
-    // switch (a)
-    // {
-    // default:
-    //     print("default");
-    //     break;
-    // }
-    // switch (a)
-    // {
-    // case 1:
-    //     print("1");
-    //     break;
+    print("switch case loops");
+    switch (a)
+    {
+    default:
+        print("default");
+        break;
+    }
+    switch (a)
+    {
+    case 1:
+        print("1");
+        break;
 
-    // case 2:
-    //     print("2");
-    //     break;
+    case 2:
+        print("2");
+        break;
 
-    // case 3:
-    //     print("3");
-    //     break;
-    // }
+    case 3:
+        print("3");
+        break;
+    }
 
-    // switch (a)
-    // {
-    // case 1:
-    //     print("1");
-    //     break;
+    switch (a)
+    {
+    case 1:
+        print("1");
+        break;
 
-    // case 2:
-    //     print("2");
-    //     break;
+    case 2:
+        print("2");
+        break;
 
-    // case 3:
-    //     print("3");
-    //     break;
+    case 3:
+        print("3");
+        break;
 
-    // default:
-    //     print("default");
-    //     break;
-    // }
+    default:
+        print("default");
+        break;
+    }
+}
+    int y()
+    {
+        print("y");
+        return 1;
+    }
+    int x(int a, int b)
+    {
+        print("add");
+        return a + b;
+    }
+{
     // ////////////////////////////////
-    // print("functions");
-    // a + 1;
-    // x(1, 2);
-    // print("x");
-    // int y()
-    // {
-    //     print("y");
-    //     return 1;
-    // }
-    // int x(int a, int b)
-    // {
-    //     print("add");
-    //     return a + b;
-    // }
-    // a = y();
-    // print("y done");
+    print("functions");
+    a + 1;
+    x(1, 2);
+    print("x");
+
+    a = y();
+    print("y done");
     // ////////////////////////////////
     // print("enums");
     // enum Color
@@ -255,3 +258,4 @@
     // print(true);
     // print(b);
     exit;
+}

@@ -38,8 +38,32 @@ Scopes
 Arithematic op
 default nums?!!
 
-fix grammar
-use yytext
 proper output of errors
 add lines to the errors
 handle enums errors
+Fix the if else weird error
+rename out of scope error from variable to function
+check type parameters in function call (need new datastructure)
+handle function, enum, swith, for,
+conversions
+if always True or False
+line of each error
+
+
+
+Quad -> 
+- If-then-else statement, while loops, repeat-until loops, for loops, switch statement.   (nested)
+- functions, enums
+
+Errors ->
+- functions without parameters -> change functionCall to Node_type & $$ = val($1)
+- enums (and the inside of enums to symbol table).
+- The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
+- Warning in case of if statement whose condition is always false.
+- strings
+
+GUI ->
+- Level 2
+- Level 3
+
+

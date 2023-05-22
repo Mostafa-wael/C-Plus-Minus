@@ -23,3 +23,4 @@ Name:d,Type:int,Value:102,Declared:1,Initialized:1,Used:0,Const:0,Scope:7
 Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:8
 Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:12
 Name:a,Type:int,Value:12,Declared:1,Initialized:1,Used:1,Const:0,Scope:15
+Name:x,Type:int,Value:0,Declared:1,Initialized:0,Used:0,Const:0,Scope:0
