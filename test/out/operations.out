@@ -8,6 +8,7 @@ Quads() pop b
 Quads() push 2
 Quads() pop c
 
+c
 Quads() push a
 Quads() NEG
 Quads() push 10
@@ -124,10 +125,8 @@ Quads() pop a
 Quads() push 0
 Quads() pop b
 
-Quads() push a
-1
-Quads() push b
-0
+a
+b
 Quads() push a
 Quads() push b
 Quads() EQ

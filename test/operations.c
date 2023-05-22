@@ -2,6 +2,7 @@ print("arithmetic");
 int a = 10;
 int b = 10;
 int c = 2;
+print(c);
 print(-a == -10); // -10
 print(-3 - 4);
 print(a + b == 20);            // 20
