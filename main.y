@@ -191,12 +191,12 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         | BOOL_DATA_TYPE                        {$$ = boolNode();}
                         | VOID_DATA_TYPE                        {;}
                         ;
-declaration             : dataType IDENTIFIER 		            {/*Check declared*/}
-                        | dataType IDENTIFIER '=' exp	        {/*Check declared & check type*/updateSymbolVal($2,$4); typeCheck($1, $4);}
-                        | dataModifier dataType IDENTIFIER '=' exp 	    {/*Check declared*/;}
+declaration             : dataType IDENTIFIER 		            {/*Check declared when inserting*/}
+                        | dataType IDENTIFIER '=' exp	        {/*Check declared when inserting & check type*/updateSymbolVal($2,$4); typeCheck($1, $4);}
+                        | dataModifier dataType IDENTIFIER '=' exp 	    {/*Check declared when inserting*/;}
                         ;
-assignment              : IDENTIFIER '=' exp                    {/*Const, Decl, Type checks*/ /*Set Used*/updateSymbolVal($1,$3); $$ = $3;}
-                        | IDENTIFIER '=' STRING                 {/*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
+assignment              : IDENTIFIER '=' exp                    {checkDeclaration($1); checkConstant($1); /*Const, Decl, Type checks*/ /*Set Used*/updateSymbolVal($1,$3); $$ = $3;}
+                        | IDENTIFIER '=' STRING                 {checkDeclaration($1); checkConstant($1);  /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3));}
                         | enumDef                               {;}             //
                         | dataType enumDeclaration              {/*Check declared*/;}
                         ;
@@ -233,7 +233,7 @@ term   	                : NUMBER                                {$$ = intNode();
                         | FLOAT_NUMBER                          {$$ = floatNode(); $$->value.floatVal = $1; /*Pass value & type*/}
                         | TRUE_VAL                              {$$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
                         | FALSE_VAL                             {$$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
-                        | IDENTIFIER	                        {$$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+                        | IDENTIFIER	                        {$$ = symbolVal($1); checkDeclaration($1); checkInitialization($1); /*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
@@ -274,21 +274,21 @@ functionParams          : term                                  {;}
 functionDef             : dataType IDENTIFIER '(' functionArgs ')' '{' codeBlock '}' {;}
                         | dataType IDENTIFIER '(' ')' '{' codeBlock '}'         {printf("functionDef\n");}
                         ;
-functionCall            : IDENTIFIER '(' functionParams ')'     {;}
-                        | IDENTIFIER '(' ')'                    {;}
+functionCall            : IDENTIFIER '(' functionParams ')'     {checkDeclaration($1);}
+                        | IDENTIFIER '(' ')'                    {checkDeclaration($1);}
                         ;
 //======================
 /* Enumerations */
 //======================
 enumDef	                : ENUM IDENTIFIER '{' enumBody '}'      {;}
                         ;
-enumBody		: IDENTIFIER                            {;}
+enumBody		        : IDENTIFIER                            {;}
                         | IDENTIFIER '=' exp                    {;}
                         | enumBody ',' IDENTIFIER               {;}
                         | enumBody ',' IDENTIFIER '=' exp       {;}
                         ;
-enumDeclaration         : IDENTIFIER IDENTIFIER                 {;}
-                        | IDENTIFIER IDENTIFIER '=' exp         {;}
+enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkDeclaration($1);}
+                        | IDENTIFIER IDENTIFIER '=' exp         {checkDeclaration($1);}
                         ;
 
 //======================
@@ -381,65 +381,63 @@ void typeCheck(struct nodeType* type1, struct nodeType* type2) {
     }
 }
 
-//------------------------------------------------------------------------------- 
-// checking functions 
-//-------------------------------------------------------------------------------  
+------------------------------------------------------------------------------- 
+checking functions 
+-------------------------------------------------------------------------------  
 
-// this function checks if a variable is used before declaration or out of scope
-// void checkDeclaration(char name) {
+this function checks if a variable is used before declaration or out of scope
+void checkDeclaration(char name) {
 
-//     //TODO: check for scope
-//     //TODO: use yytext 
+    //TODO: check for scope
+    //TODO: use yytext 
 
-//     int found = 0;
+    int found = 0;
 
-//     for(int i=symbolTableIndex-1;i>=0;i--) {
-//         if(strcmp(symbol_Table[i].name, name) == 0) {
-//             found = 1;
-//             break;
-//         }
-//     }
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        if(strcmp(symbol_Table[i].name, name) == 0) {
+            found = 1;
+            break;
+        }
+    }
 
-//     if(!found) {
-//         printf("Variable %c not declared\n", name);
-//     }
+    if(!found) {
+        printf("Variable %c not declared\n", name);
+    }
 
-// }
+}
 
-// // this function checks if a variable is initialized before use
-// void checkInitialization(char name) {
-//     for(int i=symbolTableIndex-1;i>=0;i--) {
-//         if(strcmp(symbol_Table[i].name, name) == 0) {
-//             if(symbol_Table[i].isInit == 0) {
-//                 printf("Variable %c not initialized\n", name);
-//                 return;
-//             }
-//         }
-//     }
-// }
+// this function checks if a variable is initialized before use
+void checkInitialization(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        if(strcmp(symbol_Table[i].name, name) == 0) {
+            if(symbol_Table[i].isInit == 0) {
+                printf("Variable %c not initialized\n", name);
+                return;
+            }
+        }
+    }
+}
 
-// // this function checks that all variables are used
-// void checkUsage() {
-//     for(int i=0;i<symbolTableIndex;i++) {
-//         if(symbol_Table[i].isUsed == 0) {
-//             printf("Variable %s not used\n", symbol_Table[i].name);
-//         }
-//     }
-// }
+// this function checks that all variables are used
+void checkUsage() {
+    for(int i=0;i<symbolTableIndex;i++) {
+        if(symbol_Table[i].isUsed == 0) {
+            printf("Variable %s not used\n", symbol_Table[i].name);
+        }
+    }
+}
 
-// // this function checks if a constant variable is assigned a value
-// void checkConstantInitialization(char name) {
-//     for(int i=symbolTableIndex-1;i>=0;i--) {
-//         if(strcmp(symbol_Table[i].name, name) == 0) {
-//             if(symbol_Table[i].isConst == 1) {
-//                 printf("Constant variable %c cannot be assigned a value\n", name);
-//                 return;
-//             }
-//         }
-//     }
-// }
-
-
+// this function checks if a constant variable is re-assigned a value  
+void checkConstant(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        if(strcmp(symbol_Table[i].name, name) == 0) {
+            if(symbol_Table[i].isConst == 1) {
+                printf("Constant variable %c cannot be assigned a value\n", name);
+                return;
+            }
+        }
+    }
+}
 
 //-------------------------------------------------------------------------------
 int main (void) {
@@ -448,7 +446,9 @@ int main (void) {
     
     yyparse ( );
 	
-    return 0;
+    checkUsage();
+
+    return 
 }
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 

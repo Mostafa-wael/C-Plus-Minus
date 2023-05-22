@@ -42,3 +42,4 @@ fix grammar
 use yytext
 proper output of errors
 add lines to the errors
+handle enums errors
