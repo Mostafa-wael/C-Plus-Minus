@@ -381,11 +381,11 @@ void typeCheck(struct nodeType* type1, struct nodeType* type2) {
     }
 }
 
-------------------------------------------------------------------------------- 
-checking functions 
--------------------------------------------------------------------------------  
+//------------------------------------------------------------------------------- 
+//checking functions 
+//-------------------------------------------------------------------------------  
 
-this function checks if a variable is used before declaration or out of scope
+/* this function checks if a variable is used before declaration or out of scope */
 void checkDeclaration(char name) {
 
     //TODO: check for scope
@@ -441,14 +441,14 @@ void checkConstant(char name) {
 
 //-------------------------------------------------------------------------------
 int main (void) {
-	/* init symbol table */
-	
-    
-    yyparse ( );
-	
-    checkUsage();
 
-    return 
+        /* init symbol table */
+    
+        yyparse ( );
+                
+        checkUsage();
+
+        return 0;
 }
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 
