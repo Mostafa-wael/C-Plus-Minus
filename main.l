@@ -9,7 +9,7 @@ extern int line=1;
 
 #include <stdio.h>
 #include <stdarg.h>
-#define SHOW_LOGS 0
+#define SHOW_LOGS 1
 void Log(const char* type, const char* value)
 {
     if(SHOW_LOGS)
