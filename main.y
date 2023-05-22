@@ -41,38 +41,38 @@ int labelStack[MAX_STACK_SIZE];
 #define OUT_OF_SCOPE 7
 void Log_SEMANTIC_ERROR(int semanticError, char var)
 {
-        int errorLine = line-1;
+        int errorLine = line;
         if(SHOW_SEMANTIC_ERROR)
         {
         switch(semanticError)
         {
                 case TYPE_MISMATCH:
-                        printf("SemanticError(%d) Type mismatch error with %c\n", errorLine, var);
+                        printf("Semantic error (%d) Type mismatch error with %c\n", errorLine, var);
                         break;
                 case UNDECLARED: // TODO
-                        printf("SemanticError(%d) Undeclared variable %c\n", errorLine, var);
+                        printf("Semantic error (%d) Undeclared variable %c\n", errorLine, var);
                         break;
                 case UNINITIALIZED:
-                        printf("SemanticError(%d) Uninitialized variable %c\n", errorLine, var);
+                        printf("Semantic error (%d) Uninitialized variable %c\n", errorLine, var);
                         break;
                 case UNUSED:
-                        printf("SemanticError(%d) Unused variable %c\n", errorLine, var);
+                        printf("Semantic error (%d) Unused variable %c\n", errorLine, var);
                         break;
                 case REDECLARED:
-                        printf("SemanticError(%d) Redeclared variable %c\n", errorLine, var);
+                        printf("Semantic error (%d) Redeclared variable %c\n", errorLine, var);
                         break;
                 case CONSTANT:
-                        printf("SemanticError(%d) Constant variable %c\n", errorLine, var);
+                        printf("Semantic error (%d) Constant variable %c\n", errorLine, var);
                         break;
                 case OUT_OF_SCOPE:
-                        printf("SemanticError(%d) Variable %c out of scope\n", errorLine, var);
+                        printf("Semantic error (%d) Variable %c out of scope\n", errorLine, var);
                         break;
                 default:
-                        printf("SemanticError(%d) Unknown error at\n", errorLine);
+                        printf("Semantic error (%d) Unknown error at\n", errorLine);
                         break;
         }
         printSymbolTable();
-        exit(EXIT_FAILURE);
+        // exit(EXIT_FAILURE);
         }
 }
 char buffer[500];
@@ -959,5 +959,5 @@ int main (void) {
 
 /* void yyerror (char *s) {printf ("%s at line %d\n", s, line-1);}  */
 void yyerror(char* s) {
-    printf("syntax error(%d) Near line %d, column %d.\n", line,-1, line-1, yyleng);
+    printf("Syntax error (%d) Near line %d, last token length %d.\n", line, line, yyleng);
 }
