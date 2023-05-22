@@ -31,5 +31,14 @@
 - [ ] Design suitable action rules to produce the output quadruples [Gendy] -> 5/5
 
 
+-------
+Continue other types
+Checks (decleration, intialization, use, consts)
+Scopes
+Arithematic op
+default nums?!!
 
-
+fix grammar
+use yytext
+proper output of errors
+add lines to the errors

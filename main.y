@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+
 /* if this is defined, then the vector will double in capacity each
  * time it runs out of space. if it is not defined, then the vector will
  * be conservative, and will have a capacity no larger than necessary.
@@ -17,6 +18,8 @@
 
 void yyerror (char *s); // in case of errors
 int yylex();
+
+char* yytext; // the text of the current token
 
 char buffer[500];
 
@@ -40,6 +43,7 @@ struct nodeType* boolNode();
 struct nodeType* stringNode();
 void try(struct nodeType* type1, struct nodeType* type2);
 
+int symbolTableIndex = 0; // index of the symbol table
 
 // Symbol table
 //======================
@@ -187,7 +191,7 @@ declaration             : dataType IDENTIFIER 		        {/*Check declared*/ ;}
                         | dataType assignment	                {/*Check declared & check type*/try($1, $2);}
                         | dataModifier declaration 	        {/*Check declared*/;}
                         ;
-assignment              : IDENTIFIER '=' exp                    {updateSymbolVal($1,$3); $$ = $3;}
+assignment              : IDENTIFIER '=' exp                    {checkInitialization($1); updateSymbolVal($1,$3); $$ = $3;}
                         | IDENTIFIER '=' STRING                 {updateSymbolVal($1,atoi($3));}
                         | enumDeclaration                       {;}     
                         | enumDef                               {;}
@@ -362,6 +366,66 @@ void try(struct nodeType* type1, struct nodeType* type2) {
     }
 }
 
+//------------------------------------------------------------------------------- 
+// checking functions 
+//-------------------------------------------------------------------------------  
+
+// this function checks if a variable is used before declaration or out of scope
+void checkDeclaration(char name) {
+
+    //TODO: check for scope
+    //TODO: use yytext 
+
+    int found = 0;
+
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        if(strcmp(symbol_Table[i].name, name) == 0) {
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) {
+        printf("Variable %c not declared\n", name);
+    }
+
+}
+
+// this function checks if a variable is initialized before use
+void checkInitialization(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        if(strcmp(symbol_Table[i].name, name) == 0) {
+            if(symbol_Table[i].isInit == 0) {
+                printf("Variable %c not initialized\n", name);
+                return;
+            }
+        }
+    }
+}
+
+// this function checks that all variables are used
+void checkUsage() {
+    for(int i=0;i<symbolTableIndex;i++) {
+        if(symbol_Table[i].isUsed == 0) {
+            printf("Variable %s not used\n", symbol_Table[i].name);
+        }
+    }
+}
+
+// this function checks if a constant variable is assigned a value
+void checkConstantInitialization(char name) {
+    for(int i=symbolTableIndex-1;i>=0;i--) {
+        if(strcmp(symbol_Table[i].name, name) == 0) {
+            if(symbol_Table[i].isConst == 1) {
+                printf("Constant variable %c cannot be assigned a value\n", name)
+                return;
+            }
+        }
+    }
+}
+
+
+
 //-------------------------------------------------------------------------------
 int main (void) {
 	/* init symbol table */
@@ -369,9 +433,12 @@ int main (void) {
 	for(i=0; i<52; i++) {
 		symbolTable[i] = 0;
 	}
+    
+    yyparse ( );
+	
+    checkUsage();
 
-	return yyparse ( );
+    return 
 }
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 
-
