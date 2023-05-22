@@ -388,22 +388,20 @@ Lex(42) punctuators: )
 Lex(42) end Of Statement: ; 
 
 Lex(42) inline comment: // 0
-Lex(43) inline comment: // print(a &&b);              // 0
-Lex(44) inline comment: // print(a || b);             // 1
-Lex(45) command: print
-Lex(45) punctuators: (
-Lex(45) punctuators: (
-Lex(45) identifier: x
-Lex(45) logical operator: &&
-Lex(45) identifier: x
-Lex(45) logical operator: &&
-Lex(45) identifier: y
-Lex(45) punctuators: )
-Lex(45) logical operator: ||
-Lex(45) identifier: x
-Lex(45) punctuators: )
+Lex(43) command: print
+Lex(43) punctuators: (
+Lex(43) punctuators: (
+Lex(43) identifier: x
+Lex(43) logical operator: &&
+Lex(43) identifier: x
+Lex(43) logical operator: &&
+Lex(43) identifier: y
+Lex(43) punctuators: )
+Lex(43) logical operator: ||
+Lex(43) identifier: x
+Lex(43) punctuators: )
 1
-Lex(45) end Of Statement: ; 
+Lex(43) end Of Statement: ; 
 
-Lex(45) inline comment: // 1
-Lex(46) command: exit
+Lex(43) inline comment: // 1
+Lex(44) command: exit

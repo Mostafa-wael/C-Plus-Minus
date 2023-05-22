@@ -1,2 +1,3 @@
 Symbol Table:
-Name:W,Type:enum,Value:0,Declared:1,Initialized:0,Used:0,Const:0,Scope:0
+Name:a,Type:int,Value:90,Declared:1,Initialized:1,Used:0,Const:0,Scope:0
+Name:b,Type:float,Value:1120521421,Declared:1,Initialized:1,Used:0,Const:0,Scope:0

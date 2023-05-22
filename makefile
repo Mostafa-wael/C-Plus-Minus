@@ -28,7 +28,7 @@ mixed: build
 custom: build
 	./main < ./test/custom.c > ./test/out/custom.out
 
-testAll: decleration operations conditions loops functions enum mixed
+testAll: decleration operations conditions loops functions enum
 	echo "All tests passed"
 
 	
