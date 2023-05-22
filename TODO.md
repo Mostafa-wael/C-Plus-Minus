@@ -56,7 +56,6 @@ Quad ->
 - functions, enums
 
 Errors ->
-- functions without parameters -> change functionCall to Node_type & $$ = val($1)
 - enums (and the inside of enums to symbol table).
 - The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
 - Warning in case of if statement whose condition is always false.
@@ -66,4 +65,5 @@ GUI ->
 - Level 2
 - Level 3
 
-
+Done:
+[x] functions without parameters -> change functionCall to Node_type & $$ = val($1)

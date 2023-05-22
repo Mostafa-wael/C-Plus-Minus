@@ -343,7 +343,7 @@ functionDef             : dataType IDENTIFIER '(' functionArgs ')' {checkSameSco
                         | dataType IDENTIFIER '('              ')' {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);}
                         '{'{enterScope();} codeBlock '}'              {exitScope();}
                         ;
-functionCall            : IDENTIFIER '(' functionParams ')'     {checkOutOfScope($1);}
+functionCall            : IDENTIFIER '(' functionParams ')'     {checkOutOfScope($1); $$ = symbolVal($1);}
                         | IDENTIFIER '(' ')'                    {checkOutOfScope($1); $$ = symbolVal($1);}
                         ;
 //======================

@@ -1419,6 +1419,8 @@ Quads() push 1
 Lex(235) end Of Statement: ; 
 
 Quads() ADD
+Lex(236) identifier: a
+Lex(236) punctuators: =
 Lex(236) identifier: x
 Lex(236) punctuators: (
 Lex(236) int value: 1
