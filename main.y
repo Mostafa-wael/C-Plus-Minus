@@ -451,4 +451,4 @@ int main (void) {
         return 0;
 }
 
-void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 
+void yyerror (char *s) {printf ("%s\n", s);} 
