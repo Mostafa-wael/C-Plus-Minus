@@ -1,2 +1,0 @@
-Symbol Table:
-Name:a,Type:int,Value:10,Declared:1,Initialized:1,Used:0,Const:0,Scope:0

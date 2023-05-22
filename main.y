@@ -499,13 +499,13 @@ void updateSymbolVal(char symbol, struct nodeType* val){
 void printNode(struct nodeType* x)
 {
     if(strcmp(x->type, "int") == 0)
-        printf("%d", x->value.intVal);
+        printf("%d\n", x->value.intVal);
     else if(strcmp(x->type, "float") == 0)
-        printf("%f", x->value.floatVal);
+        printf("%f\n", x->value.floatVal);
     else if(strcmp(x->type, "bool") == 0)
-        printf("%d", x->value.boolVal);
+        printf("%d\n", x->value.boolVal);
     else if(strcmp(x->type, "string") == 0)
-        printf("%s", x->value.stringVal);
+        printf("%s\n", x->value.stringVal);
 }
 
 void printSymbolTable(){
@@ -959,5 +959,5 @@ int main (void) {
 
 /* void yyerror (char *s) {printf ("%s at line %d\n", s, line-1);}  */
 void yyerror(char* s) {
-    printf("Syntax error (%d) Near line %d, last token length %d.\n", line, line, yyleng);
+    printf("Syntax error (%d) Near line %d.\n", line, line);
 }
