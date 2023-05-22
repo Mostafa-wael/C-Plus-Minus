@@ -8,10 +8,26 @@
 #include <ctype.h>
 #include <string.h>
 
+// Quadruples
+//======================
 #define SHOW_Quads 1
+void quadPop(char symbol);
+void quadInstruction(const char* instruction);
+void quadPushInt(int val);
+void quadPushFloat(float val);
+void quadPushIdentifier(char symbol);
+void quadJF(int labelNum);
+void quadAddStartLabel(int labelNum);
+void quadAddEndLabel();
+void quadJMP(int labelNum);
+int label = 0;
+#define MAX_STACK_SIZE 100
+int stackPointer = 0;
+int labelStack[MAX_STACK_SIZE];
 void yyerror (char *s); // in case of errors
 int yylex();
-// show semantic erros
+// Semantic Erros
+//======================
 #define SHOW_SEMANTIC_ERROR 1
 #define TYPE_MISMATCH 1
 #define UNDECLARED 2
@@ -62,10 +78,12 @@ int scope_cnt = 0;
 int scopes[100];
 
 // Scope functions
+//======================
 void enterScope();
 void exitScope();
 
 // Op functions
+//======================
 struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op);
@@ -254,15 +272,15 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         ;
                     
 declaration             : dataType IDENTIFIER 		        {checkSameScope($2);
-                                                                insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);/*Check declared when inserting*/}
-                        | dataType IDENTIFIER                   {checkSameScope($2);} '=' exp {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); updateSymbolVal($2,$5); setInit($2);}
+                                                                insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);/*Check declared when inserting*/quadPop($2);}
+                        | dataType IDENTIFIER                   {checkSameScope($2);} '=' exp {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); updateSymbolVal($2,$5); setInit($2); quadPop($2);}
                         | dataModifier dataType IDENTIFIER      {checkSameScope($3);} '=' exp 
-                                                                {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0, scopes[scope_idx-1]); updateSymbolVal($3,$6); setInit($3);}
+                                                                {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0, scopes[scope_idx-1]); updateSymbolVal($3,$6); setInit($3); quadPop($2);}
                         ;
 assignment              : IDENTIFIER '=' exp                    {checkOutOfScope($1); checkConstant($1); 
-                                                                typeCheck2($1, $3); setUsed($1); updateSymbolVal($1,$3); $$ = $3; setInit($1);}
+                                                                typeCheck2($1, $3); setUsed($1); updateSymbolVal($1,$3); $$ = $3; setInit($1); quadPop($1);}
                         | IDENTIFIER '=' STRING                 {checkOutOfScope($1);  checkConstant($1); 
-                                                                /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3)); setInit($1);}
+                                                                /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3)); setInit($1); quadPop($1);}
                         | enumDef                               {;}             //
                         | dataType enumDeclaration              {/*Check declared*/;}
                         ;
@@ -474,10 +492,6 @@ void updateSymbolVal(char symbol, struct nodeType* val){
 }
 
 void printSymbolTable(){
-    printf("Symbol Table:\n");
-    for(int i=0;i<sym_table_idx;i++){
-        printf("Name:%c,Type:%s,Value:%d,Declared:%d,Initialized:%d,Used:%d,Const:%d,Scope:%d\n", symbol_Table[i].name, symbol_Table[i].type, symbol_Table[i].value.intVal, symbol_Table[i].isDecl, symbol_Table[i].isInit, symbol_Table[i].isUsed, symbol_Table[i].isConst, symbol_Table[i].scope);
-    }
 
     // Print to file
     FILE *f = fopen("symbol_table.txt", "w");

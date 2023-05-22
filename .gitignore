@@ -3,5 +3,6 @@ y.tab.c
 lex.yy.c
 main.exe
 main
-.vscode/settings.json
-main
+.vscode/*
+test/out/*
+symbol_table.txt
