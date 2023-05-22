@@ -7,6 +7,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+void yyerror (char *s); // in case of errors
+int yylex();
+extern int line;
+extern int yyleng;
+
 
 // Quadruples
 //======================
@@ -24,8 +29,6 @@ int label = 0;
 #define MAX_STACK_SIZE 100
 int stackPointer = 0;
 int labelStack[MAX_STACK_SIZE];
-void yyerror (char *s); // in case of errors
-int yylex();
 // Semantic Erros
 //======================
 #define SHOW_SEMANTIC_ERROR 1
@@ -36,40 +39,41 @@ int yylex();
 #define REDECLARED 5
 #define CONSTANT 6
 #define OUT_OF_SCOPE 7
-void Log_SEMANTIC_ERROR(int semanticError, char var, int line)
+void Log_SEMANTIC_ERROR(int semanticError, char var)
 {
-    if(SHOW_SEMANTIC_ERROR)
-    {
+        int errorLine = line-1;
+        if(SHOW_SEMANTIC_ERROR)
+        {
         switch(semanticError)
         {
                 case TYPE_MISMATCH:
-                        printf("SemanticError(%d) Type mismatch error with %c\n", line, var);
+                        printf("SemanticError(%d) Type mismatch error with %c\n", errorLine, var);
                         break;
                 case UNDECLARED: // TODO
-                        printf("SemanticError(%d) Undeclared variable %c at line %d\n", var, line);
+                        printf("SemanticError(%d) Undeclared variable %c\n", errorLine, var);
                         break;
                 case UNINITIALIZED:
-                        printf("SemanticError(%d) Uninitialized variable %c\n", line, var);
+                        printf("SemanticError(%d) Uninitialized variable %c\n", errorLine, var);
                         break;
                 case UNUSED:
-                        printf("SemanticError(%d) Unused variable %c\n", line, var);
+                        printf("SemanticError(%d) Unused variable %c\n", errorLine, var);
                         break;
                 case REDECLARED:
-                        printf("SemanticError(%d) Redeclared variable %c\n", line, var);
+                        printf("SemanticError(%d) Redeclared variable %c\n", errorLine, var);
                         break;
                 case CONSTANT:
-                        printf("SemanticError(%d) Constant variable %c\n", line, var);
+                        printf("SemanticError(%d) Constant variable %c\n", errorLine, var);
                         break;
                 case OUT_OF_SCOPE:
-                        printf("SemanticError(%d) Variable %c out of scope\n", line, var);
+                        printf("SemanticError(%d) Variable %c out of scope\n", errorLine, var);
                         break;
                 default:
-                        printf("SemanticError(%d) Unknown error at line %c\n", line);
+                        printf("SemanticError(%d) Unknown error at\n", errorLine);
                         break;
         }
         printSymbolTable();
         exit(EXIT_FAILURE);
-    }
+        }
 }
 char buffer[500];
 
@@ -534,7 +538,7 @@ struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op){
                 break;
             default:
                 /* printf("Invalid operator\n"); */
-                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     else if(strcmp(op1->type, "float") == 0 && strcmp(op2->type, "float") == 0){
@@ -554,7 +558,7 @@ struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op){
                 break;
             default:
                 /* printf("Invalid operator\n"); */
-                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     else if (strcmp(op1->type, "int") == 0 && strcmp(op2->type, "float") == 0){
@@ -574,7 +578,7 @@ struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op){
                 break;
             default:
                 /* printf("Invalid operator\n"); */
-                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     else if (strcmp(op1->type, "float") == 0 && strcmp(op2->type, "int") == 0){
@@ -594,12 +598,12 @@ struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op){
                 break;
             default:
                 /* printf("Invalid operator\n"); */
-                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     else{
         /* printf("Type Error\n"); */
-        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
     }
     return p;
 }
@@ -626,12 +630,12 @@ struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op){
                 break;
             default:
                 /* printf("Invalid operator\n"); */
-                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     else{
         /* printf("Type Error\n"); */
-        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
     }
     return p;
 }
@@ -649,14 +653,14 @@ struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op){
                 break;
             default:
                 /* printf("Invalid operator\n"); */
-                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+                Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     else{
         /* printf("Type Error\n"); /// ISSUE HERE
         printf("%s\n", op1->type);
         printf("%s\n", op2->type); */
-        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0); // TODO
+        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type); // TODO
     }
     return p;
 }
@@ -667,7 +671,7 @@ struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op)
     if(strcmp(op1->type, op2->type) != 0)
     {
         /* printf("Type mismatch\n"); */
-        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0); // TODO
+        Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type); // TODO
     }
 
     if( strcmp(op1->type,"float") == 0){
@@ -691,7 +695,7 @@ struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op)
         }
         else{
             /* printf("Invalid operator\n"); */
-            Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     else{
@@ -715,7 +719,7 @@ struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op)
         }
         else{
             /* printf("Invalid operator\n"); */
-            Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type, 0);
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, op2->type);
         }
     }
     return p;
@@ -754,7 +758,7 @@ struct nodeType* stringNode() {
 void typeCheck(struct nodeType* type1, struct nodeType* type2) {
     if(strcmp(type1->type, type2->type) != 0) {
         /* printf("Type Error\n"); //To-Do: */
-        Log_SEMANTIC_ERROR(TYPE_MISMATCH, type2->type, 0); // TODO
+        Log_SEMANTIC_ERROR(TYPE_MISMATCH, type2->type); // TODO
     }
     return;
 }
@@ -765,7 +769,7 @@ void typeCheck2(char symbol, struct nodeType* type2) {
             for(int j=scope_idx-1;j>=0;j--) {
                 if(symbol_Table[i].scope == scopes[j]) {
                     if(strcmp(symbol_Table[i].type, type2->type) != 0) {
-                        Log_SEMANTIC_ERROR(TYPE_MISMATCH, symbol_Table[i].name, 0);
+                        Log_SEMANTIC_ERROR(TYPE_MISMATCH, symbol_Table[i].name);
                         /* printf("Type Errrror\n"); //To-Do:
                         printf("%s\n", symbol_Table[i].type); */
                     }
@@ -811,7 +815,7 @@ void checkSameScope(char name) {
             lvl = symbol_Table[i].scope;
             if(lvl == scopes[scope_idx-1]) {
                 /* printf("Variable %c already declared in the same scope\n", name); */
-                Log_SEMANTIC_ERROR(REDECLARED, name, 0);
+                Log_SEMANTIC_ERROR(REDECLARED, name);
             }
         }
     }
@@ -830,7 +834,7 @@ void checkOutOfScope(char name) {
         }
     }
     /* printf("Variable %c out of scope(undeclared or removed)\n", name); */
-    Log_SEMANTIC_ERROR(OUT_OF_SCOPE, name, 0);
+    Log_SEMANTIC_ERROR(OUT_OF_SCOPE, name);
 
 }
 // this function checks if a variable is initialized before use
@@ -840,7 +844,7 @@ void checkInitialization(char name) {
         if(symbol_Table[i].name == name) {
             if(symbol_Table[i].isInit == 0) {
                 /* printf("Variable %c not initialized\n", name); */
-                Log_SEMANTIC_ERROR(UNINITIALIZED, name, 0);
+                Log_SEMANTIC_ERROR(UNINITIALIZED, name);
                 return;
             }
         }
@@ -852,7 +856,7 @@ void checkUsage() {
     for(int i=0;i<sym_table_idx;i++) {
         if(symbol_Table[i].isUsed == 0) {
             /* printf("Variable %c not used\n", symbol_Table[i].name); */
-            Log_SEMANTIC_ERROR(UNUSED, symbol_Table[i].name, 0);
+            Log_SEMANTIC_ERROR(UNUSED, symbol_Table[i].name);
         }
     }
 }
@@ -865,7 +869,7 @@ void checkConstant(char name) {
                 if(symbol_Table[i].scope == scopes[j]) {
                     if(symbol_Table[i].isConst == 1) {
                         /* printf("Constant variable %c cannot be assigned a value\n", name); */
-                        Log_SEMANTIC_ERROR(CONSTANT, name, 0);
+                        Log_SEMANTIC_ERROR(CONSTANT, name);
                         
                         return;
                     }
@@ -940,4 +944,8 @@ int main (void) {
     return 0;
 }
 
-void yyerror (char *s) {printf ("%s\n", s);} 
+
+/* void yyerror (char *s) {printf ("%s at line %d\n", s, line-1);}  */
+void yyerror(char* s) {
+    printf("syntax error(%d) Near line %d, column %d.\n", line,-1, line-1, yyleng);
+}

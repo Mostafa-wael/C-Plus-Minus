@@ -5,7 +5,8 @@
 void yyerror (char *s); 
 // called by the parser whenever it needs a token. This is where the lexical analyzer is called. 
 int yylex();
-int line=1;
+extern int line=1;
+
 #include <stdio.h>
 #include <stdarg.h>
 #define SHOW_LOGS 0
