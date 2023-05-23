@@ -46,6 +46,15 @@ void quadPopLastIdentifierStack();
 
 int lastIdentifierStackPointer = -1;
 char lastIdentifierStack[MAX_STACK_SIZE];
+
+
+void quadJumpStartLabel();
+void quadPushStartLabel(int startLabelNum);
+void quadPopStartLabel();
+
+int startLabelNum = 0;
+int startLabelstackPointer = -1;
+int startLabelStack[MAX_STACK_SIZE];
 // Semantic Erros
 //======================
 #define SHOW_SEMANTIC_ERROR 1
@@ -273,7 +282,7 @@ statements	            : statement ';'                         {;}
 codeBlock               :  statements                           {;}
                         ;
 controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadPopEndLabel();}
-                        | whileLoop
+                        | {quadPushStartLabel(++startLabelNum);} whileLoop {quadPopStartLabel();}
                         | forLoop
                         | repeatUntilLoop
                         | {quadPushEndLabel(++endLabelNum);} switchCaseLoop {quadPopEndLabel();}
@@ -373,7 +382,7 @@ switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack
 //======================
 /* Loops */
 //======================
-whileLoop               : WHILE '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();}   {;}
+whileLoop               : WHILE '(' exp ')' {quadJumpFalseLabel(++labelNum);} '{'{enterScope();} codeBlock '}'{/*end*/ exitScope(); quadJumpStartLabel(); quadPopLabel();}    {;}
                         ;
 forLoop                 : FOR '(' assignment ';' exp ';' assignment ')' '{'{enterScope();} codeBlock '}'{exitScope();} {;}
                         ;
@@ -527,6 +536,31 @@ void quadPopLastIdentifierStack(){
     char identifier = lastIdentifierStack[lastIdentifierStackPointer--];
 }
 
+
+void quadPushStartLabel(int startLabelNum){
+        if (SHOW_Quads) {
+            /* push the labelNum to the stack */
+            startLabelStack[++startLabelstackPointer] = startLabelNum;
+            if (SHOW_Quads) {
+                printf("Quads() StartLabel_%d\n", startLabelNum);
+            }
+        }
+}
+void quadJumpStartLabel(){
+        if (SHOW_Quads) {
+        /* get last  startLabelNum from the stack*/
+        int startLabelNum = startLabelStack[startLabelstackPointer];
+        printf("Quads() JMP StartLabel_%d\n", startLabelNum);
+       }
+}
+void quadPopStartLabel(){
+    if (startLabelstackPointer < 0){
+            printf("Quads() Error: No start label to add. Segmenration Fault\n");
+            return;
+        }
+    /* get the last endLabelNum from the stack */
+    int startLabelNum = startLabelStack[startLabelstackPointer--];
+}
 //======================
 // Symbol table functions
 //======================

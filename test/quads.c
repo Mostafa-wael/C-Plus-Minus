@@ -1,80 +1,14 @@
-int a = 10;
-int b = 20;
-print("switch case loops////////////////////////////////////");
-switch (a)
+int a = 0;
+int b = 4;
+while (a < 20)
 {
-default:
-    print("default");
-    break;
-}
 
-print("switch case2 loops////////////////////////////////////");
-switch (a)
-{
-case 1:
-    print("1");
-    break;
-
-case 2:
-    print("2");
-    break;
-
-case 3:
-    print("3");
-    break;
-}
-print("switch case3 loops////////////////////////////////////");
-switch (a)
-{
-case 1:
-    print("1");
-    break;
-
-case 2:
-    print("2");
-    break;
-
-case 3:
-    print("3");
-    break;
-
-default:
-    print("default");
-    break;
-}
-print("switch case4 loops////////////////////////////////////");
-switch (a)
-{
-case 1:
-    print("1");
-    break;
-
-case 2:
-    switch (b)
+    while (b < 20)
     {
-    case 1:
-        print("1");
-        break;
-
-    case 2:
-        print("2");
-        break;
-
-    case 3:
-        print("3");
-        break;
-
-    default:
-        print("default");
-        break;
+        print(b);
+        b = b + 1;
     }
 
-case 3:
-    print("3");
-    break;
-
-default:
-    print("default");
-    break;
+    a = a + 1;
 }
-exit;
+print(a);
