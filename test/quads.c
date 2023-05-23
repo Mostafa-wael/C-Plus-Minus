@@ -1,37 +1,38 @@
 int a = 10;
-if (a == 10) {
-    a = 5;
-    print("----");
+print("First if statement start");
+if (a == 11){
+    a = 11;
 }
-// else if (a == 12) {
-//    if (a == 17) {
-//             a = 7;
-//             print("----");
-//         }
-//         else {
-//             a = 8;
-//             print("----");
-//         }
-//     print("----");
-// }
-// else if (a == 14) {
-//     a = 7;
-//     print("----");
-// }
-// else 
-// {
-//     if (a == 16) {
-//        a = 7;
-//         print("----");
-//     }
-//     else {
-//         a = 100;
-//         print("----");
-//     }
-//     a=8;
-//     print("----");
-// }
+print("second if statement start");
+if (a == 100){
+    a = 100;
+}
+else if (a == 12){
+    if (a == 14){
+        a = 14;
+    }
+    else{
+        a = 13;
+    }
+}
+else if (a == 13){
+   if (a == 15){
+        a = 15;
+    }
+    else if (a == 11){
+        a = 11;
+    }
+}
+else{
+    a = 14;
+}
+print("Third if statement start");
+if (a == 11){
+    a = 11;
+}
 
+
+a = 8;
 
 
 // print("Addition operation");
