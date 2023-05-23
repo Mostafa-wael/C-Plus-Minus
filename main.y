@@ -153,6 +153,7 @@ void checkInitialization(char name);
 int checkDeclaration(char name);
 void checkUsage();
 void checkConstIf(struct nodeType* exp);
+int isConstVar(char name);
 
 void setConst(char name);
 void setInit(char name);
@@ -358,7 +359,7 @@ term   	                : NUMBER                                {quadPushInt($1)
                         | FLOAT_NUMBER                          {quadPushFloat($1); $$ = floatNode(); $$->value.floatVal = $1; $$->isConst=1; /*Pass value & type*/}
                         | TRUE_VAL                              {quadPushInt(1); $$ = boolNode();  $$->value.boolVal = 1; $$->isConst=1; /*Pass value & type*/}
                         | FALSE_VAL                             {quadPushInt(0); $$ = boolNode();  $$->value.boolVal = 0; $$->isConst=1; /*Pass value & type*/}
-                        | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1); $$->isConst=0;/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+                        | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1); $$->isConst=isConstVar($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
                         | STRING                                {quadPushString($1); $$ = stringNode(); $$->value.stringVal = strdup($1); $$->isConst=1; /*Pass value & type*/}
                         | '(' exp ')'                           {$$ = $2;}
                         ;
@@ -1136,6 +1137,24 @@ void checkConstIf(struct nodeType* exp)
     }
 }
 
+int isConstVar(char name){
+    for(int i=sym_table_idx-1;i>=0;i--) {
+        if(symbol_Table[i].name == name) {
+            for(int j=scope_idx-1;j>=0;j--) {
+                if(symbol_Table[i].scope == scopes[j]) {
+                    if(symbol_Table[i].isConst == 1) {
+                        return 1;
+                    }
+                    else{
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 // ------------------------------------------------------------------------------- 
 // Setter functions 
 // -------------------------------------------------------------------------------  
@@ -1205,5 +1224,6 @@ int main (void) {
 void yyerror(char* s) {
     printf("Syntax error (%d) Near line %d.\n", line, line);
     fprintf(stderr, "Syntax error (%d) Near line %d.\n", line, line);
+    printSymbolTable();
     exit(EXIT_FAILURE);
 }
