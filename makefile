@@ -6,7 +6,7 @@ lex.yy.c: y.tab.c main.l
 	lex main.l
 
 build: lex.yy.c y.tab.c
-	gcc -g lex.yy.c y.tab.c -o main 
+	gcc -w -g lex.yy.c y.tab.c -o main 
 
 run: build
 	./main
@@ -27,6 +27,8 @@ mixed: build
 	./main < ./test/mixed.c > ./test/out/mixed.out
 custom: build
 	./main < ./test/custom.c > ./test/out/custom.out
+quads: build
+	./main < ./test/quads.c > ./test/out/quads.out
 const_if: build
 	./main < ./test/const_if.c > ./test/out/const_if.out
 

@@ -2,5 +2,20 @@
     "files.associations": {
         "string": "c",
         "random": "c"
-    }
+    },
+    "workbench.colorCustomizations": {
+        "commandCenter.border": "#e7e7e799",
+        "statusBar.background": "#644d17",
+        "statusBar.border": "#644d17",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#8d6d21",
+        "statusBarItem.remoteBackground": "#644d17",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#644d17",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.border": "#644d17",
+        "titleBar.inactiveBackground": "#644d1799",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#644d17"
 }
