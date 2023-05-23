@@ -286,8 +286,8 @@ codeBlock               :  statements                           {;}
                         ;
 controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadPopEndLabel();}
                         | {quadPushStartLabel(++startLabelNum);} whileLoop {quadPopStartLabel();}
-                        | forLoop
-                        | repeatUntilLoop
+                        | forLoop {quadPopStartLabel();}
+                        | {quadPushStartLabel(++startLabelNum);} repeatUntilLoop {quadPopStartLabel();}
                         | {quadPushEndLabel(++endLabelNum);} switchCaseLoop {quadPopEndLabel();}
                         ;      
                                                  
@@ -387,9 +387,9 @@ switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack
 //======================
 whileLoop               : WHILE '(' exp ')' {quadJumpFalseLabel(++labelNum);} '{'{enterScope();} codeBlock '}'{/*end*/ exitScope(); quadJumpStartLabel(); quadPopLabel();}    {;}
                         ;
-forLoop                 : FOR '(' assignment ';' exp ';' assignment ')' '{'{enterScope();} codeBlock '}'{exitScope();} {;}
+forLoop                 : FOR '(' assignment ';' {quadPushStartLabel(++startLabelNum);} exp ';' {quadJumpFalseLabel(++labelNum);} assignment ')' '{'{enterScope();} codeBlock '}'{exitScope(); quadJumpStartLabel(); quadPopLabel();} {;}
                         ;
-repeatUntilLoop         : REPEAT '{'{enterScope();} codeBlock '}'{exitScope();} UNTIL '(' exp ')' ';'         {;}
+repeatUntilLoop         : REPEAT '{'{enterScope();} codeBlock '}'{exitScope();} UNTIL '(' exp ')' ';' {quadJumpFalseLabel(++labelNum); quadJumpStartLabel(); quadPopLabel();}
                         ;
 
 //======================

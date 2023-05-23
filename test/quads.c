@@ -1,19 +1,20 @@
-int a = 0;
-int b = 1;
-int c = 2;
-int x(int a, int b, float c)
+int a;
+int b = 0;
+for (a = 2; a < 10; a = a + 1)
 {
-    if(a>b){
-        return a>b;
-    }
-    else {
-        return false;
-    }
-}
-int y()
-{
-    print("y");
-    return;
-}
-x(a, b, c);
 
+    while (b < 10)
+    {
+        if (b == 5)
+        {
+            print("hi");
+            print(b);
+        }
+
+        b = b + 1;
+    }
+
+    print(a);
+    b = a;
+}
+exit;
