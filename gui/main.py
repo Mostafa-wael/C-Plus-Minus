@@ -4,12 +4,12 @@ import re
 import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QTextCursor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QColor
-from PyQt5.QtWidgets import QLabel, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit, QWidget, QShortcut, QFileDialog, QPushButton, QTextBrowser, QTableWidget, QTableWidgetItem, QAbstractItemView
+from PyQt5.QtWidgets import QLabel, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit, QPlainTextEdit, QWidget, QShortcut, QFileDialog, QPushButton, QTextBrowser, QTableWidget, QTableWidgetItem, QAbstractItemView
 
 
 # Regex patterns for output file parsing
 lexer_line_pattern = r'Lex\((\d+)\).+'
-quads_line_pattern = r'Quads\(\).+'
+quads_line_pattern = r'Quads\(.*\).+'
 syntax_error_line_pattern = r'Syntax error \((\d+)\).+'
 semantic_error_line_pattern = r'Semantic error \((\d+)\).+'
 
@@ -19,11 +19,11 @@ TITLE_STYLE_SHEET = "font-size: 30px; font-weight: bold; color: #0BB419;"
 TEXT_EDITOR_FONT_SIZE = 20
 TEXT_EDITOR_WIDTH = 750
 TEXT_EDITOR_HEIGHT = 600
-CODE_FONT_FAMILY = "Hack"
+CODE_FONT_FAMILY = "Courier New"
 CODE_COLOR = "#000000"
 LINE_NUMBER_COLOR = "#0000FF"
 BUTTON_STYLE_SHEET = "background-color: #0BB419; color: white; font-size: 30px; font-weight: bold"
-BUTTON_WIDTH = 330
+BUTTON_WIDTH = 230
 BUTTON_HEIGHT = 100
 
 
@@ -33,6 +33,7 @@ class MainWindow(QWidget):
 
         self.file_path = None
         self.symbol_table_headers = ['Name', 'Type', 'Value', 'Declared', 'Initialized', 'Used', 'Scope']
+        self.current_line = 1
 
         self.open_new_file_shortcut = QShortcut(QKeySequence('Ctrl+O'), self)
         self.open_new_file_shortcut.activated.connect(self.open_new_file)
@@ -42,12 +43,16 @@ class MainWindow(QWidget):
 
         self.style_layout()
         self.highlighter = SyntaxHighlighter(self.code_text_editor.document())
+        self.remove_highlight_button.clicked.connect(lambda: self.highlighter.clear_highlight())
 
         # Make the window full screen
         self.showMaximized()
 
         # Change the title of the window
         self.setWindowTitle("C Compiler")
+
+        # Change the background color of the window
+        # self.setStyleSheet("background-color: #FFFFFF;")
 
         # print the resolution of the screen
         # print("Resolution:", QApplication.desktop().screenGeometry())
@@ -80,23 +85,33 @@ class MainWindow(QWidget):
         text_editor_title.setStyleSheet(TITLE_STYLE_SHEET)
         text_editor_title.setContentsMargins(350, 0, 0, 0)
 
+        # Create remove highlight button
+        self.remove_highlight_button = QPushButton("R")
+        self.remove_highlight_button.setFixedWidth(40)
+        self.remove_highlight_button.setFixedHeight(40)
+        self.remove_highlight_button.setStyleSheet(BUTTON_STYLE_SHEET)
+        self.remove_highlight_button.setToolTip("Remove Syntax Highlight")
+        self.remove_highlight_button.setShortcut("Ctrl+R")
+
+        title_layout = QHBoxLayout()
+        title_layout.addWidget(text_editor_title)
+        title_layout.addWidget(self.remove_highlight_button) 
+
         # Create the text editor widget
-        self.code_text_editor = QTextEdit()
+        self.code_text_editor = CodeEditor()
         self.code_text_editor.setFont(QFont(CODE_FONT_FAMILY, TEXT_EDITOR_FONT_SIZE))
         self.code_text_editor.setStyleSheet(f"color: {CODE_COLOR};")
 
         # Make the text editor scrollable
-        self.code_text_editor.setLineWrapMode(QTextEdit.NoWrap)
+        # self.code_text_editor.setLineWrapMode(QTextEdit.NoWrap)
         
         # Change the size of the text editor
         self.code_text_editor.setFixedWidth(TEXT_EDITOR_WIDTH)
         self.code_text_editor.setFixedHeight(TEXT_EDITOR_HEIGHT)
 
-        # Add an event handler to the text editor to trace the line number
-        self.code_text_editor.textChanged.connect(self.line_widget_line_count_changed)
-
         self.line_widget = LineNumberWidget(self.code_text_editor, number_color=LINE_NUMBER_COLOR, font_size=TEXT_EDITOR_FONT_SIZE)
         self.line_widget.setFixedHeight(TEXT_EDITOR_HEIGHT)
+        self.code_text_editor.textChanged.connect(self.line_widget_line_count_changed)
 
         text_editor_layout = QHBoxLayout()
         text_editor_layout.addWidget(self.line_widget)
@@ -110,21 +125,21 @@ class MainWindow(QWidget):
         # Add an event handler to the button
         compile_all_button.clicked.connect(self.compile_all_button_handler)
 
-        compile_step_by_step_button = QPushButton("Compile Step by Step")
-        compile_step_by_step_button.setFixedWidth(BUTTON_WIDTH + 70)
-        compile_step_by_step_button.setFixedHeight(BUTTON_HEIGHT)
-        compile_step_by_step_button.setStyleSheet(BUTTON_STYLE_SHEET)
+        self.compile_step_by_step_button = QPushButton(f"Compile Step by Step ({-1})")
+        self.compile_step_by_step_button.setFixedWidth(BUTTON_WIDTH + 250)
+        self.compile_step_by_step_button.setFixedHeight(BUTTON_HEIGHT)
+        self.compile_step_by_step_button.setStyleSheet(BUTTON_STYLE_SHEET)
         # Add an event handler to the button
-        compile_step_by_step_button.clicked.connect(self.compile_step_by_step_button_handler)
+        self.compile_step_by_step_button.clicked.connect(self.compile_step_by_step_button_handler)
 
         buttons_layout = QHBoxLayout()
+        buttons_layout.setSpacing(10)
         buttons_layout.addWidget(compile_all_button)
-        buttons_layout.addWidget(compile_step_by_step_button)
-        buttons_layout.setContentsMargins(105, 10, 0, 0)
-        buttons_layout.setAlignment(compile_all_button, Qt.AlignTop | Qt.AlignLeft)
+        buttons_layout.addWidget(self.compile_step_by_step_button)
+        buttons_layout.setContentsMargins(105, 20, 0, 0)
 
         code_layout = QVBoxLayout()
-        code_layout.addWidget(text_editor_title)
+        code_layout.addLayout(title_layout)
         code_layout.addLayout(text_editor_layout, 1)
         code_layout.addLayout(buttons_layout, 2)
 
@@ -165,7 +180,7 @@ class MainWindow(QWidget):
     def create_quads_area(self):
         text_editor_title = QLabel("Quadruples")
         text_editor_title.setStyleSheet(TITLE_STYLE_SHEET)
-        text_editor_title.setContentsMargins(600, 0, 0, 0)
+        text_editor_title.setContentsMargins(0, 0, 300, 5)
 
         self.quads_editor = QTextEdit()
 
@@ -182,14 +197,14 @@ class MainWindow(QWidget):
         self.quads_editor.setFontFamily(CODE_FONT_FAMILY)
 
         # Change the size of the text editor
-        self.quads_editor.setFixedWidth(TEXT_EDITOR_WIDTH + 88)
+        self.quads_editor.setFixedWidth(TEXT_EDITOR_WIDTH + 70)
         self.quads_editor.setFixedHeight(TEXT_EDITOR_HEIGHT)
 
         quads_layout = QVBoxLayout()
-        quads_layout.setContentsMargins(0, 0, 170, 40)
+        quads_layout.setContentsMargins(0, 0, 100, 40)
         quads_layout.addWidget(text_editor_title)
         quads_layout.addWidget(self.quads_editor, 1)
-        quads_layout.setAlignment(text_editor_title, Qt.AlignTop)
+        quads_layout.setAlignment(text_editor_title, Qt.AlignTop | Qt.AlignRight)
         quads_layout.setAlignment(self.quads_editor, Qt.AlignTop | Qt.AlignRight)
 
         return quads_layout
@@ -198,7 +213,7 @@ class MainWindow(QWidget):
     def create_symbol_table_area(self):
         text_editor_title = QLabel("Symbol Table")
         text_editor_title.setStyleSheet(TITLE_STYLE_SHEET)
-        text_editor_title.setContentsMargins(600, 170, 0, 0)
+        text_editor_title.setContentsMargins(630, 170, 0, 0)
 
         self.symbol_table = QTableWidget()
         self.symbol_table.setStyleSheet(f"color: {CODE_COLOR};")
@@ -209,30 +224,37 @@ class MainWindow(QWidget):
         self.symbol_table.setHorizontalHeaderLabels(self.symbol_table_headers)
         self.symbol_table.setColumnWidth(2, 160)
         self.symbol_table.setColumnWidth(3, 120)
-        self.symbol_table.setColumnWidth(4, 120)
+        self.symbol_table.setColumnWidth(4, 140)
         
         # Change the size of the table
-        self.symbol_table.setFixedWidth(TEXT_EDITOR_WIDTH + 88)
+        self.symbol_table.setFixedWidth(TEXT_EDITOR_WIDTH + 70)
         self.symbol_table.setFixedHeight(400)
 
         # Change the font size of the headers
-        self.symbol_table.horizontalHeader().setFont(QFont(CODE_FONT_FAMILY, 15))
+        self.symbol_table.horizontalHeader().setFont(QFont(CODE_FONT_FAMILY, TEXT_EDITOR_FONT_SIZE - 5))
 
         symbol_table_layout = QVBoxLayout()
-        symbol_table_layout.setContentsMargins(0, 0, 170, 0)
+        symbol_table_layout.setContentsMargins(0, 0, 100, 0)
         symbol_table_layout.addWidget(text_editor_title)
         symbol_table_layout.addWidget(self.symbol_table, 1)
-        symbol_table_layout.setAlignment(self.symbol_table, Qt.AlignTop)
+        symbol_table_layout.setAlignment(self.symbol_table, Qt.AlignTop | Qt.AlignRight)
         symbol_table_layout.setAlignment(self.symbol_table, Qt.AlignTop | Qt.AlignRight)
 
         return symbol_table_layout
 
     
     def compile_all_button_handler(self):
-        # Reset the text editors
-        self.error_editor.setText("")
+        self.current_line = 1
+        self.compile_step_by_step_button.setText(f"Compile Step by Step ({-1})")
+        # Reset the output fields
+        self.error_editor.setText("Compiling...")
         self.quads_editor.setText("")
         self.highlighter.clear_highlight()
+        self.symbol_table.clearContents()
+        self.symbol_table.setRowCount(0)
+
+        # Referesh the window
+        self.repaint()
 
         # Export the written code to a temporary file
         os.chdir('..')
@@ -249,13 +271,51 @@ class MainWindow(QWidget):
         self.parse_symbol_table()
         
         # Remove the temporary files and return to the working directory
-        # os.remove('test/temp.c')
+        os.remove('test/temp.c')
         # os.remove('test/out/temp.out')
         os.chdir('gui')
 
 
     def compile_step_by_step_button_handler(self):
-        pass
+        self.highlighter.clear_highlight()
+        # Export the written code to a temporary file
+        os.chdir('..')
+        code = self.code_text_editor.toPlainText().splitlines()
+        file_contents = []
+        i = 0
+        code_statements = 0
+        while True:
+            if i >= len(code):
+                break
+            file_contents.append(code[i])
+            if code[i].strip() != '':
+                code_statements += 1
+            if code_statements == self.current_line:
+                self.current_line += 1
+                break
+            i += 1
+
+        with open("test/temp.c", "w") as f:
+            f.write('\n'.join(file_contents))
+
+        # Compile the code
+        # os.system('make build')
+        os.system('./main < ./test/temp.c > ./test/out/temp.out')
+        
+        self.compile_step_by_step_button.setText(f"Compile Step by Step ({i + 1})")
+        # Parse the output files
+        error = self.parse_output_file()
+        self.parse_symbol_table()
+
+        if len(file_contents) == len(code) and not error:
+            self.error_editor.setText(self.error_editor.toPlainText() + "\nCompilation finished successfully!")
+            self.current_line = 1
+            
+        if error:
+            self.current_line = 1
+            
+
+        os.chdir('gui')
         
 
     def parse_output_file(self):
@@ -273,23 +333,28 @@ class MainWindow(QWidget):
                 quads_lines.append(line.replace('Quads() ', ''))
             elif line != '':
                 console_lines.append(line)
-                
-        if len(console_lines) > 0 and len(lexer_lines) > 0:
-            for console_line in console_lines:
-                if re.match(syntax_error_line_pattern, console_line):
-                    error_line = int(re.search(syntax_error_line_pattern, console_line).group(1))
-                    fmt = QTextCharFormat()
-                    fmt.setBackground(QColor(255, 0, 0))
-                    self.highlighter.highlight_line(error_line - 1, fmt)
-
-                elif re.match(semantic_error_line_pattern, console_line):
-                    error_line = int(re.search(semantic_error_line_pattern, console_line).group(1))
+        
+        error = False
+        for console_line in console_lines:
+            if re.match(syntax_error_line_pattern, console_line):
+                error_line = int(re.search(syntax_error_line_pattern, console_line).group(1))
+                fmt = QTextCharFormat()
+                fmt.setBackground(QColor(255, 0, 0))
+                self.highlighter.highlight_line(error_line - 1, fmt)
+                error = True
+        
+        for console_line in console_lines:
+            if re.match(semantic_error_line_pattern, console_line):
+                error_line = int(re.search(semantic_error_line_pattern, console_line).group(1))
+                if error_line - 1 not in self.highlighter.highlight_lines.keys():
                     fmt = QTextCharFormat()
                     fmt.setBackground(QColor(255, 255, 0))
                     self.highlighter.highlight_line(error_line - 1, fmt)
 
         self.error_editor.setText('\n'.join(console_lines))
         self.quads_editor.setText('\n'.join(quads_lines))
+        self.repaint()
+        return error
 
 
     def parse_symbol_table(self):
@@ -414,23 +479,129 @@ class LineNumberWidget(QTextBrowser):
 class SyntaxHighlighter(QSyntaxHighlighter):
     def __init__(self, parent):
         super(SyntaxHighlighter, self).__init__(parent)
-        self._highlight_lines = dict()
+        self.highlight_lines = dict()
 
     def highlight_line(self, line, fmt):
         if isinstance(line, int) and line >= 0 and isinstance(fmt, QTextCharFormat):
-            self._highlight_lines[line] = fmt
+            self.highlight_lines[line] = fmt
             tb = self.document().findBlockByLineNumber(line)
             self.rehighlightBlock(tb)
 
     def clear_highlight(self):
-        self._highlight_lines = dict()
+        self.highlight_lines = dict()
         self.rehighlight()
 
     def highlightBlock(self, text):
         line = self.currentBlock().blockNumber()
-        fmt = self._highlight_lines.get(line)
+        fmt = self.highlight_lines.get(line)
         if fmt is not None:
             self.setFormat(0, len(text), fmt)
+
+
+class CCodeHighlighter(QSyntaxHighlighter):
+    def _init_(self, parent=None):
+        super(CCodeHighlighter, self)._init_(parent)
+        
+        # Define the C keywords
+        self.keywords = [
+            'auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extern',
+            'float', 'for', 'goto', 'if', 'int', 'long', 'register', 'return', 'short', 'signed', 'sizeof', 'static',
+            'struct', 'switch', 'typedef', 'union', 'unsigned', 'void', 'volatile', 'while'
+        ]
+        
+        # Define the C operators
+        self.operators = [
+            '+', '-', '*', '/', '%', '++', '--', '==', '!=', '>', '<', '>=', '<=', '&&', '||', '!', '&', '|', '^',
+            '~', '<<', '>>', '=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '&=', '|=', '^=', '->', '.'
+        ]
+        
+        # Define the C types
+        self.types = [
+            'int', 'char', 'float', 'double', 'void', 'short', 'long', 'signed', 'unsigned', 'const'
+        ]
+        
+        # Define the C preprocessor directives
+        self.directives = [
+            '#include', '#define', '#ifndef', '#ifdef', '#endif', '#undef', '#if', '#elif', '#else', '#error', '#pragma'
+        ]
+        
+        # Define the text formats for syntax highlighting
+        self.keywordFormat = QTextCharFormat()
+        self.keywordFormat.setForeground(QColor(64, 128, 255))
+        self.keywordFormat.setFontWeight(QFont.Bold)
+        
+        self.operatorFormat = QTextCharFormat()
+        self.operatorFormat.setForeground(QColor(0, 0, 255))
+        
+        self.typeFormat = QTextCharFormat()
+        self.typeFormat.setForeground(QColor(0, 128, 0))
+        self.typeFormat.setFontWeight(QFont.Bold)
+        
+        self.directiveFormat = QTextCharFormat()
+        self.directiveFormat.setForeground(QColor(128, 0, 128))
+        
+        self.stringFormat = QTextCharFormat()
+        self.stringFormat.setForeground(QColor(255, 0, 0))
+        
+        self.commentFormat = QTextCharFormat()
+        self.commentFormat.setForeground(QColor(128, 128, 128))
+        
+        # Define the regular expressions for syntax highlighting
+        self.rules = []
+        
+        # C keywords
+        keywordPattern = '\\b(' + '|'.join(self.keywords) + ')\\b'
+        self.rules.append((QRegExp(keywordPattern), self.keywordFormat))
+        
+        # C operators
+        operatorPattern = '|'.join([QRegExp.escape(op) for op in self.operators])
+        self.rules.append((QRegExp(operatorPattern), self.operatorFormat))
+        
+        # C types
+        typePattern = '\\b(' + '|'.join(self.types) + ')\\b'
+        self.rules.append((QRegExp(typePattern), self.typeFormat))
+        
+        # C preprocessor directives
+        directivePattern = '\\b(' + '|'.join(self.directives) + ')\\b'
+        self.rules.append((QRegExp(directivePattern), self.directiveFormat))
+        
+        # String literals
+        self.rules.append((QRegExp('".*?"'), self.stringFormat))
+        self.rules.append((QRegExp('\'.*?\''), self.stringFormat))
+        
+        # Single-line comments
+        self.rules.append((QRegExp('//[^\n]*'), self.commentFormat))
+        
+        # Multi-line comments
+        self.rules.append((QRegExp('/\\*'), self.commentFormat))
+        self.rules.append((QRegExp('\\*/'), self.commentFormat))
+
+    def highlightBlock(self, text):
+        for pattern, format in self.rules:
+            expression = QRegExp(pattern)
+            index = expression.indexIn(text)
+            while index >= 0:
+                length = expression.matchedLength()
+                self.setFormat(index, length, format)
+                index = expression.indexIn(text, index + length)
+
+
+class CodeEditor(QPlainTextEdit):
+    def _init_(self, parent=None):
+        super(CodeEditor, self)._init_(parent)
+        
+        # Set the font and tab stop width
+        font = QFont('Courier New')
+        font.setFixedPitch(True)
+        font.setPointSize(10)
+        self.setFont(font)
+        self.setTabStopWidth(20)
+        
+        # Enable line wrapping
+        self.setLineWrapMode(QPlainTextEdit.NoWrap)
+        
+        # Syntax highlighting
+        self.highlighter = CCodeHighlighter(self.document())
 
 
 if __name__ == "__main__":

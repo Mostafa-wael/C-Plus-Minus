@@ -1,7 +1,3 @@
-int x = 1;
+int x = 2;
 
-x = x + 1;
-
-print(x)
-
-int y;
+int y =2;
