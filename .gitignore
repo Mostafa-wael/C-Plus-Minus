@@ -6,3 +6,4 @@ main
 .vscode/*
 test/out/*
 symbol_table.txt
+test/expected/*

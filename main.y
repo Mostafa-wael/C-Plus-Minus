@@ -22,21 +22,30 @@ void quadPushInt(int val);
 void quadPushFloat(float val);
 void quadPushIdentifier(char symbol);
 void quadPushString(char* str);
-void quadJF(int labelNum);
-void quadJMP();
-void quadAddLabel();
-void quadAddStartLabel(int labelNum);
 
 
+void quadJumpFalseLabel(int labelNum);
+void quadPopLabel();
+
+void quadJumpEndLabel();
 void quadPushEndLabel(int endLabelNum);
-void quadAddEndLabel();
+void quadPopEndLabel();
+
 #define MAX_STACK_SIZE 100
 int labelNum = 0;
-int labelSackPointer = -1;
+int labelStackPointer = -1;
 int labelStack[MAX_STACK_SIZE];
+
 int endLabelNum = 0;
 int endLabelstackPointer = -1;
 int endLabelStack[MAX_STACK_SIZE];
+
+void quadPushLastIdentifierStack(char identifier);
+void quadPeakLastIdentifierStack();
+void quadPopLastIdentifierStack();
+
+int lastIdentifierStackPointer = -1;
+char lastIdentifierStack[MAX_STACK_SIZE];
 // Semantic Erros
 //======================
 #define SHOW_SEMANTIC_ERROR 1
@@ -263,20 +272,20 @@ statements	            : statement ';'                         {;}
                         ;
 codeBlock               :  statements                           {;}
                         ;
-controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadAddEndLabel();}
+controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadPopEndLabel();}
                         | whileLoop
                         | forLoop
                         | repeatUntilLoop
-                        | switchCaseLoop
+                        | {quadPushEndLabel(++endLabelNum);} switchCaseLoop {quadPopEndLabel();}
                         ;      
                                                  
 statement               : assignment 		                {;}
                         | exp                                   {;}
                         | declaration 		                {;}
                         | EXIT 		                        {exit(EXIT_SUCCESS);}
-                        | BREAK 		                {;}
-                        | CONTINUE 		                {;}
-                        | RETURN 		                {;}
+                        | BREAK 		                    {quadJumpEndLabel();}
+                        | CONTINUE 		                    {;}
+                        | RETURN 		                    {;}
                         | RETURN exp 		                {;}
                         | PRINT '(' IDENTIFIER ')' 		    {printNode(symbolVal($3)); setUsed($3);}
                         | PRINT '(' exp ')' 		        {printNode($3);}
@@ -347,19 +356,19 @@ term   	                : NUMBER                                {quadPushInt($1)
 //======================
 /* Conditions */
 //======================
-ifCondition             : IF '(' exp {checkConstIf($3); quadJF(++labelNum);} ')' '{'{enterScope();} codeBlock '}'{quadJMP(); exitScope(); quadAddLabel();} ElseCondition {;}
+ifCondition             : IF '(' exp {checkConstIf($3); quadJumpFalseLabel(++labelNum);} ')' '{'{enterScope();} codeBlock '}'{quadJumpEndLabel(); exitScope(); quadPopLabel();} ElseCondition {;}
                         ;
 ElseCondition           : {;}
                         | ELSE {;} ifCondition {;}
                         | ELSE {;}'{'{enterScope();} codeBlock '}'{exitScope();} {;}
                         ;
-case                    : CASE exp ':' statements               {;}
+case                    : CASE exp {quadPeakLastIdentifierStack(); quadJumpFalseLabel(++labelNum);} ':' statements {quadPopLabel();}
                         | DEFAULT ':' statements                {;}
                         ;
 caseList                : caseList case
                         | case
                         ;
-switchCaseLoop          : SWITCH '(' exp ')' '{'{enterScope();} caseList '}'{exitScope();}   {;}
+switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack($3);} '{'{enterScope();} caseList '}'{exitScope();}   {quadPopLastIdentifierStack();}
                         ;
 //======================
 /* Loops */
@@ -451,47 +460,76 @@ void quadPushEndLabel(int endLabelNum)
 {
        if (SHOW_Quads) {
             /* push the labelNum to the stack */
-            labelStack[++endLabelstackPointer] = endLabelNum;
+            endLabelStack[++endLabelstackPointer] = endLabelNum;
        }
 }
-void quadJMP() // jump to the first end label in the stack
+void quadJumpEndLabel() // jump to the first end label in the stack
 {
       if (SHOW_Quads) {
         /* get last  endLabelNum from the stack*/
-        int endLabelNum = labelStack[endLabelstackPointer];
+        int endLabelNum = endLabelStack[endLabelstackPointer];
         printf("Quads() JMP EndLabel_%d\n", endLabelNum);
        }
 }
-void quadAddEndLabel(){
+void quadPopEndLabel(){
         if (endLabelstackPointer < 0){
             printf("Quads() Error: No end label to add. Segmenration Fault\n");
             return;
         }
         /* get the last endLabelNum from the stack */
-        int endLabelNum = labelStack[endLabelstackPointer--];
+        int endLabelNum = endLabelStack[endLabelstackPointer--];
         if (SHOW_Quads) {
                 printf("Quads() EndLabel_%d\n", endLabelNum);
         }
 }
-void quadJF(int labelNum)
+void quadJumpFalseLabel(int labelNum)
 {
        if (SHOW_Quads) {
                printf("Quads() JF Label_%d\n", labelNum);
                /* push the labelNum to the stack */
-                labelStack[labelSackPointer++] = labelNum;
+                labelStack[labelStackPointer++] = labelNum;
        }
 }
-void quadAddLabel(){
-        if (labelSackPointer < 0){
+void quadPopLabel(){
+        if (labelStackPointer < 0){
             printf("Quads() Error: No end label to add. Segmenration Fault\n");
             return;
         }
         /* get the last labelNum from the stack */
-        int labelNum = labelStack[--labelSackPointer];
+        int labelNum = labelStack[--labelStackPointer];
         if (SHOW_Quads) {
                 printf("Quads() Label_%d\n", labelNum);
         }
 }
+void quadPushLastIdentifierStack(char identifier){
+        if (SHOW_Quads) {
+            /* add the IDENTIFIER to the stack */
+            lastIdentifierStack[++lastIdentifierStackPointer] = identifier;
+        }
+}
+void quadPeakLastIdentifierStack(){
+    if (lastIdentifierStackPointer < 0){
+        printf("Quads() Error: No last identifier to peak. Segmenration Fault\n");
+        return;
+    }
+    /* get the last identifier from the stack */
+    char identifier = lastIdentifierStack[lastIdentifierStackPointer];
+    if (SHOW_Quads) {
+            printf("Quads() push %c\n", identifier);
+    }
+}
+void quadPopLastIdentifierStack(){
+    if (lastIdentifierStackPointer < 0){
+        printf("Quads() Error: No last identifier to pop. Segmenration Fault\n");
+        return;
+    }
+    /* get the last IDENTIFIER from the stack */
+    char identifier = lastIdentifierStack[lastIdentifierStackPointer--];
+}
+
+//======================
+// Symbol table functions
+//======================
 int sym_table_idx = 0;
 
 /* C code */
@@ -508,10 +546,6 @@ int computeSymbolIndex(char token){
         }
     }
 } 
-
-//======================
-// Symbol table functions
-//======================
 void insert(char name, char* type, int isConst, int isInit, int isUsed, int scope){
 
     symbol_Table [sym_table_idx].name = name;
