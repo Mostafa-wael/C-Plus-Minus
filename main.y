@@ -449,13 +449,13 @@ void quadStartFunction(char function) // TODO: make it string isnetad of char
 void quadEndFunction(char function)
 {
         if (SHOW_Quads) {
-                printf("Quads(%d) \tEND PROC %c\n", line, function);
+                printf("Quads(%d) \tENDPROC %c\n", line, function);
         }
 }
 void quadCallFunction(char function)
 {
         if (SHOW_Quads) {
-                printf("Quads(%d) \tCALL function %c\n", line, function);
+                printf("Quads(%d) \tCALL %c\n", line, function);
         }
 }
 void quadReturn()
@@ -607,7 +607,7 @@ void quadStartEnum(char enumName)
 void quadEndEnum(char enumName)
 {
         if (SHOW_Quads) {
-                printf("Quads(%d) \tEND ENUM %c\n", line, enumName);
+                printf("Quads(%d) \tENDENUM %c\n", line, enumName);
         }
 }
 //======================

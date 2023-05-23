@@ -1,6 +1,7 @@
 # Compilers Project
 
 ## Table of Contents
+
 - [Compilers Project](#compilers-project)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
@@ -14,6 +15,14 @@
     - [Loops](#loops)
     - [Functions](#functions)
     - [Enumerations](#enumerations)
+  - [Quadruples](#quadruples)
+    - [Procedures](#procedures)
+    - [Enums](#enums)
+    - [Variables](#variables)
+    - [Branching \& Jumps](#branching--jumps)
+    - [Arithmetic Operations](#arithmetic-operations)
+    - [Bitwise Operations](#bitwise-operations)
+    - [Logical Operations](#logical-operations)
   - [Production Rules](#production-rules)
 
 ## Introduction
@@ -41,6 +50,7 @@ exit;
 ```
 
 ## Run Steps
+
 - `yacc -d main.y`: create y.tab.h and y.tab.c
 - `lex main.l`: create lex.yy.c
 - `gcc -g lex.yy.c y.tab.c -o main`: create main
@@ -48,14 +58,15 @@ exit;
 
 For convenience, the above steps are combined in a makefile. To run the makefile, type `make <test case name>` in the terminal.
 
-
 ## Tools and Technologies
+
 <ol>
    <li>Lex: It breaks down the input text into a sequence of tokens, which are then passed on to the parser for further processing.</li>
    <li>Yacc: It takes a sequence of tokens as input and produces a parse tree or an abstract syntax tree (AST) that represents the structure of the input according to the grammar rules.</li>
 </ol>
 
 ## Tokens
+
 <table>
    <tr>
       <th align="left">Token</th>
@@ -130,14 +141,18 @@ For convenience, the above steps are combined in a makefile. To run the makefile
 </table>
 
 ## Syntax
+
 ### Data Types
+
 Tha language supports the following data types:
+
 - Integer
 - Float
 - Boolean
 - String
 
 It supports modifiers like `const` as well.
+
 ```c
 const int a = 10;
 int b = 20;
@@ -147,7 +162,9 @@ string e = "Hello World";
 ```
 
 ### Operators
+
 The language supports the common operators in C.
+
 ```c
 // Arithmetic operators
 a = b + c;
@@ -175,8 +192,11 @@ a = b <= c;
 a = b << c;
 a = b >> c;
 ```
+
 ### Conditional Statements
+
 The language supports the if-else, if-elif-else, and switch-case statements.
+
 ```c
 int a = 10;
 // if statement
@@ -246,8 +266,11 @@ switch (a) {
         break;
 }
 ```
+
 ### Loops
+
 The language supports the while, for, and repeat-until loops.
+
 ```c
 // while loop
 a = 0;
@@ -293,8 +316,11 @@ repeat {
     }
 } until (a == 1);
 ```
+
 ### Functions
+
 The language supports functions with and without parameters.
+
 ```c
 int y (){
     print("y");
@@ -307,10 +333,13 @@ int x(int a, int b) {
 x(1, 2); // function call
 a = y(); // function call and assignment
 ```
+
 N.B.: you can't define a function inside any scope.
 
 ### Enumerations
+
 The language supports enumerations.
+
 ```c
 enum Color{
     RED=10,
@@ -324,7 +353,77 @@ enum Color{
     Color c3=3+5;
 }
 ```
+
+## Quadruples
+
+### Procedures
+
+ **Quadruples** | **Description**                                                   |    **ARG1**     |    **ARG2**     |    **RES**      |
+----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
+ **PROC**       | Start of a procedure                                              | procedure name  |                 |                 |
+ **ENDPROC**    | End of a procedure                                                | procedure name  |                 |                 |
+ **CALL**       | Calls a procedure, handles all the stuff related to the PC        | procedure name  |                 |                 |
+ **RET**        | Return from  a procedure, handles all the stuff related to the PC |                 |                 |                 |
+
+### Enums
+
+ **Quadruples** | **Description**                                                   |    **ARG1**     |    **ARG2**     |    **RES**      |
+----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
+ **ENUM**       | Start of an enum                                                  |   enum name     |                 |                 |
+ **ENDENUM**    | End of an enum                                                    |   enum name     |                 |                 |
+
+### Variables
+
+ **Quadruples** | **Description**                                                   |    **ARG1**     |    **ARG2**     |    **RES**      |
+----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
+ **PUSH**       | Push to the stack frame                                           | Identifier/Expr |                 |                 |
+ **POP**        | Pop from the stack frame                                          | Identifier/Expr |                 |                 |
+
+### Branching & Jumps
+
+ **Quadruples** | **Description**                                                   |    **ARG1**     |    **ARG2**     |    **RES**      |
+----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
+ **JMP**        | Unconditional jump to the label                                   |    label        |                 |                 |
+ **JF**         | Jumps to the label if the result of the last operation was false  |    label        |                 |                 |
+
+### Arithmetic Operations
+
+ **Quadruples** | **Description**                                                   |    **ARG1**     |    **ARG2**     |    **RES**      |
+----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
+ **NEG**        | Get the opposite sign of an expression                            |                 |                 |                 |
+ **COMPLEMENT** | Get the complement of an expression                               |                 |                 |                 |
+ **NOT**        | Get the bitwise not of an expression                              |                 |                 |                 |
+ **ADD**        | Add two numbers                                                   |                 |                 |                 |
+ **SUB**        | Subtract two numbers                                              |                 |                 |                 |
+ **MUL**        | Multiply two numbers                                              |                 |                 |                 |
+ **DIV**        | Divide two numbers                                                |                 |                 |                 |
+ **MOD**        | Modulus two numbers                                               |                 |                 |                 |
+
+### Bitwise Operations
+
+ **Quadruples** | **Description**                                                   |    **ARG1**     |    **ARG2**     |    **RES**      |
+----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
+ **BITWISE_OR** | Get the bitwise or of two numbers                                 |                 |                 |                 |
+ **BITWISE_AND**| Get the bitwise and of two numbers                                |                 |                 |                 |
+ **BITWISE_XOR**| Get the bitwise xor of two numbers                                |                 |                 |                 |
+ **SHL**        | Shift left the number                                             |                 |                 |                 |
+ **SHR**        | Shift right the number                                            |                 |                 |                 |
+
+### Logical Operations
+
+ **Quadruples** | **Description**                                                   |    **ARG1**     |    **ARG2**     |    **RES**      |
+----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
+ **LOGICAL_OR** | Get the logical or of two numbers                                 |                 |                 |                 |
+ **LOGICAL_AND**| Get the logical or of two numbers                                 |                 |                 |                 |
+ **EQ**         | Check if two numbers are equal                                    |                 |                 |                 |
+ **NEQ**        | Check if two numbers are not equal                                |                 |                 |                 |
+ **GT**         | Check if the first number is greater than the second              |                 |                 |                 |
+ **GEQ**        | Check if the first number is greater than or equal the second     |                 |                 |                 |
+ **LT**         | Check if the first number is less than the second                 |                 |                 |                 |
+ **LEQ**        | Check if the first number is less than or equal the second        |                 |                 |                 |
+
 ## Production Rules
+
 <ul>
    <li>program → statements | functionDef | statements program | functionDef program</li>
    <br>
