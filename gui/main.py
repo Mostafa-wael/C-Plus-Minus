@@ -4,7 +4,7 @@ import re
 import os
 from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import QFont, QTextCursor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QColor, QPixmap
-from PyQt5.QtWidgets import QLabel, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit, QPlainTextEdit, QWidget, QShortcut, QFileDialog, QPushButton, QTextBrowser, QTableWidget, QTableWidgetItem, QAbstractItemView
+from PyQt5.QtWidgets import QLabel, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit, QWidget, QShortcut, QFileDialog, QPushButton, QTextBrowser, QTableWidget, QTableWidgetItem, QAbstractItemView
 
 
 # Regex patterns for output file parsing
@@ -12,6 +12,7 @@ lexer_line_pattern = r'Lex\((\d+)\).+'
 quads_line_pattern = r'Quads\(.*\).+'
 syntax_error_line_pattern = r'Syntax error \((\d+)\).+'
 semantic_error_line_pattern = r'Semantic error \((\d+)\).+'
+semantic_warning_line_pattern = r'Semantic warning \((\d+)\).+'
 
 
 # Application customizations
@@ -83,14 +84,14 @@ class MainWindow(QWidget):
 
     def create_center_area(self):
         label = QLabel("Cover")
-        pixmap = QPixmap('cover.png')
+        pixmap = QPixmap('logo.png')
         pixmap = pixmap.scaledToHeight(180)
-        pixmap = pixmap.scaledToWidth(380)
+        pixmap = pixmap.scaledToWidth(280)
         label.setPixmap(pixmap)
         layout = QVBoxLayout()
         layout.addWidget(label)
         # label.setAlignment(Qt.AlignCenter)
-        label.setContentsMargins(15, 250, 0, 0)
+        label.setContentsMargins(35, 250, 0, 0)
         return label
 
     def create_code_area(self):
@@ -102,7 +103,7 @@ class MainWindow(QWidget):
         # Create remove highlight button
         self.remove_highlight_button = QPushButton("R")
         self.remove_highlight_button.setFixedWidth(40)
-        self.remove_highlight_button.setFixedHeight(40)
+        self.remove_highlight_button.setFixedHeight(44)
         self.remove_highlight_button.setStyleSheet(BUTTON_STYLE_SHEET)
         self.remove_highlight_button.setToolTip("Remove Syntax Highlight")
         self.remove_highlight_button.setShortcut("Ctrl+R")
@@ -113,7 +114,7 @@ class MainWindow(QWidget):
 
         # Create the text editor widget
         self.code_text_editor = CodeEditor()
-        self.code_text_editor.setFont(QFont(CODE_FONT_FAMILY, TEXT_EDITOR_FONT_SIZE))
+        self.code_text_editor.setFont(QFont(CODE_FONT_FAMILY, TEXT_EDITOR_FONT_SIZE + 1))
         self.code_text_editor.setStyleSheet(f"color: {CODE_COLOR};")
         
         # Change the size of the text editor
@@ -191,7 +192,7 @@ class MainWindow(QWidget):
     def create_quads_area(self):
         text_editor_title = QLabel("Quadruples")
         text_editor_title.setStyleSheet(TITLE_STYLE_SHEET)
-        text_editor_title.setContentsMargins(0, 0, 300, 5)
+        text_editor_title.setContentsMargins(0, 0, 280, 5)
 
         self.quads_editor = QTextEdit()
 
@@ -233,7 +234,7 @@ class MainWindow(QWidget):
 
         self.symbol_table.setColumnCount(7)
         self.symbol_table.setHorizontalHeaderLabels(self.symbol_table_headers)
-        self.symbol_table.setColumnWidth(2, 160)
+        self.symbol_table.setColumnWidth(2, 120)
         self.symbol_table.setColumnWidth(3, 120)
         self.symbol_table.setColumnWidth(4, 140)
         
@@ -360,6 +361,14 @@ class MainWindow(QWidget):
                     fmt = QTextCharFormat()
                     fmt.setBackground(QColor(255, 255, 0))
                     self.highlighter.highlight_line(error_line - 1, fmt)
+        
+        for console_line in console_lines:
+            if re.match(semantic_warning_line_pattern, console_line):
+                error_line = int(re.search(semantic_warning_line_pattern, console_line).group(1))
+                if error_line - 1 not in self.highlighter.highlight_lines.keys():
+                    fmt = QTextCharFormat()
+                    fmt.setBackground(QColor(255, 165, 0))
+                    self.highlighter.highlight_line(error_line - 1, fmt)
 
         self.error_editor.setText('\n'.join(console_lines))
         self.quads_editor.setText('\n'.join(quads_lines))
@@ -411,9 +420,10 @@ class MainWindow(QWidget):
             new_file_path, _ = QFileDialog.getSaveFileName(self, "Save file as", "", "*.c")
             if new_file_path:
                 self.file_path = new_file_path
-                file_contents = self.code_text_editor.toPlainText()
-                with open(self.file_path, "w") as f:
-                    f.write(file_contents)
+        
+        file_contents = self.code_text_editor.toPlainText()
+        with open(self.file_path, "w") as f:
+            f.write(file_contents)
 
 
 class LineNumberWidget(QTextBrowser):
@@ -589,7 +599,7 @@ class CCodeHighlighter(QSyntaxHighlighter):
         self.rehighlight()
 
 
-class CodeEditor(QPlainTextEdit):
+class CodeEditor(QTextEdit):
     def __init__(self, parent=None):
         super(CodeEditor, self).__init__(parent)
         
@@ -601,7 +611,7 @@ class CodeEditor(QPlainTextEdit):
         self.setTabStopWidth(20)
         
         # Enable line wrapping
-        self.setLineWrapMode(QPlainTextEdit.NoWrap)
+        self.setLineWrapMode(QTextEdit.NoWrap)
         
         # Syntax highlighting
         self.highlighter = CCodeHighlighter(self.document())

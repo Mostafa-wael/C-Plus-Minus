@@ -24,6 +24,7 @@
     - [Bitwise Operations](#bitwise-operations)
     - [Logical Operations](#logical-operations)
   - [Production Rules](#production-rules)
+  - [Desktop Application](#desktop-application)
 
 ## Introduction
 
@@ -475,3 +476,32 @@ enum Color{
    <br>
    <li>enumDeclaration → IDENTIFIER IDENTIFIER | IDENTIFIER IDENTIFIER = exp</li>
 </ul>
+
+
+## Desktop Application
+A desktop application is developed using PyQt5 to provide a user interface for the compiler. The application allows the user to select a file from the file system and compile it. The application will then display the generated quadruples, the symbol table, and the results of the executed code. 
+- The main functionalities:
+    - Open an existing file (Ctrl + O)
+    - Write a new file in the text editor
+    - Save the file (Ctrl + S)
+    - Compile the file in one step
+    - Compile the file step by step
+    - Display the generated quadruples
+    - Display the symbol table
+    - Display the results of the executed code
+    - Highlight the syntax errors in red
+    - Highlight the semantic errors in yellow
+    - Highlight the semantic warnings in orange
+    - Remove the highlights (Ctrl + R)
+
+![1684852461770](image/README/1684852461770.png)
+
+![1684852525030](image/README/1684852525030.png)
+
+![1684852560230](image/README/1684852560230.png)
+
+![1684852592279](image/README/1684852592279.png)
+
+![1684852628915](image/README/1684852628915.png)
+
+![1684852694892](image/README/1684852694892.png)
