@@ -32,8 +32,9 @@ void quadPushEndLabel(int endLabelNum);
 void quadAddEndLabel();
 #define MAX_STACK_SIZE 100
 int labelNum = 0;
-int labelSackPointer = -1;
+int labelStackPointer = -1;
 int labelStack[MAX_STACK_SIZE];
+
 int endLabelNum = 0;
 int endLabelstackPointer = -1;
 int endLabelStack[MAX_STACK_SIZE];
@@ -448,14 +449,14 @@ void quadPushEndLabel(int endLabelNum)
 {
        if (SHOW_Quads) {
             /* push the labelNum to the stack */
-            labelStack[++endLabelstackPointer] = endLabelNum;
+            endLabelStack[++endLabelstackPointer] = endLabelNum;
        }
 }
 void quadJMP() // jump to the first end label in the stack
 {
       if (SHOW_Quads) {
         /* get last  endLabelNum from the stack*/
-        int endLabelNum = labelStack[endLabelstackPointer];
+        int endLabelNum = endLabelStack[endLabelstackPointer];
         printf("Quads() JMP EndLabel_%d\n", endLabelNum);
        }
 }
@@ -465,7 +466,7 @@ void quadAddEndLabel(){
             return;
         }
         /* get the last endLabelNum from the stack */
-        int endLabelNum = labelStack[endLabelstackPointer--];
+        int endLabelNum = endLabelStack[endLabelstackPointer--];
         if (SHOW_Quads) {
                 printf("Quads() EndLabel_%d\n", endLabelNum);
         }
@@ -475,16 +476,16 @@ void quadJF(int labelNum)
        if (SHOW_Quads) {
                printf("Quads() JF Label_%d\n", labelNum);
                /* push the labelNum to the stack */
-                labelStack[labelSackPointer++] = labelNum;
+                labelStack[labelStackPointer++] = labelNum;
        }
 }
 void quadAddLabel(){
-        if (labelSackPointer < 0){
+        if (labelStackPointer < 0){
             printf("Quads() Error: No end label to add. Segmenration Fault\n");
             return;
         }
         /* get the last labelNum from the stack */
-        int labelNum = labelStack[--labelSackPointer];
+        int labelNum = labelStack[--labelStackPointer];
         if (SHOW_Quads) {
                 printf("Quads() Label_%d\n", labelNum);
         }
