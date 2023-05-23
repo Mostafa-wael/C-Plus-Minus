@@ -91,7 +91,7 @@ class MainWindow(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(label)
         # label.setAlignment(Qt.AlignCenter)
-        label.setContentsMargins(35, 250, 0, 0)
+        label.setContentsMargins(25, 250, 0, 0)
         return label
 
     def create_code_area(self):

@@ -410,13 +410,13 @@ repeatUntilLoop         : REPEAT '{'{enterScope();} codeBlock '}'{exitScope();} 
 //======================
 /* Functions */
 //======================                        
-functionArgs            : dataType IDENTIFIER                   {quadPopIdentifier($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]) ; argCount = sym_table_idx-argCount; printf("argCount: %d\n", argCount);}
+functionArgs            : dataType IDENTIFIER                   {quadPopIdentifier($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]) ; argCount = sym_table_idx-argCount;}
                         | dataType IDENTIFIER  {quadPopIdentifier($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]) ;} ',' functionArgs
                         ;
 functionParams          : term   {typeCheck3($1->type, symbol_Table[++funcPointer].type); paramCount--;}
                         | term   {typeCheck3($1->type, symbol_Table[++funcPointer].type); paramCount--;} ',' functionParams
                         ;
-functionDef             : dataType IDENTIFIER {quadStartFunction($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); argCount = sym_table_idx; printf("argCount: %d\n", argCount);} 
+functionDef             : dataType IDENTIFIER {quadStartFunction($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); argCount = sym_table_idx;} 
                         {enterScope();} functionDefRest '{'codeBlock '}' {exitScope(); quadEndFunction($2); updateSymbolParam($2, argCount);}
                         ;
 functionDefRest         : '(' functionArgs ')' 
