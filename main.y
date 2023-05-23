@@ -15,7 +15,7 @@ extern int yyleng;
 
 // Quadruples
 //======================
-#define SHOW_Quads 1
+#define SHOW_Quads 0
 void quadPopIdentifier(char symbol);
 void quadInstruction(const char* instruction);
 void quadPushInt(int val);
@@ -32,6 +32,12 @@ void quadPopLabel();
 void quadJumpEndLabel();
 void quadPushEndLabel(int endLabelNum);
 void quadPopEndLabel();
+
+int argCount = 0;
+int sym_table_idx = 0;
+
+int funcPointer = -1;
+int paramCount = 0;
 
 #define MAX_STACK_SIZE 100
 int labelNum = 0;
@@ -81,7 +87,8 @@ void Log_SEMANTIC_ERROR(int semanticError, char var)
         switch(semanticError)
         {
                 case TYPE_MISMATCH:
-                        printf("Semantic error (%d) Type mismatch error with %c\n", errorLine, var);
+                        // printf("Semantic error (%d) Type mismatch error with %c\n", errorLine, var);
+                        printf("Semantic error (%d) Type mismatch error\n", errorLine);
                         break;
                 case UNDECLARED: // TODO
                         printf("Semantic error (%d) Undeclared variable %c\n", errorLine, var);
@@ -187,7 +194,8 @@ void insert(char name, char* type, int isConst, int isInit, int isUsed, int scop
 struct nodeType* symbolVal(char symbol); // returns the value of a given symbol
 void updateSymbolName(char symbol, char newName);
 void updateSymbolVal(char symbol, struct nodeType* val); // updates the value of a given symbol
-
+void updateSymbolParam(char symbol, int param);
+int getSymbolindex(char name);
 void checkSameScope(char name);
 void checkOutOfScope(char name);
 
@@ -401,19 +409,19 @@ repeatUntilLoop         : REPEAT '{'{enterScope();} codeBlock '}'{exitScope();} 
 //======================
 /* Functions */
 //======================                        
-functionArgs            : dataType IDENTIFIER                   {quadPopIdentifier($2);}
-                        | dataType IDENTIFIER ',' functionArgs  {quadPopIdentifier($2);}
+functionArgs            : dataType IDENTIFIER                   {quadPopIdentifier($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]) ; argCount = sym_table_idx-argCount; printf("argCount: %d\n", argCount);}
+                        | dataType IDENTIFIER  {quadPopIdentifier($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]) ;} ',' functionArgs
                         ;
-functionParams          : term                                  {}
-                        | term ',' functionParams               {}
+functionParams          : term   {printf("argCount: %d\n", $1);}
+                        | term   {printf("argCount: %d\n", $1);} ',' functionParams
                         ;
-functionDef             : dataType IDENTIFIER {quadStartFunction($2);} functionDefRest {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);} 
-                                                            '{'{enterScope();} codeBlock '}' {exitScope(); quadEndFunction($2);}
+functionDef             : dataType IDENTIFIER {quadStartFunction($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); argCount = sym_table_idx; printf("argCount: %d\n", argCount);} 
+                        {enterScope();} functionDefRest '{'codeBlock '}' {exitScope(); quadEndFunction($2); updateSymbolParam($2, argCount);}
                         ;
-functionDefRest            : '(' functionArgs ')' 
+functionDefRest         : '(' functionArgs ')' 
                         | '('              ')' 
                         ;
-functionCall            : IDENTIFIER functionCallRest     {checkOutOfScope($1); $$ = symbolVal($1); quadCallFunction($1);}
+functionCall            : IDENTIFIER { paramCount = symbolVal($1)->value.intVal; } functionCallRest {checkOutOfScope($1); $$ = symbolVal($1); quadCallFunction($1);}
                         ;
 functionCallRest        : '(' functionParams ')'             {;}
                         | '('              ')'               {;}
@@ -613,7 +621,6 @@ void quadEndEnum(char enumName)
 //======================
 // Symbol table functions
 //======================
-int sym_table_idx = 0;
 
 /* C code */
 int computeSymbolIndex(char token){
@@ -663,6 +670,13 @@ struct nodeType* symbolVal(char symbol){
     return p;
 }
 
+int getSymbolIndex(char name) {
+    int bucket = computeSymbolIndex(name);
+    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    p->type = bucket;
+    return bucket;
+}
+
 void updateSymbolName(char symbol, char newName){
     int bucket = computeSymbolIndex(symbol);
     symbol_Table [bucket].name = newName;
@@ -680,6 +694,11 @@ void updateSymbolVal(char symbol, struct nodeType* val){
         symbol_Table[bucket].value.boolVal = val->value.boolVal;
     else if(strcmp(symbol_Table[bucket].type, "string") == 0)
         symbol_Table[bucket].value.stringVal = val->value.stringVal;
+}
+
+void updateSymbolParam(char symbol, int param){
+    int bucket = computeSymbolIndex(symbol);
+    symbol_Table [bucket].value.intVal = param;
 }
 
 void printNode(struct nodeType* x)
