@@ -84,13 +84,13 @@ class MainWindow(QWidget):
     def create_center_area(self):
         label = QLabel("Cover")
         pixmap = QPixmap('cover.png')
-        pixmap = pixmap.scaledToHeight(400)
-        pixmap = pixmap.scaledToWidth(250)
+        pixmap = pixmap.scaledToHeight(180)
+        pixmap = pixmap.scaledToWidth(380)
         label.setPixmap(pixmap)
         layout = QVBoxLayout()
         layout.addWidget(label)
         # label.setAlignment(Qt.AlignCenter)
-        label.setContentsMargins(40, 250, 0, 0)
+        label.setContentsMargins(15, 250, 0, 0)
         return label
 
     def create_code_area(self):
@@ -324,7 +324,6 @@ class MainWindow(QWidget):
             
         if error:
             self.current_line = 1
-            
 
         os.chdir('gui')
         
@@ -341,7 +340,7 @@ class MainWindow(QWidget):
             if re.match(lexer_line_pattern, line):
                 lexer_lines.append(line)
             elif re.match(quads_line_pattern, line):
-                quads_lines.append(line.replace('Quads() ', ''))
+                quads_lines.append(re.sub(r'Quads\(.*\)', '', line))
             elif line != '':
                 console_lines.append(line)
         

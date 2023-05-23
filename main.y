@@ -518,7 +518,7 @@ void quadPopEndLabel(){
         /* get the last endLabelNum from the stack */
         int endLabelNum = endLabelStack[endLabelstackPointer--];
         if (SHOW_Quads) {
-                printf("Quads(%d) EndLabel_%d\n", line, endLabelNum);
+                printf("Quads(%d) EndLabel_%d:\n", line, endLabelNum);
         }
 }
 void quadJumpFalseLabel(int labelNum)
@@ -537,7 +537,7 @@ void quadPopLabel(){
         /* get the last labelNum from the stack */
         int labelNum = labelStack[--labelStackPointer];
         if (SHOW_Quads) {
-                printf("Quads(%d) Label_%d\n",line, labelNum);
+                printf("Quads(%d) Label_%d:\n",line, labelNum);
         }
 }
 void quadPushLastIdentifierStack(char identifier){
@@ -572,7 +572,7 @@ void quadPushStartLabel(int startLabelNum){
             /* push the labelNum to the stack */
             startLabelStack[++startLabelstackPointer] = startLabelNum;
             if (SHOW_Quads) {
-                printf("Quads(%d) StartLabel_%d\n", line, startLabelNum);
+                printf("Quads(%d) StartLabel_%d:\n", line, startLabelNum);
             }
         }
 }
