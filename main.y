@@ -39,6 +39,7 @@ int labelStack[MAX_STACK_SIZE];
 #define REDECLARED 5
 #define CONSTANT 6
 #define OUT_OF_SCOPE 7
+#define CONSTANT_IF 8
 void Log_SEMANTIC_ERROR(int semanticError, char var)
 {
         int errorLine = line;
@@ -66,6 +67,9 @@ void Log_SEMANTIC_ERROR(int semanticError, char var)
                         break;
                 case OUT_OF_SCOPE:
                         printf("Semantic error (%d) Variable %c out of scope\n", errorLine, var);
+                        break;
+                case CONSTANT_IF:
+                        printf("Semantic error (%d) If statement is always %s\n", errorLine, (var ? "True" : "False"));
                         break;
                 default:
                         printf("Semantic error (%d) Unknown error at\n", errorLine);
@@ -104,6 +108,7 @@ struct nodeType {
                 char* stringVal;
                 int boolVal;
         }value;
+        int isConst; // this is used to check if the expression is a constant, which helps in if statements with constant expressions
 };
 // type functions
 struct nodeType* intNode();
@@ -116,6 +121,7 @@ void checkConstant(char name);
 void checkInitialization(char name);
 int checkDeclaration(char name);
 void checkUsage();
+void checkConstIf(struct nodeType* exp);
 
 void setConst(char name);
 void setInit(char name);
@@ -289,50 +295,50 @@ assignment              : IDENTIFIER '=' exp                    {checkOutOfScope
                         | dataType enumDeclaration              {/*Check declared*/;}
                         ;
 exp    	                : term                                  {$$ = $1;}
-                        | functionCall                          {;}
+                        | functionCall                          {$$->isConst=0;}
                         /* Negation */
-                        | '-' term                              {quadInstruction("NEG"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);}
-                        | '~' term                              {quadInstruction("COMPLEMENT"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE);}
-                        | NOT term                              {quadInstruction("NOT"); if($2->type == "bool"){$$ = boolNode(); $$->value.boolVal = !$2->value.boolVal;} else{ if($2->value.intVal){$$ = boolNode(); $$->value.boolVal = 0;} else{$$ = boolNode(); $$->value.boolVal = 1;}}}
+                        | '-' term                              {quadInstruction("NEG"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);    $$->isConst=$2->isConst;}
+                        | '~' term                              {quadInstruction("COMPLEMENT"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE); $$->isConst=$2->isConst;}
+                        | NOT term                              {quadInstruction("NOT"); if($2->type == "bool"){$$ = boolNode(); $$->value.boolVal = !$2->value.boolVal;} else{ if($2->value.intVal){$$ = boolNode(); $$->value.boolVal = 0;} else{$$ = boolNode(); $$->value.boolVal = 1;}} $$->isConst=$2->isConst;}
                         // /* Arithmatic */
-                        | exp '+' exp                           {quadInstruction("ADD"); $$ = arithmatic($1,$3,'+');}
-                        | exp '-' exp                           {quadInstruction("SUB"); $$ = arithmatic($1,$3,'-');}
-                        | exp '*' exp                           {quadInstruction("MUL"); $$ = arithmatic($1,$3,'*');}
-                        | exp '/' exp                           {quadInstruction("DIV"); $$ = arithmatic($1,$3,'/');}
-                        | exp '%' exp                           {quadInstruction("MOD"); $$ = arithmatic($1,$3,'%');}
+                        | exp '+' exp                           {quadInstruction("ADD"); $$ = arithmatic($1,$3,'+'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp '-' exp                           {quadInstruction("SUB"); $$ = arithmatic($1,$3,'-'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp '*' exp                           {quadInstruction("MUL"); $$ = arithmatic($1,$3,'*'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp '/' exp                           {quadInstruction("DIV"); $$ = arithmatic($1,$3,'/'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp '%' exp                           {quadInstruction("MOD"); $$ = arithmatic($1,$3,'%'); $$->isConst=(($1->isConst)&&($3->isConst));}
                         // /* Bitwise */
-                        | exp '|' exp                           {quadInstruction("BITWISE_OR"); $$ = bitwise($1,$3,'|');}
-                        | exp '&' exp                           {quadInstruction("BITWISE_AND"); $$ = bitwise($1,$3,'&');}
-                        | exp '^' exp                           {quadInstruction("BITWISE_XOR"); $$ = bitwise($1,$3,'^');}
-                        | exp SHL exp                           {quadInstruction("SHL"); $$ = bitwise($1,$3,'<');}
-                        | exp SHR exp                           {quadInstruction("SHR"); $$ = bitwise($1,$3,'>');}
+                        | exp '|' exp                           {quadInstruction("BITWISE_OR"); $$ = bitwise($1,$3,'|');  $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp '&' exp                           {quadInstruction("BITWISE_AND"); $$ = bitwise($1,$3,'&'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp '^' exp                           {quadInstruction("BITWISE_XOR"); $$ = bitwise($1,$3,'^'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp SHL exp                           {quadInstruction("SHL"); $$ = bitwise($1,$3,'<'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp SHR exp                           {quadInstruction("SHR"); $$ = bitwise($1,$3,'>'); $$->isConst=(($1->isConst)&&($3->isConst));}
                         // /* Logical */
-                        | exp OR exp                            {quadInstruction("LOGICAL_OR"); $$ = logical($1,$3,'|');}
-                        | exp AND exp                           {quadInstruction("LOGICAL_AND"); $$ = logical($1,$3,'&');}
+                        | exp OR exp                            {quadInstruction("LOGICAL_OR");  $$ = logical($1,$3,'|'); $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp AND exp                           {quadInstruction("LOGICAL_AND"); $$ = logical($1,$3,'&'); $$->isConst=(($1->isConst)&&($3->isConst));}
                         // /* Comparison */
-                        | exp EQ exp                            {quadInstruction("EQ"); $$ = comparison($1,$3,"==");}
-                        | exp NEQ exp                           {quadInstruction("NEQ"); $$ = comparison($1,$3,"!=");}
-                        | exp GT exp                            {quadInstruction("GT"); $$ = comparison($1,$3,">");}
-                        | exp GEQ exp                           {quadInstruction("GEQ"); $$ = comparison($1,$3,">=");}
-                        | exp LT exp                            {quadInstruction("LT"); $$ = comparison($1,$3,"<");}
-                        | exp LEQ exp                           {quadInstruction("LEQ"); $$ = comparison($1,$3,"<=");}
+                        | exp EQ exp                            {quadInstruction("EQ");  $$ = comparison($1,$3,"==");  $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp NEQ exp                           {quadInstruction("NEQ"); $$ = comparison($1,$3,"!=");  $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp GT exp                            {quadInstruction("GT");  $$ = comparison($1,$3,">");   $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp GEQ exp                           {quadInstruction("GEQ"); $$ = comparison($1,$3,">=");  $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp LT exp                            {quadInstruction("LT");  $$ = comparison($1,$3,"<");   $$->isConst=(($1->isConst)&&($3->isConst));}
+                        | exp LEQ exp                           {quadInstruction("LEQ"); $$ = comparison($1,$3,"<=");  $$->isConst=(($1->isConst)&&($3->isConst));}
                         ;
-term   	                : NUMBER                                {quadPushInt($1); $$ = intNode(); $$->value.intVal = $1;  /*Pass value & type*/}
-                        | FLOAT_NUMBER                          {quadPushFloat($1); $$ = floatNode(); $$->value.floatVal = $1; /*Pass value & type*/}
-                        | TRUE_VAL                              {quadPushInt(1); $$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
-                        | FALSE_VAL                             {quadPushInt(0); $$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
-                        | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
-                        | STRING                                {quadPushString($1); $$ = stringNode(); $$->value.stringVal = strdup($1); /*Pass value & type*/}
+term   	                : NUMBER                                {quadPushInt($1); $$ = intNode(); $$->value.intVal = $1; $$->isConst=1;  /*Pass value & type*/}
+                        | FLOAT_NUMBER                          {quadPushFloat($1); $$ = floatNode(); $$->value.floatVal = $1; $$->isConst=1; /*Pass value & type*/}
+                        | TRUE_VAL                              {quadPushInt(1); $$ = boolNode();  $$->value.boolVal = 1; $$->isConst=1; /*Pass value & type*/}
+                        | FALSE_VAL                             {quadPushInt(0); $$ = boolNode();  $$->value.boolVal = 0; $$->isConst=1; /*Pass value & type*/}
+                        | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1); $$->isConst=0;/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+                        | STRING                                {quadPushString($1); $$ = stringNode(); $$->value.stringVal = strdup($1); $$->isConst=1; /*Pass value & type*/}
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
 /* Conditions */
 //======================
-ifCondition             : IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
+ifCondition             : IF '(' exp {checkConstIf($3);} ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
                         ;
 ElseCondition           : {;}
                         | ELSE '{'{enterScope();} codeBlock '}'{exitScope();} {;}
-                        | ELSE IF '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
+                        | ELSE IF '(' exp {checkConstIf($4);} ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
                         ;
 case                    : CASE exp ':' statements               {;}
                         | DEFAULT ':' statements                {;}
@@ -897,6 +903,13 @@ void checkConstant(char name) {
                 }
             }
         }
+    }
+}
+
+void checkConstIf(struct nodeType* exp)
+{
+    if(exp->isConst == 1){
+        Log_SEMANTIC_ERROR(CONSTANT_IF, exp->value.boolVal != 0);
     }
 }
 

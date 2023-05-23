@@ -27,8 +27,10 @@ mixed: build
 	./main < ./test/mixed.c > ./test/out/mixed.out
 custom: build
 	./main < ./test/custom.c > ./test/out/custom.out
+const_if: build
+	./main < ./test/const_if.c > ./test/out/const_if.out
 
-testAll: decleration operations conditions loops functions enum
+testAll: decleration operations conditions loops functions enum const_if
 	echo "All tests passed"
 
 	
