@@ -31,8 +31,10 @@ quads: build
 	./main < ./test/quads.c > ./test/out/quads.out
 const_if: build
 	./main < ./test/const_if.c > ./test/out/const_if.out
+conversions: build
+	./main < ./test/conversions.c > ./test/out/conversions.out
 
-testAll: decleration operations conditions loops functions enum const_if
+testAll: decleration operations conditions loops functions enum const_if conversions
 	echo "All tests passed"
 
 	

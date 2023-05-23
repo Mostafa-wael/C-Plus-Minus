@@ -104,6 +104,7 @@ struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op);
+struct nodeType* convertTo(struct nodeType* term, char *type);
 
 // Types
 //======================
@@ -306,6 +307,8 @@ assignment              : IDENTIFIER '=' exp                    {checkOutOfScope
                         ;
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {$$->isConst=0;}
+                        /* Conversion */
+                        | '(' dataType ')' term                 {$$ = convertTo($4, $2->type); $$->isConst = $4->isConst;} // TODO add quad instruction
                         /* Negation */
                         | '-' term                              {quadInstruction("NEG"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);    $$->isConst=$2->isConst;}
                         | '~' term                              {quadInstruction("COMPLEMENT"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE); $$->isConst=$2->isConst;}
@@ -802,6 +805,97 @@ struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op)
     }
     return p;
 }
+
+struct nodeType* convertTo(struct nodeType* term, char *type){
+
+    struct nodeType* p = malloc(sizeof(struct nodeType));
+
+
+    if(strcmp(type, "int") == 0){   // convert to int
+        p->type = "int";
+        if(strcmp(term->type, "float") == 0){
+            p->value.intVal = (int)term->value.floatVal;
+        }
+        else if(strcmp(term->type, "bool") == 0){
+            p->value.intVal = (int)term->value.boolVal;
+        }
+        else if(strcmp(term->type, "string") == 0){
+            // remove double quotes from start and end of string
+            char *str = strdup(term->value.stringVal);
+            str++;
+            str[strlen(str)-1] = '\0';
+            p->value.intVal = atoi(str);
+        }
+        else{
+            /* printf("Invalid type\n"); */
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    }
+    else if(strcmp(type, "float") == 0){  // convert to float
+        p->type = "float";
+        if(strcmp(term->type, "int") == 0){
+            p->value.floatVal = (float)term->value.intVal;
+        }
+        else if(strcmp(term->type, "bool") == 0){
+            p->value.floatVal = (float)term->value.boolVal;
+        }
+        else if(strcmp(term->type, "string") == 0){
+            // remove double quotes from start and end of string
+            char *str = strdup(term->value.stringVal);
+            str++;
+            str[strlen(str)-1] = '\0';
+            p->value.floatVal = atof(str);
+        }
+        else{
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    }
+    else if(strcmp(type, "bool") == 0){  // convert to bool
+        p->type = "bool";
+        if(strcmp(term->type, "int") == 0){
+            p->value.boolVal = (int)term->value.intVal!=0;
+        }
+        else if(strcmp(term->type, "float") == 0){
+            p->value.boolVal = (int)term->value.floatVal!=0;
+        }
+        else if(strcmp(term->type, "string") == 0){
+            // remove double quotes from start and end of string
+            char *str = strdup(term->value.stringVal);
+            str++;
+            str[strlen(str)-1] = '\0';
+            p->value.boolVal = str[0] != '\0';
+        }
+        else{
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    }
+    else if(strcmp(type, "string") == 0){ // convert to string
+        p->type = "string";
+        if(strcmp(term->type, "int") == 0){
+            char t[100];
+            sprintf(t, "%d", term->value.intVal);
+            p->value.stringVal = strdup(t);
+        }
+        else if(strcmp(term->type, "float") == 0){
+            char t[100];
+            sprintf(t, "%f", term->value.floatVal);
+            p->value.stringVal = strdup(t);
+        }
+        else if(strcmp(term->type, "bool") == 0){
+            char t[100];
+            sprintf(t, "%d", term->value.boolVal);
+            p->value.stringVal = strdup(t);
+        }
+        else{
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    } 
+
+
+    return p;
+}
+
+
 //------------------------------------------------------------------------------- 
 // Type checking functions 
 //-------------------------------------------------------------------------------  
