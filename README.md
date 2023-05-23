@@ -378,6 +378,7 @@ enum Color{
 ----------------|-------------------------------------------------------------------|-----------------|-----------------|-----------------|
  **PUSH**       | Push to the stack frame                                           | Identifier/Expr |                 |                 |
  **POP**        | Pop from the stack frame                                          | Identifier/Expr |                 |                 |
+ **CAST**       | Cast the type of the var on the top of the stack to the type of the var to be pop into  |  |                 |                 |
 
 ### Branching & Jumps
 

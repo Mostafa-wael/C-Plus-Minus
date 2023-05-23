@@ -15,7 +15,7 @@ extern int yyleng;
 
 // Quadruples
 //======================
-#define SHOW_Quads 0
+#define SHOW_Quads 1
 void quadPopIdentifier(char symbol);
 void quadInstruction(const char* instruction);
 void quadPushInt(int val);
@@ -343,7 +343,7 @@ assignment              : IDENTIFIER '=' exp                    {checkOutOfScope
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {$$->isConst=0;}
                         /* Conversion */
-                        | '(' dataType ')' term                 {$$ = convertTo($4, $2->type); $$->isConst = $4->isConst;} // TODO add quad instruction
+                        | '(' dataType ')' term                 {quadInstruction("CAST");$$ = convertTo($4, $2->type); $$->isConst = $4->isConst;} // TODO add quad instruction
                         /* Negation */
                         | '-' term                              {quadInstruction("NEG"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);    $$->isConst=$2->isConst;}
                         | '~' term                              {quadInstruction("COMPLEMENT"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE); $$->isConst=$2->isConst;}
