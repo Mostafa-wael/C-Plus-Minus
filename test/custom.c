@@ -1,4 +1,7 @@
 
+float x = 5.5;
+int i = (int) x;
+print(i);
 int x(int a, int b, bool d, float f)
 {
     int y = 7;
