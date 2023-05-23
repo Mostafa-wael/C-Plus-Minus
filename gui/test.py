@@ -4,8 +4,8 @@ from PyQt5.QtGui import QFont, QColor, QTextCharFormat, QSyntaxHighlighter
 from PyQt5.QtCore import Qt, QRegExp
 
 class CCodeHighlighter(QSyntaxHighlighter):
-    def _init_(self, parent=None):
-        super(CCodeHighlighter, self)._init_(parent)
+    def __init__(self, parent=None):
+        super(CCodeHighlighter, self).__init__(parent)
         
         # Define the C keywords
         self.keywords = [
@@ -92,8 +92,8 @@ class CCodeHighlighter(QSyntaxHighlighter):
 
 
 class CodeEditor(QPlainTextEdit):
-    def _init_(self, parent=None):
-        super(CodeEditor, self)._init_(parent)
+    def __init__(self, parent=None):
+        super(CodeEditor, self).__init__(parent)
         
         # Set the font and tab stop width
         font = QFont('Courier New')
