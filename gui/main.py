@@ -2,8 +2,8 @@
 import sys
 import re
 import os
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QTextCursor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QColor
+from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtGui import QFont, QTextCursor, QKeySequence, QSyntaxHighlighter, QTextCharFormat, QColor, QPixmap
 from PyQt5.QtWidgets import QLabel, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit, QPlainTextEdit, QWidget, QShortcut, QFileDialog, QPushButton, QTextBrowser, QTableWidget, QTableWidgetItem, QAbstractItemView
 
 
@@ -42,14 +42,14 @@ class MainWindow(QWidget):
         self.save_current_file_shortcut.activated.connect(self.save_current_file)
 
         self.style_layout()
-        self.highlighter = SyntaxHighlighter(self.code_text_editor.document())
+        self.highlighter = CCodeHighlighter(self.code_text_editor.document())
         self.remove_highlight_button.clicked.connect(lambda: self.highlighter.clear_highlight())
 
         # Make the window full screen
         self.showMaximized()
 
         # Change the title of the window
-        self.setWindowTitle("C Compiler")
+        self.setWindowTitle("C+- Compiler")
 
         # Change the background color of the window
         # self.setStyleSheet("background-color: #FFFFFF;")
@@ -72,12 +72,26 @@ class MainWindow(QWidget):
         right_half_layout.addLayout(quads_layout)
         right_half_layout.addLayout(symbol_table_layout, 1)
 
+        center_app_layout = self.create_center_area()
+
         app_layout = QHBoxLayout()
         app_layout.addLayout(left_half_app_layout)
-        app_layout.addLayout(right_half_layout, 1)
+        app_layout.addWidget(center_app_layout, 1)
+        app_layout.addLayout(right_half_layout, 2)
 
         self.setLayout(app_layout)
 
+    def create_center_area(self):
+        label = QLabel("Cover")
+        pixmap = QPixmap('cover.png')
+        pixmap = pixmap.scaledToHeight(400)
+        pixmap = pixmap.scaledToWidth(250)
+        label.setPixmap(pixmap)
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        # label.setAlignment(Qt.AlignCenter)
+        label.setContentsMargins(40, 250, 0, 0)
+        return label
 
     def create_code_area(self):
         # Create title widget
@@ -101,9 +115,6 @@ class MainWindow(QWidget):
         self.code_text_editor = CodeEditor()
         self.code_text_editor.setFont(QFont(CODE_FONT_FAMILY, TEXT_EDITOR_FONT_SIZE))
         self.code_text_editor.setStyleSheet(f"color: {CODE_COLOR};")
-
-        # Make the text editor scrollable
-        # self.code_text_editor.setLineWrapMode(QTextEdit.NoWrap)
         
         # Change the size of the text editor
         self.code_text_editor.setFixedWidth(TEXT_EDITOR_WIDTH)
@@ -213,7 +224,7 @@ class MainWindow(QWidget):
     def create_symbol_table_area(self):
         text_editor_title = QLabel("Symbol Table")
         text_editor_title.setStyleSheet(TITLE_STYLE_SHEET)
-        text_editor_title.setContentsMargins(630, 170, 0, 0)
+        text_editor_title.setContentsMargins(330, 170, 0, 0)
 
         self.symbol_table = QTableWidget()
         self.symbol_table.setStyleSheet(f"color: {CODE_COLOR};")
@@ -383,7 +394,6 @@ class MainWindow(QWidget):
 
 
     def line_widget_line_count_changed(self):
-        self.code_text_editor.setFontPointSize(TEXT_EDITOR_FONT_SIZE)
         if self.line_widget:
             n = int(self.code_text_editor.document().lineCount())
             self.line_widget.changeLineCount(n)
@@ -402,10 +412,9 @@ class MainWindow(QWidget):
             new_file_path, _ = QFileDialog.getSaveFileName(self, "Save file as", "", "*.c")
             if new_file_path:
                 self.file_path = new_file_path
-
-        file_contents = self.code_text_editor.toPlainText()
-        with open(self.file_path, "w") as f:
-            f.write(file_contents)
+                file_contents = self.code_text_editor.toPlainText()
+                with open(self.file_path, "w") as f:
+                    f.write(file_contents)
 
 
 class LineNumberWidget(QTextBrowser):
@@ -476,43 +485,21 @@ class LineNumberWidget(QTextBrowser):
         self.setFixedWidth(self.__size*5)
 
 
-class SyntaxHighlighter(QSyntaxHighlighter):
-    def __init__(self, parent):
-        super(SyntaxHighlighter, self).__init__(parent)
-        self.highlight_lines = dict()
-
-    def highlight_line(self, line, fmt):
-        if isinstance(line, int) and line >= 0 and isinstance(fmt, QTextCharFormat):
-            self.highlight_lines[line] = fmt
-            tb = self.document().findBlockByLineNumber(line)
-            self.rehighlightBlock(tb)
-
-    def clear_highlight(self):
-        self.highlight_lines = dict()
-        self.rehighlight()
-
-    def highlightBlock(self, text):
-        line = self.currentBlock().blockNumber()
-        fmt = self.highlight_lines.get(line)
-        if fmt is not None:
-            self.setFormat(0, len(text), fmt)
-
-
 class CCodeHighlighter(QSyntaxHighlighter):
-    def _init_(self, parent=None):
-        super(CCodeHighlighter, self)._init_(parent)
+    def __init__(self, parent=None):
+        super(CCodeHighlighter, self).__init__(parent)
         
         # Define the C keywords
         self.keywords = [
             'auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extern',
             'float', 'for', 'goto', 'if', 'int', 'long', 'register', 'return', 'short', 'signed', 'sizeof', 'static',
-            'struct', 'switch', 'typedef', 'union', 'unsigned', 'void', 'volatile', 'while'
+            'struct', 'switch', 'typedef', 'union', 'unsigned', 'void', 'volatile', 'while', 'print'
         ]
         
         # Define the C operators
         self.operators = [
             '+', '-', '*', '/', '%', '++', '--', '==', '!=', '>', '<', '>=', '<=', '&&', '||', '!', '&', '|', '^',
-            '~', '<<', '>>', '=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '&=', '|=', '^=', '->', '.'
+            '~', '<<', '>>', '=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '&=', '|=', '^=', '->', '.', '{', '}'
         ]
         
         # Define the C types
@@ -576,6 +563,8 @@ class CCodeHighlighter(QSyntaxHighlighter):
         self.rules.append((QRegExp('/\\*'), self.commentFormat))
         self.rules.append((QRegExp('\\*/'), self.commentFormat))
 
+        self.highlight_lines = dict()
+
     def highlightBlock(self, text):
         for pattern, format in self.rules:
             expression = QRegExp(pattern)
@@ -585,10 +574,25 @@ class CCodeHighlighter(QSyntaxHighlighter):
                 self.setFormat(index, length, format)
                 index = expression.indexIn(text, index + length)
 
+        line = self.currentBlock().blockNumber()
+        fmt = self.highlight_lines.get(line)
+        if fmt is not None:
+            self.setFormat(0, len(text), fmt)
+
+    def highlight_line(self, line, fmt):
+        if isinstance(line, int) and line >= 0 and isinstance(fmt, QTextCharFormat):
+            self.highlight_lines[line] = fmt
+            tb = self.document().findBlockByLineNumber(line)
+            self.rehighlightBlock(tb)
+
+    def clear_highlight(self):
+        self.highlight_lines = dict()
+        self.rehighlight()
+
 
 class CodeEditor(QPlainTextEdit):
-    def _init_(self, parent=None):
-        super(CodeEditor, self)._init_(parent)
+    def __init__(self, parent=None):
+        super(CodeEditor, self).__init__(parent)
         
         # Set the font and tab stop width
         font = QFont('Courier New')
@@ -602,7 +606,6 @@ class CodeEditor(QPlainTextEdit):
         
         # Syntax highlighting
         self.highlighter = CCodeHighlighter(self.document())
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
