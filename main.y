@@ -284,8 +284,7 @@ declaration             : dataType IDENTIFIER 		        {checkSameScope($2);
                         ;
 assignment              : IDENTIFIER '=' exp                    {checkOutOfScope($1); checkConstant($1); 
                                                                 typeCheck2($1, $3); setUsed($1); updateSymbolVal($1,$3); $$ = $3; setInit($1); quadPop($1);}
-                        | IDENTIFIER '=' STRING                 {checkOutOfScope($1);  checkConstant($1); 
-                                                                /*Const, Decl, Type checks*/ /*Set Used*/ updateSymbolVal($1,atoi($3)); setInit($1); quadPop($1);}
+
                         | enumDef                               {;}             //
                         | dataType enumDeclaration              {/*Check declared*/;}
                         ;
@@ -323,6 +322,7 @@ term   	                : NUMBER                                {quadPushInt($1)
                         | TRUE_VAL                              {quadPushInt(1); $$ = boolNode();  $$->value.boolVal = 1;/*Pass value & type*/}
                         | FALSE_VAL                             {quadPushInt(0); $$ = boolNode();  $$->value.boolVal = 0;/*Pass value & type*/}
                         | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+                        | STRING                                {quadPushString($1); $$ = stringNode(); $$->value.stringVal = strdup($1); /*Pass value & type*/}
                         | '(' exp ')'                           {$$ = $2;}
                         ;
 //======================
@@ -415,6 +415,12 @@ void quadPushIdentifier(char symbol)
 {
        if (SHOW_Quads) {
                printf("Quads() push %c\n", symbol);
+       }
+}
+void quadPushString(char* str)
+{
+       if (SHOW_Quads) {
+               printf("Quads() push %s\n", str);
        }
 }
 void quadPop(char symbol)

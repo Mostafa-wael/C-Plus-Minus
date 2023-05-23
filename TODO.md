@@ -63,9 +63,9 @@ line of each error
 - enums (and the inside of enums to symbol table).
 - The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
 - Warning in case of if statement whose condition is always false.
-- strings
 - function parameters
 - fix types inside symbol table
+- make sure of all declarations, initializations, is used, consts
 
 ## GUI
 
@@ -74,3 +74,4 @@ line of each error
 
 Done:
 [x] functions without parameters -> change functionCall to Node_type & $$ = val($1)
+[x] fix strings

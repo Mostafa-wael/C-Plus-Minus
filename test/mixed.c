@@ -253,7 +253,7 @@
     //     Color c2 = RED;
     //     Color c3 = 3 + 5;
     // }
-    // string a = "hi";
+    string a = "hi";
     // int b = 5;
     // print(true);
     // print(b);
