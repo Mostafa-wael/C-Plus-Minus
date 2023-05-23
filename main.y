@@ -1260,7 +1260,7 @@ int main (void) {
     
         enumVal = intNode();
         
-        yyparse ( );  
+        yyparse ();  
         checkUsage();
         printSymbolTable();
 
@@ -1268,10 +1268,9 @@ int main (void) {
 }
 
 
-/* void yyerror (char *s) {printf ("%s at line %d\n", s, line-1);}  */
 void yyerror(char* s) {
-    printf("Syntax error (%d) Near line %d.\n", line, line);
-    fprintf(stderr, "Syntax error (%d) Near line %d.\n", line, line);
+    printf("Syntax error (%d) Near line %d: %s\n", line, line, s);
+    fprintf(stderr, "Syntax error (%d) Near line %d: %s\n", line, line, s);
     printSymbolTable();
     exit(EXIT_FAILURE);
 }
