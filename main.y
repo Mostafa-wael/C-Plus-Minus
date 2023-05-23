@@ -437,62 +437,62 @@ enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkOutOfScope
 void quadStartFunction(char function) // TODO: make it string isnetad of char
 {
         if (SHOW_Quads) {
-                printf("Quads() function %c\n", function);
+                printf("Quads(%d) \tPROC %c\n", line, function);
         }
 }
 void quadEndFunction(char function)
 {
         if (SHOW_Quads) {
-                printf("Quads() end function %c\n", function);
+                printf("Quads(%d) \tEND PROC %c\n", line, function);
         }
 }
 void quadCallFunction(char function)
 {
         if (SHOW_Quads) {
-                printf("Quads() call function %c\n", function);
+                printf("Quads(%d) \tCALL function %c\n", line, function);
         }
 }
 void quadReturn()
 {
         if (SHOW_Quads) {
-                printf("Quads() return\n");
+                printf("Quads(%d) \tRET\n", line);
         }
 }
 void quadInstruction(const char* instruction)
 {
         if (SHOW_Quads) {
                
-                printf("Quads() %s\n", instruction);
+                printf("Quads(%d) \t%s\n", line, instruction);
         }
 }
 void quadPushInt(int val)
 {
        if (SHOW_Quads) {
-               printf("Quads() push %d\n", val);
+               printf("Quads(%d) \tPUSH %d\n", line, val);
        }
 }
 void quadPushFloat(float val)
 {
        if (SHOW_Quads) {
-               printf("Quads() push %f\n", val);
+               printf("Quads(%d) \tPUSH %f\n", line, val);
        }
 }
 void quadPushIdentifier(char symbol)
 {
        if (SHOW_Quads) {
-               printf("Quads() push %c\n", symbol);
+               printf("Quads(%d) \tPUSH %c\n", line, symbol);
        }
 }
 void quadPushString(char* str)
 {
        if (SHOW_Quads) {
-               printf("Quads() push %s\n", str);
+               printf("Quads(%d) \tPUSH %s\n", line, str);
        }
 }
 void quadPopIdentifier(char symbol)
 {
        if (SHOW_Quads) {
-            printf("Quads() pop %c\n\n", symbol);
+            printf("Quads(%d) \tPOP %c\n\n", line, symbol);
        }
 }
 void quadPushEndLabel(int endLabelNum)
@@ -507,37 +507,37 @@ void quadJumpEndLabel() // jump to the first end label in the stack
       if (SHOW_Quads) {
         /* get last  endLabelNum from the stack*/
         int endLabelNum = endLabelStack[endLabelstackPointer];
-        printf("Quads() JMP EndLabel_%d\n", endLabelNum);
+        printf("Quads(%d) \tJMP EndLabel_%d\n", line, endLabelNum);
        }
 }
 void quadPopEndLabel(){
         if (endLabelstackPointer < 0){
-            printf("Quads() Error: No end label to add. Segmenration Fault\n");
+            printf("Quads(%d) Error: No end label to add. Segmenration Fault\n", line);
             return;
         }
         /* get the last endLabelNum from the stack */
         int endLabelNum = endLabelStack[endLabelstackPointer--];
         if (SHOW_Quads) {
-                printf("Quads() EndLabel_%d\n", endLabelNum);
+                printf("Quads(%d) EndLabel_%d\n", line, endLabelNum);
         }
 }
 void quadJumpFalseLabel(int labelNum)
 {
        if (SHOW_Quads) {
-               printf("Quads() JF Label_%d\n", labelNum);
+               printf("Quads(%d) \tJF Label_%d\n", line, labelNum);
                /* push the labelNum to the stack */
                 labelStack[labelStackPointer++] = labelNum;
        }
 }
 void quadPopLabel(){
         if (labelStackPointer < 0){
-            printf("Quads() Error: No end label to add. Segmenration Fault\n");
+            printf("Quads(%d) Error: No end label to add. Segmenration Fault\n", line);
             return;
         }
         /* get the last labelNum from the stack */
         int labelNum = labelStack[--labelStackPointer];
         if (SHOW_Quads) {
-                printf("Quads() Label_%d\n", labelNum);
+                printf("Quads(%d) Label_%d\n",line, labelNum);
         }
 }
 void quadPushLastIdentifierStack(char identifier){
@@ -548,18 +548,18 @@ void quadPushLastIdentifierStack(char identifier){
 }
 void quadPeakLastIdentifierStack(){
     if (lastIdentifierStackPointer < 0){
-        printf("Quads() Error: No last identifier to peak. Segmenration Fault\n");
+        printf("Quads(%d) Error: No last identifier to peak. Segmenration Fault\n", line);
         return;
     }
     /* get the last identifier from the stack */
     char identifier = lastIdentifierStack[lastIdentifierStackPointer];
     if (SHOW_Quads) {
-            printf("Quads() push %c\n", identifier);
+            printf("Quads(%d) \tPUSH %c\n", line, identifier);
     }
 }
 void quadPopLastIdentifierStack(){
     if (lastIdentifierStackPointer < 0){
-        printf("Quads() Error: No last identifier to pop. Segmenration Fault\n");
+        printf("Quads(%d) Error: No last identifier to pop. Segmenration Fault\n", line);
         return;
     }
     /* get the last IDENTIFIER from the stack */
@@ -572,7 +572,7 @@ void quadPushStartLabel(int startLabelNum){
             /* push the labelNum to the stack */
             startLabelStack[++startLabelstackPointer] = startLabelNum;
             if (SHOW_Quads) {
-                printf("Quads() StartLabel_%d\n", startLabelNum);
+                printf("Quads(%d) StartLabel_%d\n", line, startLabelNum);
             }
         }
 }
@@ -580,12 +580,12 @@ void quadJumpStartLabel(){
         if (SHOW_Quads) {
         /* get last  startLabelNum from the stack*/
         int startLabelNum = startLabelStack[startLabelstackPointer];
-        printf("Quads() JMP StartLabel_%d\n", startLabelNum);
+        printf("Quads(%d) \tJMP StartLabel_%d\n", line, startLabelNum);
        }
 }
 void quadPopStartLabel(){
     if (startLabelstackPointer < 0){
-            printf("Quads() Error: No start label to add. Segmenration Fault\n");
+            printf("Quads(%d) Error: No start label to add. Segmenration Fault\n", line);
             return;
         }
     /* get the last endLabelNum from the stack */
