@@ -1,15 +1,26 @@
 print("enums");
+
 enum W
 {
+    H,
     R = 10,
     G,
-    B = 12,
-    R
+    B = 50,
+    K
 };
-print(0);
+
+int W x = K;
+print(x);
+
 {
-    int C r;
+    int C r = 1;
     int C t = 10;
     int C v = 3 + 5;
 }
-exit;
+
+{
+    int C;
+    int C r = 1;
+    int C t = 10;
+    int C v = 3 + 5;
+}

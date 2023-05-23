@@ -21,6 +21,7 @@ void quadInstruction(const char* instruction);
 void quadPushInt(int val);
 void quadPushFloat(float val);
 void quadPushIdentifier(char symbol);
+void quadPushString(char* str);
 void quadJF(int labelNum);
 void quadAddStartLabel(int labelNum);
 void quadAddEndLabel();
@@ -82,7 +83,7 @@ void Log_SEMANTIC_ERROR(int semanticError, char var)
 char buffer[500];
 
 int scope_idx = 1;
-int scope_cnt = 0;
+int scope_cnt = 1;
 int scopes[100];
 
 // Scope functions
@@ -115,6 +116,10 @@ struct nodeType* intNode();
 struct nodeType* floatNode();
 struct nodeType* boolNode();
 struct nodeType* stringNode();
+struct nodeType* enumNode();
+
+// used to fill enum values
+struct nodeType* enumVal;
 
 void typeCheck(struct nodeType* type1, struct nodeType* type2);
 void checkConstant(char name);
@@ -378,16 +383,15 @@ functionCall            : IDENTIFIER '(' functionParams ')'     {checkOutOfScope
 //======================
 /* Enumerations */
 //======================
-enumDef	                : ENUM IDENTIFIER {checkSameScope($2); insert($2, "enum", 0, 0, 0, scopes[scope_idx-1]);} 
-                        '{'{enterScope();} enumBody '}'{exitScope();}
+enumDef	                : ENUM IDENTIFIER {checkSameScope($2); insert($2, "enum", 1, 1, 0, scopes[scope_idx-1]);} '{' enumBody '}'
                         ;
-enumBody		        : IDENTIFIER                            {;}
-                        | IDENTIFIER '=' exp                    {;}
-                        | enumBody ',' IDENTIFIER               {;}
-                        | enumBody ',' IDENTIFIER '=' exp       {;}
+enumBody		        : IDENTIFIER                            {checkSameScope($1); insert($1, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = 0; updateSymbolVal($1, enumVal);}
+                        | IDENTIFIER '=' exp                    {checkSameScope($1); typeCheck(enumVal, $3); insert($1, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = $3->value.intVal; updateSymbolVal($1, enumVal);}
+                        | enumBody ',' IDENTIFIER               {checkSameScope($3); insert($3, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal++; updateSymbolVal($3, enumVal);}
+                        | enumBody ',' IDENTIFIER '=' exp       {checkSameScope($3); typeCheck(enumVal, $5); insert($3, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = $5->value.intVal; updateSymbolVal($3, enumVal);}
                         ;
-enumDeclaration         : IDENTIFIER IDENTIFIER                 {;}
-                        | IDENTIFIER IDENTIFIER '=' exp         {;}
+enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkOutOfScope($1); typeCheck2($1,enumNode()); checkSameScope($2); insert($2, "int", 0, 0, 0, scopes[scope_idx-1]);}
+                        | IDENTIFIER IDENTIFIER '=' exp         {checkOutOfScope($1); typeCheck2($1,enumNode()); checkSameScope($2); insert($2, "int", 0, 1, 0, scopes[scope_idx-1]); typeCheck($4,intNode()); updateSymbolVal($2,$4);}
                         ;
 
 //======================
@@ -779,6 +783,13 @@ struct nodeType* stringNode() {
     return p;
 }
 
+struct nodeType* enumNode() {
+    struct nodeType* p = malloc(sizeof(struct nodeType));;
+    p->type = "enum";
+    p->value.intVal = 0;
+    return p;
+}
+
 void typeCheck(struct nodeType* type1, struct nodeType* type2) {
     if(strcmp(type1->type, type2->type) != 0) {
         /* printf("Type Error\n"); //To-Do: */
@@ -968,6 +979,8 @@ int main (void) {
 
         /* init symbol table */
     
+        enumVal = intNode();
+        
         yyparse ( );  
         checkUsage();
         printSymbolTable();

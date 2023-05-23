@@ -59,7 +59,6 @@ line of each error
 
 ## Errors
 
-- enums (and the inside of enums to symbol table).
 - The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
 - function parameters
 
@@ -67,6 +66,8 @@ line of each error
 - fix types inside symbol table
 - make sure of all declarations, initializations, is used, consts
 - fix symbol table printing for different types (string....)
+- tell wael about quadPushString()
+- return a+b; not working??!!!!
 
 ## GUI
 
@@ -77,4 +78,5 @@ Done:
 [x] functions without parameters -> change functionCall to Node_type & $$ = val($1)
 [x] fix strings
 [x] Warning in case of if statement whose condition is always false/true.
+[x] enums (and the inside of enums to symbol table).
 
