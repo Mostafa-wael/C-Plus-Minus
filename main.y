@@ -24,8 +24,6 @@ void quadPushIdentifier(char symbol);
 void quadPushString(char* str);
 
 
-
-
 void quadJumpFalseLabel(int labelNum);
 void quadPopLabel();
 
@@ -41,6 +39,13 @@ int labelStack[MAX_STACK_SIZE];
 int endLabelNum = 0;
 int endLabelstackPointer = -1;
 int endLabelStack[MAX_STACK_SIZE];
+
+void quadPushLastIdentifierStack(char identifier);
+void quadPeakLastIdentifierStack();
+void quadPopLastIdentifierStack();
+
+int lastIdentifierStackPointer = -1;
+char lastIdentifierStack[MAX_STACK_SIZE];
 // Semantic Erros
 //======================
 #define SHOW_SEMANTIC_ERROR 1
@@ -270,16 +275,16 @@ controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadPo
                         | whileLoop
                         | forLoop
                         | repeatUntilLoop
-                        | switchCaseLoop
+                        | {quadPushEndLabel(++endLabelNum);} switchCaseLoop {quadPopEndLabel();}
                         ;      
                                                  
 statement               : assignment 		                {;}
                         | exp                                   {;}
                         | declaration 		                {;}
                         | EXIT 		                        {exit(EXIT_SUCCESS);}
-                        | BREAK 		                {;}
-                        | CONTINUE 		                {;}
-                        | RETURN 		                {;}
+                        | BREAK 		                    {quadJumpEndLabel();}
+                        | CONTINUE 		                    {;}
+                        | RETURN 		                    {;}
                         | RETURN exp 		                {;}
                         | PRINT '(' IDENTIFIER ')' 		    {printNode(symbolVal($3)); setUsed($3);}
                         | PRINT '(' exp ')' 		        {printNode($3);}
@@ -354,13 +359,13 @@ ElseCondition           : {;}
                         | ELSE {;} ifCondition {;}
                         | ELSE {;}'{'{enterScope();} codeBlock '}'{exitScope();} {;}
                         ;
-case                    : CASE exp ':' statements               {;}
+case                    : CASE exp {quadPeakLastIdentifierStack(); quadJumpFalseLabel(++labelNum);} ':' statements {quadPopLabel();}
                         | DEFAULT ':' statements                {;}
                         ;
 caseList                : caseList case
                         | case
                         ;
-switchCaseLoop          : SWITCH '(' exp ')' '{'{enterScope();} caseList '}'{exitScope();}   {;}
+switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack($3);} '{'{enterScope();} caseList '}'{exitScope();}   {quadPopLastIdentifierStack();}
                         ;
 //======================
 /* Loops */
@@ -493,6 +498,35 @@ void quadPopLabel(){
                 printf("Quads() Label_%d\n", labelNum);
         }
 }
+void quadPushLastIdentifierStack(char identifier){
+        if (SHOW_Quads) {
+            /* add the IDENTIFIER to the stack */
+            lastIdentifierStack[++lastIdentifierStackPointer] = identifier;
+        }
+}
+void quadPeakLastIdentifierStack(){
+    if (lastIdentifierStackPointer < 0){
+        printf("Quads() Error: No last identifier to peak. Segmenration Fault\n");
+        return;
+    }
+    /* get the last identifier from the stack */
+    char identifier = lastIdentifierStack[lastIdentifierStackPointer];
+    if (SHOW_Quads) {
+            printf("Quads() push %c\n", identifier);
+    }
+}
+void quadPopLastIdentifierStack(){
+    if (lastIdentifierStackPointer < 0){
+        printf("Quads() Error: No last identifier to pop. Segmenration Fault\n");
+        return;
+    }
+    /* get the last IDENTIFIER from the stack */
+    char identifier = lastIdentifierStack[lastIdentifierStackPointer--];
+}
+
+//======================
+// Symbol table functions
+//======================
 int sym_table_idx = 0;
 
 /* C code */
@@ -509,10 +543,6 @@ int computeSymbolIndex(char token){
         }
     }
 } 
-
-//======================
-// Symbol table functions
-//======================
 void insert(char name, char* type, int isConst, int isInit, int isUsed, int scope){
 
     symbol_Table [sym_table_idx].name = name;
