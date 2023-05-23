@@ -62,12 +62,11 @@ line of each error
 
 - function parameters
 
+- return a+b; not working??!!!!
 - check todos in code
 - fix types inside symbol table
 - make sure of all declarations, initializations, is used, consts
 - fix symbol table printing for different types (string....)
-- tell wael about quadPushString()
-- return a+b; not working??!!!!
 
 ## GUI
 
@@ -77,5 +76,5 @@ Done:
 [x] Warning in case of if statement whose condition is always false/true.
 [x] enums (and the inside of enums to symbol table).
 [x] The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
-- Test cases.
-- line by line
+[x] Test cases.
+[x] line by line
