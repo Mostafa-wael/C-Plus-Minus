@@ -1,8 +1,10 @@
-# Compilers Project
+# C Plus Minus
+
+![logo](image/logo.png)
 
 ## Table of Contents
 
-- [Compilers Project](#compilers-project)
+- [C Plus Minus](#c-plus-minus)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Run Steps](#run-steps)
