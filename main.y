@@ -163,12 +163,13 @@ struct nodeType* enumNode();
 struct nodeType* enumVal;
 
 void typeCheck(struct nodeType* type1, struct nodeType* type2);
+void typeCheck3(char* type1, char* type2);
 void checkConstant(char name);
 void checkInitialization(char name);
-int checkDeclaration(char name);
+int  checkDeclaration(char name);
 void checkUsage();
 void checkConstIf(struct nodeType* exp);
-int isConstVar(char name);
+int  isConstVar(char name);
 
 void setConst(char name);
 void setInit(char name);
@@ -195,7 +196,7 @@ struct nodeType* symbolVal(char symbol); // returns the value of a given symbol
 void updateSymbolName(char symbol, char newName);
 void updateSymbolVal(char symbol, struct nodeType* val); // updates the value of a given symbol
 void updateSymbolParam(char symbol, int param);
-int getSymbolindex(char name);
+int getSymbolIndex(char name);
 void checkSameScope(char name);
 void checkOutOfScope(char name);
 
@@ -412,8 +413,8 @@ repeatUntilLoop         : REPEAT '{'{enterScope();} codeBlock '}'{exitScope();} 
 functionArgs            : dataType IDENTIFIER                   {quadPopIdentifier($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]) ; argCount = sym_table_idx-argCount; printf("argCount: %d\n", argCount);}
                         | dataType IDENTIFIER  {quadPopIdentifier($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]) ;} ',' functionArgs
                         ;
-functionParams          : term   {printf("argCount: %d\n", $1);}
-                        | term   {printf("argCount: %d\n", $1);} ',' functionParams
+functionParams          : term   {typeCheck3($1->type, symbol_Table[++funcPointer].type); paramCount--;}
+                        | term   {typeCheck3($1->type, symbol_Table[++funcPointer].type); paramCount--;} ',' functionParams
                         ;
 functionDef             : dataType IDENTIFIER {quadStartFunction($2);} {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); argCount = sym_table_idx; printf("argCount: %d\n", argCount);} 
                         {enterScope();} functionDefRest '{'codeBlock '}' {exitScope(); quadEndFunction($2); updateSymbolParam($2, argCount);}
@@ -421,7 +422,7 @@ functionDef             : dataType IDENTIFIER {quadStartFunction($2);} {checkSam
 functionDefRest         : '(' functionArgs ')' 
                         | '('              ')' 
                         ;
-functionCall            : IDENTIFIER { paramCount = symbolVal($1)->value.intVal; } functionCallRest {checkOutOfScope($1); $$ = symbolVal($1); quadCallFunction($1);}
+functionCall            : IDENTIFIER { paramCount = symbolVal($1)->value.intVal; funcPointer = getSymbolIndex($1); } functionCallRest {checkOutOfScope($1); $$ = symbolVal($1); quadCallFunction($1); if(paramCount != 0){Log_SEMANTIC_ERROR(UNDECLARED, $1);}}
                         ;
 functionCallRest        : '(' functionParams ')'             {;}
                         | '('              ')'               {;}
@@ -1098,6 +1099,13 @@ void typeCheck2(char symbol, struct nodeType* type2) {
     return;
 }
 
+void typeCheck3(char* type1, char* type2){
+    if(strcmp(type1, type2) != 0) {
+        /* printf("Type Error\n"); //To-Do: */
+        Log_SEMANTIC_ERROR(TYPE_MISMATCH, type2); // TODO
+    }
+    return;
+}
 // ------------------------------------------------------------------------------- 
 // checking functions 
 // -------------------------------------------------------------------------------  
