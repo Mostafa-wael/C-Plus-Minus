@@ -26,6 +26,8 @@
     - [Bitwise Operations](#bitwise-operations)
     - [Logical Operations](#logical-operations)
   - [Production Rules](#production-rules)
+  - [Semantic Errors](#semantic-errors)
+  - [Semantic Errors](#semantic-errors-1)
   - [Desktop Application](#desktop-application)
 
 ## Introduction
@@ -479,6 +481,18 @@ enum Color{
    <br>
    <li>enumDeclaration → IDENTIFIER IDENTIFIER | IDENTIFIER IDENTIFIER = exp</li>
 </ul>
+
+## Semantic Errors
+
+Semantic Errors         
+-------------------
+ **TYPE_MISMATCH** 
+ **UNDECLARED**    
+ **UNINITIALIZED** 
+ **UNUSED**        
+ **REDECLARED**    
+ **CONSTANT**      
+ **OUT_OF_SCOPE**
 
 
 ## Desktop Application
