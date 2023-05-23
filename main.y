@@ -24,6 +24,9 @@ void quadPushIdentifier(char symbol);
 void quadPushString(char* str);
 void quadStartFunction(char function);
 void quadEndFunction(char function);
+void quadStartEnum(char enumName);
+void quadEndEnum(char enumName);
+int enumCounter = 0;
 void quadCallFunction(char function);
 void quadReturn();
 void quadJumpFalseLabel(int labelNum);
@@ -415,12 +418,12 @@ functionCallRest        : '(' functionParams ')'             {;}
 //======================
 /* Enumerations */
 //======================
-enumDef	                : ENUM IDENTIFIER {checkSameScope($2); insert($2, "enum", 1, 1, 0, scopes[scope_idx-1]);} '{' enumBody '}'
+enumDef	                : ENUM IDENTIFIER {quadStartEnum($2);checkSameScope($2); insert($2, "enum", 1, 1, 0, scopes[scope_idx-1]);} '{' enumBody '}' {quadEndEnum($2); enumCounter=0;}
                         ;
-enumBody		        : IDENTIFIER                            {checkSameScope($1); insert($1, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = 0; updateSymbolVal($1, enumVal);}
-                        | IDENTIFIER '=' exp                    {checkSameScope($1); typeCheck(enumVal, $3); insert($1, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = $3->value.intVal; updateSymbolVal($1, enumVal);}
-                        | enumBody ',' IDENTIFIER               {checkSameScope($3); insert($3, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal++; updateSymbolVal($3, enumVal);}
-                        | enumBody ',' IDENTIFIER '=' exp       {checkSameScope($3); typeCheck(enumVal, $5); insert($3, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = $5->value.intVal; updateSymbolVal($3, enumVal);}
+enumBody		        : IDENTIFIER                            {checkSameScope($1); insert($1, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = 0; updateSymbolVal($1, enumVal); quadPushInt(++enumCounter); quadPopIdentifier($1);}
+                        | IDENTIFIER '=' exp                    {checkSameScope($1); typeCheck(enumVal, $3); insert($1, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = $3->value.intVal; updateSymbolVal($1, enumVal);quadPopIdentifier($1);}
+                        | enumBody ',' IDENTIFIER               {checkSameScope($3); insert($3, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal++; updateSymbolVal($3, enumVal);quadPushInt(++enumCounter);quadPopIdentifier($3);}
+                        | enumBody ',' IDENTIFIER '=' exp       {checkSameScope($3); typeCheck(enumVal, $5); insert($3, "int", 1, 1, 0, scopes[scope_idx-1]); enumVal->value.intVal = $5->value.intVal; updateSymbolVal($3, enumVal);quadPopIdentifier($3);}
                         ;
 enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkOutOfScope($1); typeCheck2($1,enumNode()); checkSameScope($2); insert($2, "int", 0, 0, 0, scopes[scope_idx-1]);}
                         | IDENTIFIER IDENTIFIER '=' exp         {checkOutOfScope($1); typeCheck2($1,enumNode()); checkSameScope($2); insert($2, "int", 0, 1, 0, scopes[scope_idx-1]); typeCheck($4,intNode()); updateSymbolVal($2,$4);}
@@ -434,6 +437,18 @@ enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkOutOfScope
 //======================
 /* Quadruples */
 //======================  
+void quadStartEnum(char enumName)
+{
+        if (SHOW_Quads) {
+                printf("Quads(%d) \tENUM %c\n", line, enumName);
+        }
+}
+void quadEndEnum(char enumName)
+{
+        if (SHOW_Quads) {
+                printf("Quads(%d) \tEND ENUM %c\n", line, enumName);
+        }
+}
 void quadStartFunction(char function) // TODO: make it string isnetad of char
 {
         if (SHOW_Quads) {

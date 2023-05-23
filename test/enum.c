@@ -8,15 +8,17 @@ enum W
     B = 50,
     K
 };
-
-int W x = K;
-print(x);
-
+enum L
 {
-    int C r = 1;
-    int C t = 10;
-    int C v = 3 + 5;
+    M,
+    N
 }
+
+// int W x = K;
+
+int W r = 1;
+int W t = 10;
+int W v = 3 + 5;
 
 {
     int C;
