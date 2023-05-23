@@ -1,3 +1,10 @@
+const int g = 10;
+
+if(g > 10)
+{
+    int a;
+}
+
 if("hi")
 {
     int a;

@@ -71,12 +71,11 @@ line of each error
 
 ## GUI
 
-- Test cases.
-- line by line
-
 Done:
 [x] functions without parameters -> change functionCall to Node_type & $$ = val($1)
 [x] fix strings
 [x] Warning in case of if statement whose condition is always false/true.
 [x] enums (and the inside of enums to symbol table).
 [x] The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
+- Test cases.
+- line by line
