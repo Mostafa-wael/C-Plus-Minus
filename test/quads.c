@@ -1,80 +1,19 @@
-int a = 10;
-int b = 20;
-print("switch case loops////////////////////////////////////");
-switch (a)
+int a = 0;
+int b = 1;
+int c = 2;
+int x(int a, int b, float c)
 {
-default:
-    print("default");
-    break;
-}
-
-print("switch case2 loops////////////////////////////////////");
-switch (a)
-{
-case 1:
-    print("1");
-    break;
-
-case 2:
-    print("2");
-    break;
-
-case 3:
-    print("3");
-    break;
-}
-print("switch case3 loops////////////////////////////////////");
-switch (a)
-{
-case 1:
-    print("1");
-    break;
-
-case 2:
-    print("2");
-    break;
-
-case 3:
-    print("3");
-    break;
-
-default:
-    print("default");
-    break;
-}
-print("switch case4 loops////////////////////////////////////");
-switch (a)
-{
-case 1:
-    print("1");
-    break;
-
-case 2:
-    switch (b)
-    {
-    case 1:
-        print("1");
-        break;
-
-    case 2:
-        print("2");
-        break;
-
-    case 3:
-        print("3");
-        break;
-
-    default:
-        print("default");
-        break;
+    if(a>b){
+        return a>b;
     }
-
-case 3:
-    print("3");
-    break;
-
-default:
-    print("default");
-    break;
+    else {
+        return false;
+    }
 }
-exit;
+int y()
+{
+    print("y");
+    return;
+}
+x(a, b, c);
+

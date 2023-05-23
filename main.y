@@ -16,14 +16,16 @@ extern int yyleng;
 // Quadruples
 //======================
 #define SHOW_Quads 1
-void quadPop(char symbol);
+void quadPopIdentifier(char symbol);
 void quadInstruction(const char* instruction);
 void quadPushInt(int val);
 void quadPushFloat(float val);
 void quadPushIdentifier(char symbol);
 void quadPushString(char* str);
-
-
+void quadStartFunction(char function);
+void quadEndFunction(char function);
+void quadCallFunction(char function);
+void quadReturn();
 void quadJumpFalseLabel(int labelNum);
 void quadPopLabel();
 
@@ -46,6 +48,15 @@ void quadPopLastIdentifierStack();
 
 int lastIdentifierStackPointer = -1;
 char lastIdentifierStack[MAX_STACK_SIZE];
+
+
+void quadJumpStartLabel();
+void quadPushStartLabel(int startLabelNum);
+void quadPopStartLabel();
+
+int startLabelNum = 0;
+int startLabelstackPointer = -1;
+int startLabelStack[MAX_STACK_SIZE];
 // Semantic Erros
 //======================
 #define SHOW_SEMANTIC_ERROR 1
@@ -274,7 +285,7 @@ statements	            : statement ';'                         {;}
 codeBlock               :  statements                           {;}
                         ;
 controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadPopEndLabel();}
-                        | whileLoop
+                        | {quadPushStartLabel(++startLabelNum);} whileLoop {quadPopStartLabel();}
                         | forLoop
                         | repeatUntilLoop
                         | {quadPushEndLabel(++endLabelNum);} switchCaseLoop {quadPopEndLabel();}
@@ -286,8 +297,8 @@ statement               : assignment 		                {;}
                         | EXIT 		                        {exit(EXIT_SUCCESS);}
                         | BREAK 		                    {quadJumpEndLabel();}
                         | CONTINUE 		                    {;}
-                        | RETURN 		                    {;}
-                        | RETURN exp 		                {;}
+                        | RETURN 		                    {quadReturn();}
+                        | RETURN exp 		                {quadReturn();}
                         | PRINT '(' IDENTIFIER ')' 		    {printNode(symbolVal($3)); setUsed($3);}
                         | PRINT '(' exp ')' 		        {printNode($3);}
                         ;
@@ -304,13 +315,13 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         ;
                     
 declaration             : dataType IDENTIFIER 		            {checkSameScope($2);
-                                                                insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);/*Check declared when inserting*/quadPop($2);}
-                        | dataType IDENTIFIER                   {checkSameScope($2);} '=' exp {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); updateSymbolVal($2,$5); setInit($2); quadPop($2);}
+                                                                insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);/*Check declared when inserting*/quadPopIdentifier($2);}
+                        | dataType IDENTIFIER                   {checkSameScope($2);} '=' exp {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); updateSymbolVal($2,$5); setInit($2); quadPopIdentifier($2);}
                         | dataModifier dataType IDENTIFIER      {checkSameScope($3);} '=' exp 
-                                                                {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0, scopes[scope_idx-1]); updateSymbolVal($3,$6); setInit($3); quadPop($2);}
+                                                                {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0, scopes[scope_idx-1]); updateSymbolVal($3,$6); setInit($3); quadPopIdentifier($2);}
                         ;
 assignment              : IDENTIFIER '=' exp                    {checkOutOfScope($1); checkConstant($1); 
-                                                                typeCheck2($1, $3); setUsed($1); updateSymbolVal($1,$3); $$ = $3; setInit($1); quadPop($1);}
+                                                                typeCheck2($1, $3); setUsed($1); updateSymbolVal($1,$3); $$ = $3; setInit($1); quadPopIdentifier($1);}
 
                         | enumDef                               {;}             //
                         | dataType enumDeclaration              {/*Check declared*/;}
@@ -374,7 +385,7 @@ switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack
 //======================
 /* Loops */
 //======================
-whileLoop               : WHILE '(' exp ')' '{'{enterScope();} codeBlock '}'{exitScope();}   {;}
+whileLoop               : WHILE '(' exp ')' {quadJumpFalseLabel(++labelNum);} '{'{enterScope();} codeBlock '}'{/*end*/ exitScope(); quadJumpStartLabel(); quadPopLabel();}    {;}
                         ;
 forLoop                 : FOR '(' assignment ';' exp ';' assignment ')' '{'{enterScope();} codeBlock '}'{exitScope();} {;}
                         ;
@@ -384,19 +395,22 @@ repeatUntilLoop         : REPEAT '{'{enterScope();} codeBlock '}'{exitScope();} 
 //======================
 /* Functions */
 //======================                        
-functionArgs            : dataType IDENTIFIER                   {;}
-                        | dataType IDENTIFIER ',' functionArgs  {;}
+functionArgs            : dataType IDENTIFIER                   {quadPopIdentifier($2);}
+                        | dataType IDENTIFIER ',' functionArgs  {quadPopIdentifier($2);}
                         ;
-functionParams          : term                                  {;}
-                        | term ',' functionParams               {;}
+functionParams          : term                                  {}
+                        | term ',' functionParams               {}
                         ;
-functionDef             : dataType IDENTIFIER '(' functionArgs ')' {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);} 
-                        '{'{enterScope();} codeBlock '}' {exitScope();}
-                        | dataType IDENTIFIER '('              ')' {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);}
-                        '{'{enterScope();} codeBlock '}'              {exitScope();}
+functionDef             : dataType IDENTIFIER {quadStartFunction($2);} functionDefRest {checkSameScope($2); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);} 
+                                                            '{'{enterScope();} codeBlock '}' {exitScope(); quadEndFunction($2);}
                         ;
-functionCall            : IDENTIFIER '(' functionParams ')'     {checkOutOfScope($1); $$ = symbolVal($1);}
-                        | IDENTIFIER '(' ')'                    {checkOutOfScope($1); $$ = symbolVal($1);}
+functionDefRest            : '(' functionArgs ')' 
+                        | '('              ')' 
+                        ;
+functionCall            : IDENTIFIER functionCallRest     {checkOutOfScope($1); $$ = symbolVal($1); quadCallFunction($1);}
+                        ;
+functionCallRest        : '(' functionParams ')'             {;}
+                        | '('              ')'               {;}
                         ;
 //======================
 /* Enumerations */
@@ -419,7 +433,31 @@ enumDeclaration         : IDENTIFIER IDENTIFIER                 {checkOutOfScope
 %%  
 //======================
 /* Quadruples */
-//======================    
+//======================  
+void quadStartFunction(char function) // TODO: make it string isnetad of char
+{
+        if (SHOW_Quads) {
+                printf("Quads() function %c\n", function);
+        }
+}
+void quadEndFunction(char function)
+{
+        if (SHOW_Quads) {
+                printf("Quads() end function %c\n", function);
+        }
+}
+void quadCallFunction(char function)
+{
+        if (SHOW_Quads) {
+                printf("Quads() call function %c\n", function);
+        }
+}
+void quadReturn()
+{
+        if (SHOW_Quads) {
+                printf("Quads() return\n");
+        }
+}
 void quadInstruction(const char* instruction)
 {
         if (SHOW_Quads) {
@@ -451,7 +489,7 @@ void quadPushString(char* str)
                printf("Quads() push %s\n", str);
        }
 }
-void quadPop(char symbol)
+void quadPopIdentifier(char symbol)
 {
        if (SHOW_Quads) {
             printf("Quads() pop %c\n\n", symbol);
@@ -528,6 +566,31 @@ void quadPopLastIdentifierStack(){
     char identifier = lastIdentifierStack[lastIdentifierStackPointer--];
 }
 
+
+void quadPushStartLabel(int startLabelNum){
+        if (SHOW_Quads) {
+            /* push the labelNum to the stack */
+            startLabelStack[++startLabelstackPointer] = startLabelNum;
+            if (SHOW_Quads) {
+                printf("Quads() StartLabel_%d\n", startLabelNum);
+            }
+        }
+}
+void quadJumpStartLabel(){
+        if (SHOW_Quads) {
+        /* get last  startLabelNum from the stack*/
+        int startLabelNum = startLabelStack[startLabelstackPointer];
+        printf("Quads() JMP StartLabel_%d\n", startLabelNum);
+       }
+}
+void quadPopStartLabel(){
+    if (startLabelstackPointer < 0){
+            printf("Quads() Error: No start label to add. Segmenration Fault\n");
+            return;
+        }
+    /* get the last endLabelNum from the stack */
+    int startLabelNum = startLabelStack[startLabelstackPointer--];
+}
 //======================
 // Symbol table functions
 //======================
