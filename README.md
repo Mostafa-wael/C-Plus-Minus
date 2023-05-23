@@ -1,6 +1,6 @@
 # C Plus Minus
 
-![logo](image/logo.png)
+![logo](gui/logo.png)
 
 ## Table of Contents
 
