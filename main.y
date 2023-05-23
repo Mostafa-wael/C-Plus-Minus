@@ -22,14 +22,17 @@ void quadPushInt(int val);
 void quadPushFloat(float val);
 void quadPushIdentifier(char symbol);
 void quadPushString(char* str);
-void quadJF(int labelNum);
-void quadJMP();
-void quadAddLabel();
-void quadAddStartLabel(int labelNum);
 
 
+
+
+void quadJumpFalseLabel(int labelNum);
+void quadPopLabel();
+
+void quadJumpEndLabel();
 void quadPushEndLabel(int endLabelNum);
-void quadAddEndLabel();
+void quadPopEndLabel();
+
 #define MAX_STACK_SIZE 100
 int labelNum = 0;
 int labelStackPointer = -1;
@@ -263,7 +266,7 @@ statements	            : statement ';'                         {;}
                         ;
 codeBlock               :  statements                           {;}
                         ;
-controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadAddEndLabel();}
+controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadPopEndLabel();}
                         | whileLoop
                         | forLoop
                         | repeatUntilLoop
@@ -345,7 +348,7 @@ term   	                : NUMBER                                {quadPushInt($1)
 //======================
 /* Conditions */
 //======================
-ifCondition             : IF '(' exp {checkConstIf($3); quadJF(++labelNum);} ')' '{'{enterScope();} codeBlock '}'{quadJMP(); exitScope(); quadAddLabel();} ElseCondition {;}
+ifCondition             : IF '(' exp {checkConstIf($3); quadJumpFalseLabel(++labelNum);} ')' '{'{enterScope();} codeBlock '}'{quadJumpEndLabel(); exitScope(); quadPopLabel();} ElseCondition {;}
                         ;
 ElseCondition           : {;}
                         | ELSE {;} ifCondition {;}
@@ -452,7 +455,7 @@ void quadPushEndLabel(int endLabelNum)
             endLabelStack[++endLabelstackPointer] = endLabelNum;
        }
 }
-void quadJMP() // jump to the first end label in the stack
+void quadJumpEndLabel() // jump to the first end label in the stack
 {
       if (SHOW_Quads) {
         /* get last  endLabelNum from the stack*/
@@ -460,7 +463,7 @@ void quadJMP() // jump to the first end label in the stack
         printf("Quads() JMP EndLabel_%d\n", endLabelNum);
        }
 }
-void quadAddEndLabel(){
+void quadPopEndLabel(){
         if (endLabelstackPointer < 0){
             printf("Quads() Error: No end label to add. Segmenration Fault\n");
             return;
@@ -471,7 +474,7 @@ void quadAddEndLabel(){
                 printf("Quads() EndLabel_%d\n", endLabelNum);
         }
 }
-void quadJF(int labelNum)
+void quadJumpFalseLabel(int labelNum)
 {
        if (SHOW_Quads) {
                printf("Quads() JF Label_%d\n", labelNum);
@@ -479,7 +482,7 @@ void quadJF(int labelNum)
                 labelStack[labelStackPointer++] = labelNum;
        }
 }
-void quadAddLabel(){
+void quadPopLabel(){
         if (labelStackPointer < 0){
             printf("Quads() Error: No end label to add. Segmenration Fault\n");
             return;
