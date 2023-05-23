@@ -13,9 +13,9 @@ int W x = K;
 print(x);
 
 {
-    int C r = 1;
-    int C t = 10;
-    int C v = 3 + 5;
+    int W r = 1;
+    int W t = 10;
+    int W v = 3 + 5;
 }
 
 {

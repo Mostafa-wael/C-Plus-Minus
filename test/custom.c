@@ -1,17 +1,8 @@
-int a = 3;
-int b = 2;
-if (a == 3)
+
+int x(int a, int b)
 {
-    print("if");
-    print("another if");
+    int y = 7;
+    print("add");
+    return a;
 }
-else if (b == 2)
-{
-    print("else");
-    print("another else");
-}
-else
-{
-    print("else");
-    print("another else");
-}
+x(1, 2);
