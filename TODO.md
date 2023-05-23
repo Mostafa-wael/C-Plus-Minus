@@ -56,10 +56,10 @@ line of each error
 - If-then-else statement, while loops, repeat-until loops, for loops, switch statement.   (nested)
 - functions, enums
 - show quad line number
+- conversions quads
 
 ## Errors
 
-- The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...
 - function parameters
 
 - check todos in code
@@ -79,4 +79,4 @@ Done:
 [x] fix strings
 [x] Warning in case of if statement whose condition is always false/true.
 [x] enums (and the inside of enums to symbol table).
-
+[x] The addition of type conversion quadruples to match operators’semantic requirements, i.e. converting integer to real, ...

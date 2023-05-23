@@ -22,21 +22,30 @@ void quadPushInt(int val);
 void quadPushFloat(float val);
 void quadPushIdentifier(char symbol);
 void quadPushString(char* str);
-void quadJF(int labelNum);
-void quadJMP();
-void quadAddLabel();
-void quadAddStartLabel(int labelNum);
 
 
+void quadJumpFalseLabel(int labelNum);
+void quadPopLabel();
+
+void quadJumpEndLabel();
 void quadPushEndLabel(int endLabelNum);
-void quadAddEndLabel();
+void quadPopEndLabel();
+
 #define MAX_STACK_SIZE 100
 int labelNum = 0;
-int labelSackPointer = -1;
+int labelStackPointer = -1;
 int labelStack[MAX_STACK_SIZE];
+
 int endLabelNum = 0;
 int endLabelstackPointer = -1;
 int endLabelStack[MAX_STACK_SIZE];
+
+void quadPushLastIdentifierStack(char identifier);
+void quadPeakLastIdentifierStack();
+void quadPopLastIdentifierStack();
+
+int lastIdentifierStackPointer = -1;
+char lastIdentifierStack[MAX_STACK_SIZE];
 // Semantic Erros
 //======================
 #define SHOW_SEMANTIC_ERROR 1
@@ -104,6 +113,7 @@ struct nodeType* arithmatic(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* bitwise(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* logical(struct nodeType* op1, struct nodeType*op2, char op);
 struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op);
+struct nodeType* convertTo(struct nodeType* term, char *type);
 
 // Types
 //======================
@@ -262,20 +272,20 @@ statements	            : statement ';'                         {;}
                         ;
 codeBlock               :  statements                           {;}
                         ;
-controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadAddEndLabel();}
+controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadPopEndLabel();}
                         | whileLoop
                         | forLoop
                         | repeatUntilLoop
-                        | switchCaseLoop
+                        | {quadPushEndLabel(++endLabelNum);} switchCaseLoop {quadPopEndLabel();}
                         ;      
                                                  
 statement               : assignment 		                {;}
                         | exp                                   {;}
                         | declaration 		                {;}
                         | EXIT 		                        {exit(EXIT_SUCCESS);}
-                        | BREAK 		                {;}
-                        | CONTINUE 		                {;}
-                        | RETURN 		                {;}
+                        | BREAK 		                    {quadJumpEndLabel();}
+                        | CONTINUE 		                    {;}
+                        | RETURN 		                    {;}
                         | RETURN exp 		                {;}
                         | PRINT '(' IDENTIFIER ')' 		    {printNode(symbolVal($3)); setUsed($3);}
                         | PRINT '(' exp ')' 		        {printNode($3);}
@@ -306,6 +316,8 @@ assignment              : IDENTIFIER '=' exp                    {checkOutOfScope
                         ;
 exp    	                : term                                  {$$ = $1;}
                         | functionCall                          {$$->isConst=0;}
+                        /* Conversion */
+                        | '(' dataType ')' term                 {$$ = convertTo($4, $2->type); $$->isConst = $4->isConst;} // TODO add quad instruction
                         /* Negation */
                         | '-' term                              {quadInstruction("NEG"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = -$2->value.intVal;} else if($2->type == "float"){$$ = floatNode(); $$->value.floatVal = -$2->value.floatVal;} else exit(EXIT_FAILURE);    $$->isConst=$2->isConst;}
                         | '~' term                              {quadInstruction("COMPLEMENT"); if($2->type == "int"){$$ = intNode(); $$->value.intVal = ~$2->value.intVal;} else exit(EXIT_FAILURE); $$->isConst=$2->isConst;}
@@ -344,19 +356,19 @@ term   	                : NUMBER                                {quadPushInt($1)
 //======================
 /* Conditions */
 //======================
-ifCondition             : IF '(' exp {checkConstIf($3); quadJF(++labelNum);} ')' '{'{enterScope();} codeBlock '}'{quadJMP(); exitScope(); quadAddLabel();} ElseCondition {;}
+ifCondition             : IF '(' exp {checkConstIf($3); quadJumpFalseLabel(++labelNum);} ')' '{'{enterScope();} codeBlock '}'{quadJumpEndLabel(); exitScope(); quadPopLabel();} ElseCondition {;}
                         ;
 ElseCondition           : {;}
                         | ELSE {;} ifCondition {;}
                         | ELSE {;}'{'{enterScope();} codeBlock '}'{exitScope();} {;}
                         ;
-case                    : CASE exp ':' statements               {;}
+case                    : CASE exp {quadPeakLastIdentifierStack(); quadJumpFalseLabel(++labelNum);} ':' statements {quadPopLabel();}
                         | DEFAULT ':' statements                {;}
                         ;
 caseList                : caseList case
                         | case
                         ;
-switchCaseLoop          : SWITCH '(' exp ')' '{'{enterScope();} caseList '}'{exitScope();}   {;}
+switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack($3);} '{'{enterScope();} caseList '}'{exitScope();}   {quadPopLastIdentifierStack();}
                         ;
 //======================
 /* Loops */
@@ -448,47 +460,76 @@ void quadPushEndLabel(int endLabelNum)
 {
        if (SHOW_Quads) {
             /* push the labelNum to the stack */
-            labelStack[++endLabelstackPointer] = endLabelNum;
+            endLabelStack[++endLabelstackPointer] = endLabelNum;
        }
 }
-void quadJMP() // jump to the first end label in the stack
+void quadJumpEndLabel() // jump to the first end label in the stack
 {
       if (SHOW_Quads) {
         /* get last  endLabelNum from the stack*/
-        int endLabelNum = labelStack[endLabelstackPointer];
+        int endLabelNum = endLabelStack[endLabelstackPointer];
         printf("Quads() JMP EndLabel_%d\n", endLabelNum);
        }
 }
-void quadAddEndLabel(){
+void quadPopEndLabel(){
         if (endLabelstackPointer < 0){
             printf("Quads() Error: No end label to add. Segmenration Fault\n");
             return;
         }
         /* get the last endLabelNum from the stack */
-        int endLabelNum = labelStack[endLabelstackPointer--];
+        int endLabelNum = endLabelStack[endLabelstackPointer--];
         if (SHOW_Quads) {
                 printf("Quads() EndLabel_%d\n", endLabelNum);
         }
 }
-void quadJF(int labelNum)
+void quadJumpFalseLabel(int labelNum)
 {
        if (SHOW_Quads) {
                printf("Quads() JF Label_%d\n", labelNum);
                /* push the labelNum to the stack */
-                labelStack[labelSackPointer++] = labelNum;
+                labelStack[labelStackPointer++] = labelNum;
        }
 }
-void quadAddLabel(){
-        if (labelSackPointer < 0){
+void quadPopLabel(){
+        if (labelStackPointer < 0){
             printf("Quads() Error: No end label to add. Segmenration Fault\n");
             return;
         }
         /* get the last labelNum from the stack */
-        int labelNum = labelStack[--labelSackPointer];
+        int labelNum = labelStack[--labelStackPointer];
         if (SHOW_Quads) {
                 printf("Quads() Label_%d\n", labelNum);
         }
 }
+void quadPushLastIdentifierStack(char identifier){
+        if (SHOW_Quads) {
+            /* add the IDENTIFIER to the stack */
+            lastIdentifierStack[++lastIdentifierStackPointer] = identifier;
+        }
+}
+void quadPeakLastIdentifierStack(){
+    if (lastIdentifierStackPointer < 0){
+        printf("Quads() Error: No last identifier to peak. Segmenration Fault\n");
+        return;
+    }
+    /* get the last identifier from the stack */
+    char identifier = lastIdentifierStack[lastIdentifierStackPointer];
+    if (SHOW_Quads) {
+            printf("Quads() push %c\n", identifier);
+    }
+}
+void quadPopLastIdentifierStack(){
+    if (lastIdentifierStackPointer < 0){
+        printf("Quads() Error: No last identifier to pop. Segmenration Fault\n");
+        return;
+    }
+    /* get the last IDENTIFIER from the stack */
+    char identifier = lastIdentifierStack[lastIdentifierStackPointer--];
+}
+
+//======================
+// Symbol table functions
+//======================
 int sym_table_idx = 0;
 
 /* C code */
@@ -505,10 +546,6 @@ int computeSymbolIndex(char token){
         }
     }
 } 
-
-//======================
-// Symbol table functions
-//======================
 void insert(char name, char* type, int isConst, int isInit, int isUsed, int scope){
 
     symbol_Table [sym_table_idx].name = name;
@@ -802,6 +839,97 @@ struct nodeType* comparison(struct nodeType* op1, struct nodeType*op2, char* op)
     }
     return p;
 }
+
+struct nodeType* convertTo(struct nodeType* term, char *type){
+
+    struct nodeType* p = malloc(sizeof(struct nodeType));
+
+
+    if(strcmp(type, "int") == 0){   // convert to int
+        p->type = "int";
+        if(strcmp(term->type, "float") == 0){
+            p->value.intVal = (int)term->value.floatVal;
+        }
+        else if(strcmp(term->type, "bool") == 0){
+            p->value.intVal = (int)term->value.boolVal;
+        }
+        else if(strcmp(term->type, "string") == 0){
+            // remove double quotes from start and end of string
+            char *str = strdup(term->value.stringVal);
+            str++;
+            str[strlen(str)-1] = '\0';
+            p->value.intVal = atoi(str);
+        }
+        else{
+            /* printf("Invalid type\n"); */
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    }
+    else if(strcmp(type, "float") == 0){  // convert to float
+        p->type = "float";
+        if(strcmp(term->type, "int") == 0){
+            p->value.floatVal = (float)term->value.intVal;
+        }
+        else if(strcmp(term->type, "bool") == 0){
+            p->value.floatVal = (float)term->value.boolVal;
+        }
+        else if(strcmp(term->type, "string") == 0){
+            // remove double quotes from start and end of string
+            char *str = strdup(term->value.stringVal);
+            str++;
+            str[strlen(str)-1] = '\0';
+            p->value.floatVal = atof(str);
+        }
+        else{
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    }
+    else if(strcmp(type, "bool") == 0){  // convert to bool
+        p->type = "bool";
+        if(strcmp(term->type, "int") == 0){
+            p->value.boolVal = (int)term->value.intVal!=0;
+        }
+        else if(strcmp(term->type, "float") == 0){
+            p->value.boolVal = (int)term->value.floatVal!=0;
+        }
+        else if(strcmp(term->type, "string") == 0){
+            // remove double quotes from start and end of string
+            char *str = strdup(term->value.stringVal);
+            str++;
+            str[strlen(str)-1] = '\0';
+            p->value.boolVal = str[0] != '\0';
+        }
+        else{
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    }
+    else if(strcmp(type, "string") == 0){ // convert to string
+        p->type = "string";
+        if(strcmp(term->type, "int") == 0){
+            char t[100];
+            sprintf(t, "%d", term->value.intVal);
+            p->value.stringVal = strdup(t);
+        }
+        else if(strcmp(term->type, "float") == 0){
+            char t[100];
+            sprintf(t, "%f", term->value.floatVal);
+            p->value.stringVal = strdup(t);
+        }
+        else if(strcmp(term->type, "bool") == 0){
+            char t[100];
+            sprintf(t, "%d", term->value.boolVal);
+            p->value.stringVal = strdup(t);
+        }
+        else{
+            Log_SEMANTIC_ERROR(TYPE_MISMATCH, term->type);
+        }
+    } 
+
+
+    return p;
+}
+
+
 //------------------------------------------------------------------------------- 
 // Type checking functions 
 //-------------------------------------------------------------------------------  
