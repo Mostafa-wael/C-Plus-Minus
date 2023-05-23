@@ -350,7 +350,7 @@ term   	                : NUMBER                                {quadPushInt($1)
                         | FLOAT_NUMBER                          {quadPushFloat($1); $$ = floatNode(); $$->value.floatVal = $1; $$->isConst=1; /*Pass value & type*/}
                         | TRUE_VAL                              {quadPushInt(1); $$ = boolNode();  $$->value.boolVal = 1; $$->isConst=1; /*Pass value & type*/}
                         | FALSE_VAL                             {quadPushInt(0); $$ = boolNode();  $$->value.boolVal = 0; $$->isConst=1; /*Pass value & type*/}
-                        | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1); $$->isConst=isConstVar($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
+                        | IDENTIFIER	                        {quadPushIdentifier($1); checkOutOfScope($1); checkInitialization($1); $$ = symbolVal($1); $$->isConst=isConstVar($1); setUsed($1);/*Decl, Initialize checks*/ /*Set Used*/ /*Rev. symbolVal*/ /*Pass value & type*/} 
                         | STRING                                {quadPushString($1); $$ = stringNode(); $$->value.stringVal = strdup($1); $$->isConst=1; /*Pass value & type*/}
                         | '(' exp ')'                           {$$ = $2;}
                         ;
@@ -369,7 +369,7 @@ case                    : CASE exp {quadPeakLastIdentifierStack(); quadJumpFalse
 caseList                : caseList case
                         | case
                         ;
-switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack($3);} '{'{enterScope();} caseList '}'{exitScope();}   {quadPopLastIdentifierStack();}
+switchCaseLoop          : SWITCH '(' IDENTIFIER ')' {quadPushLastIdentifierStack($3);setInit($3);} '{'{enterScope();} caseList '}'{exitScope();}   {quadPopLastIdentifierStack();}
                         ;
 //======================
 /* Loops */

@@ -1,3 +1,19 @@
+if(false)
+{
+    int a;
+}
+
+if(5<3)
+{
+    int a;
+} 
+
+const int x = 10;
+if(x<3)
+{
+    int a;
+}
+
 const int g = 10;
 
 if(g > 10)
