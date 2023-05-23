@@ -1,40 +1,39 @@
 print("conditions");
 int a = 10;
-if (a == 10)
-{
-    print("if");
-    print("another if");
+print("First if statement start");
+if (a == 11){
+    a = 11;
 }
-else if (a == 11)
-{
-    print("elif");
-    print("another elif");
+print("second if statement start");
+if (a == 100){
+    a = 100;
 }
-else
-{
-    print("else");
-    print("another else");
-    if (a == 10)
-    {
-        print("if");
-        print("another if");
+else if (a == 12){
+    if (a == 14){
+        a = 14;
     }
-    else
-    {
-        print("else");
-        print("another else");
+    else{
+        a = 13;
     }
 }
-if (a == 10)
-{
-    print("if");
-    print("another if");
+else if (a == 13){
+   if (a == 15){
+        a = 15;
+    }
+    else if (a == 11){
+        a = 11;
+    }
 }
-else if (a == 11)
-{
-    print("else");
-    print("another else");
+else{
+    a = 14;
 }
+print("Third if statement start");
+if (a == 11){
+    a = 11;
+}
+
+
+a = 8;
 ////////////////////////////////
 print("switch case loops");
 switch (a)

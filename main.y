@@ -23,13 +23,20 @@ void quadPushFloat(float val);
 void quadPushIdentifier(char symbol);
 void quadPushString(char* str);
 void quadJF(int labelNum);
+void quadJMP();
+void quadAddLabel();
 void quadAddStartLabel(int labelNum);
+
+
+void quadPushEndLabel(int endLabelNum);
 void quadAddEndLabel();
-void quadJMP(int labelNum);
-int label = 0;
 #define MAX_STACK_SIZE 100
-int stackPointer = 0;
+int labelNum = 0;
+int labelSackPointer = -1;
 int labelStack[MAX_STACK_SIZE];
+int endLabelNum = 0;
+int endLabelstackPointer = -1;
+int endLabelStack[MAX_STACK_SIZE];
 // Semantic Erros
 //======================
 #define SHOW_SEMANTIC_ERROR 1
@@ -246,7 +253,7 @@ program                 : statements                            {;}
                         | statements program                    {;}
                         | functionDef program                   {;}
                         ;
-statements	        : statement ';'                         {;}
+statements	            : statement ';'                         {;}
                         | '{'{enterScope();} codeBlock '}'{exitScope();}
                         | controlstatement                      {;}
                         | statements '{'{enterScope();} codeBlock '}'{exitScope();}          {;}
@@ -255,7 +262,7 @@ statements	        : statement ';'                         {;}
                         ;
 codeBlock               :  statements                           {;}
                         ;
-controlstatement        : ifCondition
+controlstatement        : {quadPushEndLabel(++endLabelNum);} ifCondition {quadAddEndLabel();}
                         | whileLoop
                         | forLoop
                         | repeatUntilLoop
@@ -272,8 +279,6 @@ statement               : assignment 		                {;}
                         | RETURN exp 		                {;}
                         | PRINT '(' IDENTIFIER ')' 		    {printNode(symbolVal($3)); setUsed($3);}
                         | PRINT '(' exp ')' 		        {printNode($3);}
-                        | PRINT '(' STRING ')' 	            {printf("%s\n", $3);}
-                        /* | PRINT FLOAT_NUMBER 	                {printf("%f\n", $2);} */
                         ;
 //======================
 /* Decleration */
@@ -287,7 +292,7 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
                         | VOID_DATA_TYPE                        {;}
                         ;
                     
-declaration             : dataType IDENTIFIER 		        {checkSameScope($2);
+declaration             : dataType IDENTIFIER 		            {checkSameScope($2);
                                                                 insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);/*Check declared when inserting*/quadPop($2);}
                         | dataType IDENTIFIER                   {checkSameScope($2);} '=' exp {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); updateSymbolVal($2,$5); setInit($2); quadPop($2);}
                         | dataModifier dataType IDENTIFIER      {checkSameScope($3);} '=' exp 
@@ -339,11 +344,11 @@ term   	                : NUMBER                                {quadPushInt($1)
 //======================
 /* Conditions */
 //======================
-ifCondition             : IF '(' exp {checkConstIf($3);} ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
+ifCondition             : IF '(' exp {checkConstIf($3); quadJF(++labelNum);} ')' '{'{enterScope();} codeBlock '}'{quadJMP(); exitScope(); quadAddLabel();} ElseCondition {;}
                         ;
 ElseCondition           : {;}
-                        | ELSE '{'{enterScope();} codeBlock '}'{exitScope();} {;}
-                        | ELSE IF '(' exp {checkConstIf($4);} ')' '{'{enterScope();} codeBlock '}'{exitScope();} ElseCondition {;}
+                        | ELSE {;} ifCondition {;}
+                        | ELSE {;}'{'{enterScope();} codeBlock '}'{exitScope();} {;}
                         ;
 case                    : CASE exp ':' statements               {;}
                         | DEFAULT ':' statements                {;}
@@ -436,8 +441,53 @@ void quadPushString(char* str)
 void quadPop(char symbol)
 {
        if (SHOW_Quads) {
-               printf("Quads() pop %c\n\n", symbol);
+            printf("Quads() pop %c\n\n", symbol);
        }
+}
+void quadPushEndLabel(int endLabelNum)
+{
+       if (SHOW_Quads) {
+            /* push the labelNum to the stack */
+            labelStack[++endLabelstackPointer] = endLabelNum;
+       }
+}
+void quadJMP() // jump to the first end label in the stack
+{
+      if (SHOW_Quads) {
+        /* get last  endLabelNum from the stack*/
+        int endLabelNum = labelStack[endLabelstackPointer];
+        printf("Quads() JMP EndLabel_%d\n", endLabelNum);
+       }
+}
+void quadAddEndLabel(){
+        if (endLabelstackPointer < 0){
+            printf("Quads() Error: No end label to add. Segmenration Fault\n");
+            return;
+        }
+        /* get the last endLabelNum from the stack */
+        int endLabelNum = labelStack[endLabelstackPointer--];
+        if (SHOW_Quads) {
+                printf("Quads() EndLabel_%d\n", endLabelNum);
+        }
+}
+void quadJF(int labelNum)
+{
+       if (SHOW_Quads) {
+               printf("Quads() JF Label_%d\n", labelNum);
+               /* push the labelNum to the stack */
+                labelStack[labelSackPointer++] = labelNum;
+       }
+}
+void quadAddLabel(){
+        if (labelSackPointer < 0){
+            printf("Quads() Error: No end label to add. Segmenration Fault\n");
+            return;
+        }
+        /* get the last labelNum from the stack */
+        int labelNum = labelStack[--labelSackPointer];
+        if (SHOW_Quads) {
+                printf("Quads() Label_%d\n", labelNum);
+        }
 }
 int sym_table_idx = 0;
 
@@ -992,4 +1042,6 @@ int main (void) {
 /* void yyerror (char *s) {printf ("%s at line %d\n", s, line-1);}  */
 void yyerror(char* s) {
     printf("Syntax error (%d) Near line %d.\n", line, line);
+    fprintf(stderr, "Syntax error (%d) Near line %d.\n", line, line);
+    exit(EXIT_FAILURE);
 }

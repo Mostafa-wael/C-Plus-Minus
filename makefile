@@ -8,7 +8,7 @@ lex.yy.c: y.tab.c main.l
 build: lex.yy.c y.tab.c
 	gcc -w -g lex.yy.c y.tab.c -o main 
 
-run: build
+run: clean build
 	./main
 
 decleration: build
