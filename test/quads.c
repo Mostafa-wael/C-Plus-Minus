@@ -1,14 +1,19 @@
 int a = 0;
-int b = 4;
-while (a < 20)
+int b = 1;
+int c = 2;
+int x(int a, int b, float c)
 {
-
-    while (b < 20)
-    {
-        print(b);
-        b = b + 1;
+    if(a>b){
+        return a>b;
     }
-
-    a = a + 1;
+    else {
+        return false;
+    }
 }
-print(a);
+int y()
+{
+    print("y");
+    return;
+}
+x(a, b, c);
+
