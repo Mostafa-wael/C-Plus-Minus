@@ -1,11 +1,15 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPlainTextEdit
-from PyQt5.QtGui import QFont, QColor, QTextCharFormat, QSyntaxHighlighter
-from PyQt5.QtCore import Qt, QRegExp
+
+from PyQt5.QtCore import QRegExp, QStringListModel, Qt
+from PyQt5.QtGui import (QColor, QFont, QSyntaxHighlighter, QTextCharFormat,
+                         QTextCursor)
+from PyQt5.QtWidgets import (QApplication, QCompleter, QMainWindow,
+                             QPlainTextEdit)
+
 
 class CCodeHighlighter(QSyntaxHighlighter):
-    def _init_(self, parent=None):
-        super(CCodeHighlighter, self)._init_(parent)
+    def __init__(self, parent=None):
+        super(CCodeHighlighter, self).__init__(parent)
         
         # Define the C keywords
         self.keywords = [
@@ -92,8 +96,8 @@ class CCodeHighlighter(QSyntaxHighlighter):
 
 
 class CodeEditor(QPlainTextEdit):
-    def _init_(self, parent=None):
-        super(CodeEditor, self)._init_(parent)
+    def __init__(self, parent=None):
+        super(CodeEditor, self).__init__(parent)
         
         # Set the font and tab stop width
         font = QFont('Courier New')
@@ -107,6 +111,60 @@ class CodeEditor(QPlainTextEdit):
         
         # Syntax highlighting
         self.highlighter = CCodeHighlighter(self.document())
+
+        # Code completion
+        
+        self.completer = QCompleter()
+        self.completer.setWidget(self)
+        self.completer.setCompletionMode(QCompleter.PopupCompletion)
+        self.completer.setModel(self.createCompleterModel())
+        self.completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self.setCompleter(self.completer)
+
+    def setCompleter(self, completer):
+        self.completer = completer
+        self.completer.setWidget(self)
+        self.completer.setCompletionMode(QCompleter.PopupCompletion)
+        self.completer.setModel(self.createCompleterModel())
+        self.completer.setCaseSensitivity(Qt.CaseInsensitive)
+
+    def completer(self):
+        return self.completer
+
+    def createCompleterModel(self):
+        keywords = ['auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do', 'double', 'else', 'enum', 'extern',
+            'float', 'for', 'goto', 'if', 'int', 'long', 'register', 'return', 'short', 'signed', 'sizeof', 'static',
+            'struct', 'switch', 'typedef', 'union', 'unsigned', 'void', 'volatile', 'while']
+
+        model = QStringListModel()
+        model.setStringList(keywords)
+        return model
+
+    def textUnderCursor(self):
+        cursor = self.textCursor()
+        cursor.select(QTextCursor.WordUnderCursor)
+        return cursor.selectedText()
+
+    def keyPressEvent(self, event):
+        if self.completer and self.completer.popup().isVisible():
+            if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+                event.ignore()
+                return
+        
+        super(CodeEditor, self).keyPressEvent(event)
+        
+        if event.key() == Qt.Key_Tab:
+            completionPrefix = self.textUnderCursor()
+            if completionPrefix != "":
+                self.completer.setCompletionPrefix(completionPrefix)
+                self.completer.popup().setCurrentIndex(
+                    self.completer.completionModel().index(0, 0)
+                )
+                rect = self.cursorRect()
+                rect.setWidth(self.completer.popup().sizeHintForColumn(0)
+                              + self.completer.popup().verticalScrollBar().sizeHint().width())
+                self.completer.complete(rect)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
