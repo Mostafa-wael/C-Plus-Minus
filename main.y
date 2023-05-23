@@ -103,7 +103,7 @@ void Log_SEMANTIC_ERROR(int semanticError, char var)
                         exit(EXIT_FAILURE);
                         break;
                 case CONSTANT_IF:
-                        printf("Semantic error (%d) If statement is always %s\n", errorLine, (var ? "True" : "False"));
+                        printf("Semantic warning (%d) If statement is always %s\n", errorLine, (var ? "True" : "False"));
                         break;
                 default:
                         printf("Semantic error (%d) Unknown error at\n", errorLine);
@@ -323,8 +323,8 @@ dataType                : INT_DATA_TYPE                         {$$ = intNode();
 declaration             : dataType IDENTIFIER 		            {checkSameScope($2);
                                                                 insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]);/*Check declared when inserting*/quadPopIdentifier($2);}
                         | dataType IDENTIFIER                   {checkSameScope($2);} '=' exp {typeCheck($1, $5); insert($2, $1->type, 0, 0, 0, scopes[scope_idx-1]); updateSymbolVal($2,$5); setInit($2); quadPopIdentifier($2);}
-                        | dataModifier dataType IDENTIFIER      {checkSameScope($3);} '=' exp 
-                                                                {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0, scopes[scope_idx-1]); updateSymbolVal($3,$6); setInit($3); quadPopIdentifier($2);}
+                        | dataModifier dataType IDENTIFIER      {checkSameScope($3);} '=' exp  
+                                                                {typeCheck($2, $6); insert($3, $2->type, 1, 0, 0, scopes[scope_idx-1]); updateSymbolVal($3,$6); setInit($3); quadPopIdentifier($3);}
                         ;
 assignment              : IDENTIFIER '=' exp                    {checkOutOfScope($1); checkConstant($1); 
                                                                 typeCheck2($1, $3); setUsed($1); updateSymbolVal($1,$3); $$ = $3; setInit($1); quadPopIdentifier($1);}
