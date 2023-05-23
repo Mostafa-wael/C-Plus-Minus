@@ -117,7 +117,7 @@ FALSE [fF]alse | 0 | [nN]o
 {SPACE}                            ; /*Ignore White SPACE*/
 {INLINE_COMMENT}                   {Log("inline comment", yytext);} /*Ignore Comments*/
 {MULTILINE_COMMENT}                {Log("multiline comment", yytext);} /*Ignore Comments*/
-.                                  {Log("unexpected character", yytext); ECHO; yyerror ("unexpected character");} /*Else, Error*/ 
+.                                  {Log("unexpected token", yytext); ECHO; yyerror ("unexpected token");} /*Else, Error*/ 
 %%
 // C code
 // The wrapper function yywrap() 
